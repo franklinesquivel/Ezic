@@ -352,9 +352,9 @@
 	            //LLENAR ELEMENTO DEL RECORD
 	            $record_element .= "
 	            <div class='record'>
-	            	<table>
+	            	<table class='infoTable'>
 						<tr>
-							<td>
+							<td class='photoCell'>
 								<img class='profile' src='../../../app/users/files/profile_photos/" . $user_info['photo'] . "'>
 							</td>
 							<td class='data' style='text-align: left;'>

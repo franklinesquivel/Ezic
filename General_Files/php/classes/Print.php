@@ -71,7 +71,7 @@
 		function genHeader($title)
 		{
 			ini_set("date.timezone", 'America/El_Salvador');
-            $date = date("j/m/Y");
+            $date = date("d/m/Y");
 			$aux .= "
 			<div class='PDF_header'>
 				<div class='logo'>

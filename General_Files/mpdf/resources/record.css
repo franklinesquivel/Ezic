@@ -82,3 +82,12 @@ table td p .title{
     margin: 0px;
     color: #fff;
 }
+
+.infoTable{
+	/*background: red;*/
+}
+
+.infoTable td.photoCell{
+	/*background: blue;*/
+	width: 50%;
+}

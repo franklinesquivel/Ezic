@@ -102,19 +102,17 @@ ul.side-nav.fixed:hover{
 .record .gnrl-info{
     margin-top: 50px;
     display: flex;
-    /*width: 10%;*/
-    /*display: flex;*/
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
 }
 
 .record .gnrl-info .photo{
-    width: 20%;
-    height: 150px;
+    width: 25%;
+    height: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /*background: yellow;*/
 }
 
 .record .gnrl-info .photo img{
