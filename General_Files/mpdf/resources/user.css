@@ -1,0 +1,79 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: DejaVuSansCondensed;
+}
+
+.PDF_header .logo{
+	width: 15%;
+	float: left;
+	position: relative;
+	top: 5%;
+}
+
+.PDF_header .info{
+}
+
+.PDF_header .info .date{
+	text-align: right;
+}
+
+.PDF_header .info .title{
+	text-align: center;
+	font-size: 30px;
+	margin-left: -10%;
+}
+
+table {
+	font-family: DejaVuSansCondensed;
+	border-collapse: collapse;
+	vertical-align: middle;
+	width: 100%;
+}
+
+th {
+	/*border: 1px solid red;*/
+	font-weight: bold; 
+	vertical-align: center;
+	text-align: center;
+	font-size: 15px;
+	padding: 10px 15px;
+	vertical-align: middle;
+	width: 50%;
+	padding-bottom: 10%;
+}
+
+th.info{
+	/*width: 90%;*/
+	/*font-size: 2.5em;*/
+	text-align: left;
+}
+
+th.photo_cont{
+	text-align: right;
+}
+
+td{
+	font-size: 1.2em;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+	/*border: 1px solid #000;*/
+	text-align: right;
+}
+
+td.data-title{
+	font-weight: bold;
+}
+
+td.data-content{
+	text-align: left;
+}
+
+.photo{
+	width: 150px;
+	height: 150px;
+}

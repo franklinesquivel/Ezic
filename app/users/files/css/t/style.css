@@ -1,0 +1,184 @@
+.table-of-contents.t a.active {
+    border-left-color: #4CAF50;
+}
+
+.table-of-contents.t a:hover {
+    border-left-color: #5cd961;
+}
+
+.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label{
+    color: #4CAF50;
+}
+
+.input-field input[type=text]:focus, .input-field input[type=number]:focus {
+    border-bottom: 1px solid #4CAF50;
+    box-shadow: 0 1px 0 0 #4CAF50;
+}
+
+.input-field input[type="date"]:focus + label, .input-field input[type=number]:focus + label{
+    color: #4CAF50;
+}
+
+/*Ezic 1.8*/
+[type="radio"]:checked + label:after,
+[type="radio"].with-gap:checked + label:after{
+	background: #4CAF50;
+}
+
+table.assistance tr.permission, tr.expulsed td{
+	color: white;
+}
+
+.tap-target-content p, h5{
+	color: white;
+}
+
+.alert_{
+    background: #e74c3c;
+    color: #B71C1C;
+    font-size: 1.2em;
+    padding: 10px;
+    text-align: center;
+}
+.collection.subject{
+    overflow: visible;
+    border: none;
+}
+
+.collection-item.collection-subject{
+    display: flex;
+    border: none;
+}
+
+.collection-item.collection-subject .name-subject{
+    width: 25%;
+    text-align: center;
+    border-right: 3px solid green;
+}
+
+.collection-item.collection-subject .info-subject{
+    width: 75%;
+}
+
+.collection-item.collection-subject .info-subject .r-divider{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+
+}
+
+.collection-item.collection-subject .info-subject .r-divider div{
+    width: 50%;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.collection-item.collection-subject .info-subject .r-divider div span.title{
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.collection-item.collection-subject .info-subject .r-divider div span.result{
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+.collection-item.collection-subject .info-subject .r-divider div.container-sections{
+    position: relative;
+}
+
+.btn.dropdown-button{
+    width: 75%;
+}
+
+.dropdown-content{
+    width: 75%;
+    height: auto;
+}
+
+.dropdown-content li{
+    text-align: center;
+}
+.dropdown-content li a{
+    color: green;
+}
+
+
+
+
+
+.collection.container-profiles{
+    border:none;
+}
+
+.collection.container-profiles .collection-item{
+    background: none;
+    
+}
+
+.collection.container-profiles .collection-item h5{
+    color: black;
+}
+
+.collection.container-profiles .collection-item div.description{
+    width: 95%;
+    margin-bottom: 1%;
+    word-wrap: break-word; 
+    margin-left: 2.5%;
+    text-align: justify;
+    font-style: italic;
+    font-size: 14px;
+}
+
+input[type="number"].error{border-bottom: 1px solid #B71C1C;}
+
+@media only screen and (max-width: 768px){
+    .alert_{
+        background: #e74c3c;
+        color: #B71C1C;
+        font-size: 1.2em;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .collection-item.collection-subject .info-subject .r-divider{
+        display: inline-block;
+        padding: 0px;
+        width: 100%;
+    }
+
+    .collection-item.collection-subject .info-subject .r-divider div{
+        width: 90%;
+        margin-left: 5%;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+    
+    .collection-item.collection-subject .info-subject .r-divider div.select-sections{
+        display: flex; 
+        align-items: center;
+        position: relative;
+    }
+
+    .collection-item.collection-subject .name-subject{
+        display: flex;
+        align-items: center;
+    }
+}
+
+.banda{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-weight: bold;
+    background: #e74c3c;
+    color: #B71C1C;
+    font-style: italic;
+    font-size: 15px;
+    padding: 3px;
+    position: relative;
+    top: 0;
+    left: 0;
+}

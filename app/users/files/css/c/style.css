@@ -1,0 +1,672 @@
+.table-of-contents.c a.active {
+    border-left-color: #000;
+}
+
+main{
+    /*background: red;*/
+}
+
+.table-of-contents.c a:hover {
+    border-left-color: #7f8c8d;
+}
+
+/* View = period.php */
+.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label, textarea.materialize-textarea:focus:not([readonly]) + label, .input-field input[type=email]:focus + label{
+    color: #000;
+}
+
+.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field input[type=date]:focus, .input-field textarea:focus, .input-field input[type=email]:focus {
+    border-bottom: 1px solid #000;
+    box-shadow: 0 1px 0 0 #000;
+}
+
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 0 #000;
+}
+
+.picker__date-display{
+    background-color: #202020;
+}
+
+.picker__weekday-display{
+    background-color: #000;
+}
+
+.picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected{
+    background-color: #000;
+}
+
+.picker__day.picker__day--today{
+    color: #000;
+}
+
+.picker__close, .picker__today{
+    color: #000;
+}
+
+button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
+    background-color: #343434;
+}
+
+.btnPeriod.btn{
+    background-color: #000;
+}
+
+.btnPeriod.btn:hover{
+    background-color: #202020;
+}
+
+.picker__nav--prev:hover, .picker__nav--next:hover{
+    background: rgba(82, 82, 82, 0.5);
+}
+
+.input-field div.error{
+    position: relative;
+    top: -1rem;
+    left: 0rem;
+    font-size: 0.8rem;
+    color: #e74c3c;
+}
+
+.result_cont{
+    box-sizing: border-box;
+}
+
+.result_cont .user_cont{
+    box-sizing: border-box;
+    /*background: #f4f4f4;*/
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+}
+
+.result_cont .user_cont .info_cont{
+    display: flex;
+    align-items: center;
+}
+
+.result_cont .row{
+    margin: 0;
+}
+
+.result_cont .user_cont img{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+}
+
+.result_cont .user_cont .code{
+    margin: 0px 70px;
+    font-weight: bold;
+}
+
+.result_cont .user_cont .name{
+    font-size: .8em;
+}
+
+.result_cont .search_error{
+    background: #e74c3c;
+    color: #c0392b;
+    font-size: 2em;
+    padding: 10px;
+    text-align: center;
+}
+
+[type="radio"]:checked + label:after,
+[type="radio"].with-gap:checked + label:after {
+  background-color: #000;
+}
+
+[type="radio"]:checked + label:after,
+[type="radio"].with-gap:checked + label:after {
+  border-color: #000;
+}
+
+[type="radio"]:checked + label:after,
+[type="radio"].with-gap:checked + label:before,
+[type="radio"].with-gap:checked + label:after {
+    border-color: #000;
+}
+
+.header_info_cont{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    margin-top: 5%;
+}
+
+.header_info_cont .frmPhoto_cont{
+    width: 200px;
+    height: 200px;
+    /*background: red;*/
+    position: relative;
+}
+
+.header_info_cont .frmPhoto_cont span.btnModifyPhoto{
+    position: absolute;
+    color: #fff;
+    background: rgba(0, 0, 0, .5);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .5s ease;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.header_info_cont .frmPhoto_cont span.btnModifyPhoto:hover{
+    opacity: 1;
+}
+
+.header_info_cont .frmPhoto_cont .frmPhoto{
+    width: 100%;
+    height: 100%;
+}
+
+.btn_cont{
+    margin-top: 10%;
+}
+
+.dropdown-content li > a, .dropdown-content li > span{
+    color: #000;
+}
+
+.tabs-content.carousel.initialized{
+    height: auto;
+}
+
+.carousel .carousel-item{
+    height: auto;
+}
+
+.tabs .indicator{
+    background-color: #000;
+}
+
+.userCollection a.collection-item{
+    cursor: pointer;
+}
+
+table.schedule td{
+    /*padding: 0;*/
+}
+
+table.schedule .select-wrapper .caret{
+    /*display: none;*/
+}
+
+table.schedule .select-wrapper input.select-dropdown{
+    border-bottom: none;
+    text-align: center;
+}
+
+table.schedule .select-wrapper span{/* LEO MODIFICO ESTO PARA QUE SOLO FUNCIONE CON LOS HORARIOS */
+    text-align: center;
+}
+
+[type="checkbox"]:checked + label:before {/* Clase que se modifica para cambiar de color los checkbox */
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+}
+
+input.select-dropdown.error{
+    border-bottom: 1.5px solid #c0392b;
+}
+
+blockquote{
+    border-left: 5px solid #000;
+}
+
+p.title{
+    color: black;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.input-field .txtForm.error{
+    border-bottom:  1.5px solid #c0392b;
+}
+
+.result_cont .modify_period{
+    display: none;
+}
+
+.result_cont .table_profiles{
+    display: none;
+}
+
+.progress{
+    background: #000;
+}
+
+.progress .indeterminate{
+    background: #ebebeb;
+}
+
+ul#options_slide{
+    /*color: #fff;*/
+}
+
+ul#options_slide .title{
+    color: #fff;
+    text-align: center;
+    font-size: 28px;
+    padding: 10px;
+}
+
+ul.user-cont{|
+    width: 100%;
+}
+
+ul.user-cont .user-row{
+    width: 100%;
+    display: flex;
+    height: 80px;
+}
+
+ul.user-cont div.user-item{
+    width: 50%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    border: 1px solid #e0e0e0;
+    background: #F6F6F6;
+}
+
+
+ul.user-cont div.user-item .info{
+    /*background: blue;*/
+    width: 75%;
+    height: 100%;
+    display: flex;
+    /*justify-content: space-between;*/
+}
+
+ul.user-cont div.user-item .info .photo{
+    width: 20%;
+    height: 100%;
+}
+
+ul.user-cont div.user-item .info .photo img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+ul.user-cont div.user-item .info .data{
+    width: 80%;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+ul.user-cont div.user-item .info .data .id{
+    font-size: 20px;
+    text-decoration: underline;
+    line-height: 20px;
+}
+
+ul.user-cont div.user-item .info .data .name{
+    font-size: 15px;
+}
+
+ul.user-cont div.user-item .info .data .xtra{
+    font-size: 13px;
+    font-style: italic;
+    color: #959595;
+}
+
+ul.user-cont div.user-item .options{
+    width: 25%;
+}
+
+ul.user-cont div.user-item .options .dropdown-button{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ul.user-cont li.user-row .alert_{
+    width: 100%;
+}
+
+.infoSubject{
+    display: flex;
+    height: 100px;
+    padding: 0px;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.infoSubject .teacher{
+    width: 80%;
+    height: 80px;
+    margin-top: 10px;
+    font-size: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.infoSubject .teacher .carnet{
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.infoSubject .subject{
+    width: 20%;
+    display: inline-block;
+    background: #212121;
+    color:white;
+}
+
+.infoSubject .subject .acronym{
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.infoSubject .subject .period{
+    height: 60px;
+    text-align: center;
+    padding: 5px;
+}
+
+.infoSubject .subject .period .number{
+    font-weight: bold;
+    font-size: 20px;
+    width: 100%;
+}
+
+.infoSubjet .subject .period .letter{
+    font-weight: normal;
+    font-size: 12px;
+    width: 100%;
+}
+
+#options_slide .collapsible-body ul li{
+    padding-left: 10%;
+}
+
+#options_slide .collapsible-body ul li label{
+    color: #212121;
+}
+
+input[type="checkbox"].filled-in:checked + label:after{
+    border-color: #212121;
+    background-color: #212121;
+}
+
+body{
+    /*background-color: red;*/
+}
+
+table.permission, table.justification{
+    border: 1px solid black;
+}
+
+table.permission thead{
+    background: black;
+    border-bottom: none;
+    color: white;
+}
+
+table.justification thead{
+    background: black;
+    border-bottom: none;
+    color: white;
+}
+
+.title-profile{
+    display: flex;
+}
+
+.title-profile blockquote{
+    width: 80%;
+}
+
+.title-profile .percentage{
+    width: 20%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    height: auto;
+    background: black;
+}
+
+a.showTeacher{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+body{
+    /*background: red;*/
+}
+
+@media only screen and (max-width: 768px){
+    ul#options_slide .title{
+        text-align: center;
+        font-size: 28px;
+        padding: 10px;
+    }
+
+    #options_slide .collapsible-body ul li{
+        padding-left: 10%;
+    }
+
+    #options_slide .collapsible-body ul li label{
+        color: #212121;
+    }
+
+    .result_cont .user_cont{
+        /*background: yellow;*/
+        justify-content: space-around;
+        align-items: center;
+        /*display: block;*/
+    }
+
+    .result_cont .user_cont .info_cont{
+        display: block;
+    }
+
+    .result_cont .user_cont .code{
+        /*color: red;*/
+        /*background: red;*/
+        font-weight: bold;
+        text-align: center;
+        margin: 0;
+        margin-bottom: 10px;
+    }
+
+    .result_cont .user_cont .full-name{
+        /*text-align: center;*/
+        /*background: blue;*/
+    }
+
+    .header_info_cont{
+        display: block;
+    }
+
+    .header_info_cont .frmPhoto_cont{
+        width: 100px;
+        height: 100px;
+        margin-left: 10%;
+    }
+
+    .header_info_cont .info{
+        /*background: green;*/
+    }
+
+    .header_info_cont .info h3{
+        float: right;
+        top: 5%;
+        left: 50%;
+        position: absolute;
+    }
+
+    .header_info_cont .info h5{
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .btn_cont{
+        margin-top: 15%;
+    }
+
+    .btn_cont > *{
+        margin: 2%;
+    }
+
+    .alert_{
+        background: #e74c3c;
+        color: #B71C1C;
+        font-size: 1.2em;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .progress{
+        background: #000;
+    }
+
+    .progress .indeterminate{
+        background: #ebebeb;
+    }
+
+    ul.user-cont .user-row{
+        width: 100%;
+        display: flex;
+        height: 160px;
+        flex-direction: column;
+    }
+
+    ul.user-cont .user-row .alert_{
+        width: 100%;
+    }
+
+    ul.user-cont div.user-item{
+        width: 100%;
+        height: 50%;
+    }
+
+    ul.user-cont div.user-item .info .data{
+        width: 100%;
+        padding-left: 0px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    ul.user-cont div.user-item .info .photo{
+        display: none;
+    }
+
+    body{
+        /*background: blue;*/
+    }
+
+    .infoSubject{
+        width: 90%;
+        margin-left: 5%;
+    }
+
+    .infoSubject .teacher{
+        width: 80%;
+        height: 80px;
+        margin-top: 10px;
+        font-size: 18px;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .infoSubject .teacher .carnet{
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .record .codes{
+        /*background: orange;*/
+        padding: 0px;
+    }
+
+    .record .gnrl-info{
+        margin-top: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .record .gnrl-info .photo{
+        width: 30%;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /*background: yellow;*/
+    }
+    .record .gnrl-info .data{
+        /*width: 80%;*/
+        flex-direction: column;
+    }
+
+    .record .gnrl-info .data div{
+        font-size: 10px;
+    }
+
+    .record .gnrl-info .data div .title{
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .user-show-cont .user-data{
+        margin-top: 15px;
+    }
+
+    .user-show-cont .user-data .data-block{
+        display: block;
+        padding: 10px;
+        /*background: red;*/
+    }
+
+    .user-show-cont .user-data .data-block .data-title{
+        text-align: left;
+    }
+
+    .user-show-cont .gnrl-info .photo_cont .photo{
+        width: 100px;
+        height: 100px;
+        position: relative;
+    }
+
+    .user-show-cont .gnrl-info .info{
+        display: block;
+        text-align: center; 
+    }
+
+    .user-show-cont .gnrl-info .info h3{
+        font-size: 25px;
+    }
+    .user-show-cont .gnrl-info .info h5{
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,229 @@
+<?php
+
+    require_once('User_Class.php');
+
+    class Modify extends Users
+    {
+        public $aux;
+        public $idLog;
+        public $table;
+        public $type;
+
+        function __construct(){
+            parent::__construct();
+            require_once('Page_Constructor.php');
+            $const = new Constructor();
+
+            $this->aux = $const->getRoute();
+
+            require_once($this->aux);
+            $this->connection = new Connection();
+            $this->connection->Connect();
+        }
+
+        function load_Form($id)
+        {
+            $type = $id[0];
+
+            if ($type[0] == 'C') {
+    			$type = 'C'; $idLog = 'idCoor'; $table = 'coordinator';
+                $query = "SELECT * FROM $table WHERE $idLog = '" . $id . "';";
+    		}elseif ($type[0] == 'D') {
+    			$type = 'T'; $idLog = 'idTeacher'; $table = 'teacher';
+                $query = "SELECT * FROM $table WHERE $idLog = '" . $id . "';";
+    		}else{
+    			$type = 'S'; $idLog = 'idStudent'; $table = 'student';
+                $query = "
+                SELECT * FROM student st 
+                INNER JOIN section sn ON st.idSection = sn.idSection 
+                INNER JOIN level l ON sn.idLevel = l.idLevel
+                INNER JOIN specialty sy ON sn.idSpecialty = sy.idSpecialty
+                WHERE st.idStudent = '" . $id . "';";
+    		}
+
+            $res = $this->connection->connection->query($query);
+            $row = $res->fetch_assoc();
+
+            $frm = "
+            <div class='row'>
+                <div class='header_info_cont'>
+                    <div class='frmPhoto_cont'>
+                        <div class='file-field input-field photo-input hide'>
+                            <div class='btn'>
+                                <span>File</span>
+                                <input class='photoFile' id='photo-file-input' type='file'>
+                            </div>
+                            <div class='file-path-wrapper'>
+                                <input class='file-path' type='text'>
+                            </div>
+                        </div>
+                        <span class='btnModifyPhoto'><i class='material-icons medium'>edit</i></span>
+                        <img src='../../files/profile_photos/" . $row['photo'] . "' class='circle frmPhoto' alt=''>
+                    </div>
+                    <div class='info'>
+                        <h3><b id='userId'>" . $row[$idLog] . "</b></h3>
+                        <h5>" . $row['lastName'] . ", " . $row['name'] . "</h5>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <form class='frmData'>
+                    <div class='row'>
+                        <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
+                            <input class='txtName' id='txtName' type='text' name='txtName' value='" . $row['name'] . "'>
+                            <label for='txtName'>Nombres</label>
+                        </div>
+                        <div class='input-field col l5 m5 s10 offset-s1'>
+                            <input class=txtLastName'' id='txtLastName' type='text' name='txtLastName' value='" . $row['lastName'] . "'>
+                            <label for='txtLastName'>Apellidos</label>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
+                            <input class=txtPass'' id='txtPass' type='text' name='txtPass' value='" . $this->DisarmedEncryption($row['password']) . "'>
+                            <label for='txtPass'>Contraseña</label>
+                        </div>
+                        <div class='input-field col l5 m5 s10 offset-s1'>
+                            <input class='txtEmail' id='txtEmail' type='email' name='txtEmail' value='" . $row['email'] . "'>
+                            <label for='txtEmail'>Correo Electrónico</label>
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                            <textarea id='txtRes' name='txtRes' class='materialize-textarea'>" . $row['residence'] . "</textarea>
+                            <label for='txtRes'>Residencia</label>
+                        </div>
+                        <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                            <input class='txtDate datepicker' id='txtDate' type='date' name='txtDate' value='" . $row['birthdate'] . "'>
+                            <label class='active' for='txtDate'>Fecha de Nacimiento</label>
+                        </div>
+                    </div>";
+
+            if ($type != 'S') {
+                $frm = $frm . "
+                <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                    <input class='txtProf' id='txtProf' type='text' name='txtProf' value='" . $row['profession'] . "'>
+                    <label for='txtProf'>Profesión</label>
+                </div>
+                ";
+            }else{
+                $frm = $frm . "
+                <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
+                    <select name='cmbLvl' id='cmbLvl' class='cmbUpdate'>
+                        <option value='' disabled>Seleccione una opción</option>";
+
+                $lvlRes = $this->connection->connection->query("SELECT * FROM level");
+                while ($lvlRow = $lvlRes->fetch_assoc()) {
+                    $frm = $frm . "
+                        <option value='" . $lvlRow['idLevel'] . "' " . ( $row['idLevel'] == $lvlRow['idLevel'] ? "selected" : "")  . ">Año " . $lvlRow['level'] . "</option>
+                    ";
+                }
+
+                $frm .= "
+                    </select>
+                    <label>Grado</label>
+                </div>
+                <div class='input-field col l5 m5 s10 offset-s1'>
+                    <select name='cmbSection' id='cmbSection'  class='cmbUpdate'>
+                        <option disabled >Seleccione una opción</option>
+                        <option value='" . $row['idSection'] . "' selected>" . $row['sName'] . ", " . $row['sectionIdentifier'] . "</option>    
+                    </select>
+                    <label>Sección</label>
+                </div>";
+            }
+
+            $frm = $frm . "
+                    <div class='input-field col l2 m2 s4 offset-l5 offset-m5 offset-s4'>
+                        <input " . ($row['sex'] == 'F' ? "checked='true'" : "") . " class='txtSex_F with-gap' id='txtSex_F' type='radio' name='txtSex' value='F'>
+                        <label for='txtSex_F'>Femenino</label>
+                    </div>
+                    <div class='input-field col l2 m2 s4 offset-l5 offset-m5 offset-s4'>
+                        <input " . ($row['sex'] == 'M' ? "checked='true'" : "") . " class='txtSex_M with-gap' id='txtSex_M' type='radio' name='txtSex' value='M'>
+                        <label for='txtSex_M'>Masculino</label>
+                    </div>
+                </form>
+
+                <div class='col s12 row btn_cont'>
+                    <button class='col l3 m3 s8 offset-l3 offset-m3 offset-s2 btn waves-effect waves-light red btnCancel_User'>Cancelar
+                        <i class='material-icons right'>cancel</i>
+                    </button>
+                    <br class='hide-on-large-only'>
+                    <button class='col l3 m3 s8 offset-l1 offset-m1 offset-s2 btn waves-effect waves-light black btnSave_User'>Guardar Datos
+                        <i class='material-icons right'>save</i>
+                    </button>
+                </div>
+            </div>
+            ";
+
+            return $frm;
+        }
+
+        function upload_Tmp_Img($id, $file)
+        {   
+            if (isset($file['tmp_name'])) {
+                $imgType = explode('/', $file['type'])[1];
+                $route = "../../files/profile_photos/tmp/$id.$imgType";
+                $imgRoute = "../../files/profile_photos/tmp/$id.$imgType";
+
+                return (move_uploaded_file($file['tmp_name'], $route) ? $imgRoute : 0);
+            }else{
+                return 0;
+            }
+        }
+
+        function upload_Img($id, $imgName)
+        {
+            $dirFiles = scandir('../../files/profile_photos');
+            foreach ($dirFiles as $key => $value) {
+                if ( strpos($value, $id) !== false ) $oldName = $value;
+            }
+
+            unlink("../../files/profile_photos/$oldName");
+            $route = "../../files/profile_photos/tmp/$imgName";
+
+            if (copy($route, "../../files/profile_photos/$imgName")) {
+                if (unlink($route)) {
+                    if ( $id[0] == 'C' ) {
+                        $table='coordinator'; $idLog='idCoor';
+                    }elseif ( $id[0] == 'D' ) {
+                        $table='teacher'; $idLog='idTeacher';
+                    }else{
+                        $table='student'; $idLog='idStudent';
+                    }
+                    $query = "UPDATE $table SET photo = '" . $imgName . "' WHERE $idLog = '" . $id . "'";
+                    if ($this->connection->connection->query($query)) {
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }else{
+                    return 0;
+                }
+            }else{
+                return 0;
+            }
+        }
+
+        function insert_Mod($data_obj)
+        {
+            $query = "
+            UPDATE " . $data_obj['table'] . "
+            SET
+                name = '" . $data_obj['name'] . "', 
+                lastName = '" . $data_obj['lastName'] . "',
+                password = '" . $this->ArmedEncryption($data_obj['password']) . "', 
+                email = '" . $data_obj['email'] . "', 
+                sex = '" . $data_obj['sex'] . "',
+                residence = '" . $data_obj['residence'] . "', 
+                birthdate = '" . $data_obj['birthday'] . "',
+                " . ($data_obj['type'] != 'S' ? "profession = '" . $data_obj['profession'] . "'" : "idSection = " . $data_obj['section']) . "
+            WHERE " . $data_obj['idLog'] . " = '" . $data_obj['id'] . "';";
+
+            // return $query;
+            $res = $this->connection->connection->query($query);
+
+            return ( $res ? 1 : 0 );
+        }
+    }
+
+?>
