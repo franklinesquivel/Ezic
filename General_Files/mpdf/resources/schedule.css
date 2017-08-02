@@ -1,0 +1,88 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: DejaVuSansCondensed;
+}
+
+.PDF_header{
+	/*background: red;*/
+}
+
+.PDF_header .logo{
+	/*width: 100px;*/
+	/*height: 100px;*/
+	/*background: blue;*/
+	width: 10%;
+	float: left;
+	position: relative;
+	top: 5%;
+}
+
+.PDF_header .info{
+	/*background-color: green;*/
+}
+
+.PDF_header .info .date{
+	text-align: right;
+}
+
+.PDF_header .info .title{
+	text-align: center;
+	/*background: yellow;*/
+	margin-left: -10%;
+}
+
+table {
+	font-family: DejaVuSansCondensed;
+	border-collapse: collapse;
+	vertical-align: middle;
+	width: 100%;
+	/*background-color: red;*/
+}
+
+th {
+	/*width: calc(100%/6);*/
+	font-weight: bold; 
+	vertical-align: center;
+	text-align: center;
+	font-size: 15px;
+	padding: 10px 15px;
+	vertical-align: middle;
+	border-bottom: .5px solid #95a5a6;
+}
+
+td{
+	font-size: 15px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+	border: .5px solid #d0d0d0;
+}
+
+td.hour{
+	font-size: 15px;
+	border: none;
+	/*background: red;*/
+	width: 15%;
+}
+
+.S{
+	background-color: rgb(187, 222, 251);
+}
+
+.T{
+	background-color: rgb(200, 230, 201);
+}
+
+tr.break td {
+	font-size: 15px;
+	padding: 15px;
+}
+
+.red{
+	background-color: red;
+}

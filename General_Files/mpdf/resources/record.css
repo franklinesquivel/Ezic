@@ -1,0 +1,84 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: DejaVuSansCondensed;
+}
+
+.PDF_header .logo{
+	width: 15%;
+	float: left;
+	position: relative;
+	top: 5%;
+}
+
+.PDF_header .info{
+}
+
+.PDF_header .info .date{
+	text-align: right;
+}
+
+.PDF_header .info .title{
+	text-align: center;
+	font-size: 30px;
+	margin-left: -10%;
+}
+
+table {
+	font-family: DejaVuSansCondensed;
+	border-collapse: collapse;
+	vertical-align: middle;
+	width: 100%;
+}
+
+th {
+	/*width: calc(100%/6);*/
+	font-weight: bold; 
+	vertical-align: center;
+	text-align: center;
+	font-size: 15px;
+	padding: 10px 15px;
+	vertical-align: middle;
+	color: #fff;
+}
+
+td{
+	font-size: 1em;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+}
+
+.record{
+	width: 100%;
+	padding: 0px;
+}
+
+.profile{
+	width: 20%;
+	height: 150px;
+}
+
+.record .gnrl-info{
+	background: red;
+	width: 100%;
+}
+
+.record .gnrl-info .data{
+	
+}
+
+table td p .title{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.record .codes .table-title{
+    padding: 10px;
+    margin: 0px;
+    color: #fff;
+}
