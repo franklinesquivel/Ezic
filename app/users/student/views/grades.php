@@ -69,8 +69,8 @@
         </ul>
     </header>
 
-    <main class="show">
-        <div class="row">
+    <main>
+        <div class="row cmbCont" style="display: none;">
             <div class="input-field col l4 m4 s10 offset-s1 offset-l4 offset-m4">
                 <select name="" id="cmbPeriod">
                     <option disabled>Seleciona un período</option>
@@ -78,34 +78,11 @@
             </div>
         </div>
         <div class="container gradesCont">
-            <!-- <div class='grade-wrapper'>
-                <div class='grade-header blue darken-2 white-text'>
-                    <div class='subject'>Materia: <span class='content'>Estudios Sociales y Cívica (SOC)</span></div>
-                    <div class='teacher'>Profesor: <span class='content'>Franklin Armando Esquivel Guevara</span></div>
-                </div>
-                <table class='centered'>
-                    <thead class='blue darken-2'>
-                    <tr>
-                        <th>N°</th>
-                        <th>Perfil de Evaluación</th>
-                        <th>Porcentaje</th>
-                        <th>Nota</th>               
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Prueba Objetiva</td>
-                            <td>20%</td>
-                            <td>8.50</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> -->
+            
         </div>
     </main>
 
-    <form action='../../../../General_Files/php/classes/Print.php' method="POST" target="_blank" id="print"> 
+    <form action='../../../../General_Files/php/classes/Print.php' method="POST" id="print"> 
         <input type="hidden" name="printGrades" value="1">
         <input type="hidden" name="id" value="<?php echo $userRow['idStudent'] ?>">
     </form>
@@ -115,7 +92,7 @@
             <i class="large material-icons">menu</i>
         </a>
         <ul>
-            <li title="Descargar"><a class="btn-floating blue lighten-2 btnPrint"><i class="material-icons">file_download</i></a></li>
+            <li title="Descargar"><a class="btn-floating blue lighten-2 btnPrint" disabled><i class="material-icons">file_download</i></a></li>
             <li title="Información"><a class="btn-floating amber btnInfo"><i class="material-icons">info_outline</i></a></li>
         </ul>
     </div>

@@ -213,13 +213,17 @@ ul.side-nav.fixed:hover{
 }
 
 .grade-wrapper{
-	padding-top: 5%; 
+	padding-top: 10%; 
 	width: 100%;
 	margin: auto;
 }
 
+.grade-wrapper:first-child{
+	padding-top: 0;
+}
+
 .grade-wrapper:last-child{
-	padding-bottom: 10%;
+	padding-bottom: 25%;
 }
 
 .grade-wrapper .grade-header{
@@ -234,15 +238,14 @@ ul.side-nav.fixed:hover{
 	font-weight: normal;
 }
 
-.grade-wrapper table th{
-	/*color: #fff;*/
-	border: 1px solid #1976D2;
-}
+.grade-wrapper table.S th{border: 1px solid #1976D2;}
+.grade-wrapper table.T th{border: 1px solid #4CAF50;}
+.grade-wrapper table.C th{border: 1px solid #000;}
 
-.grade-wrapper table td{
-	border: 1px solid #1976D2;
-	font-size: 1em;
-}
+.grade-wrapper table td{font-size: 1em;}
+.grade-wrapper table.S td{border: 1px solid #1976D2;}
+.grade-wrapper table.T td{border: 1px solid #4CAF50;}
+.grade-wrapper table.C td{border: 1px solid #000;}
 
 .grade-wrapper .grade-footer{
 	display: flex;
@@ -261,10 +264,25 @@ ul.side-nav.fixed:hover{
 	width: 25%;
 	padding: 5px;
 	text-align: center;
+	font-weight: bolder;
 }
 
 @media only screen and (max-width: 768px){
 	.grade-wrapper .grade-header{
 		flex-direction: column;
+	}
+
+	.grade-wrapper .grade-footer{
+		flex-direction: column;
+	}
+
+	.grade-wrapper .grade-footer .indicator{
+		width: 100%;
+		font-size: .8em;
+	}
+
+	.grade-wrapper .grade-footer .grade{
+		width: 100%;
+		font-weight: bolder;
 	}
 }

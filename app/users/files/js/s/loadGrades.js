@@ -1,27 +1,40 @@
 (() => {
-
 	$(document).ready(function(){
+		var gR;
+		var loader = new Loader();
+		loader.in();
+		$('main').fadeOut('slow');
+
 		$.ajax({
 			url: '../../files/php/S_Controller.php',
 			data: {getGrades: 1},
 			success: r => {
-				r = JSON.parse(r);
-				console.log(r);
-				for (var i = 0; i < r.pInfo.length; i++) {
-					if(r.grades[i] != -1){
-						$('#cmbPeriod').append(`<option index="${i}">Período N°${r.pInfo[i][1]}</option>`);
-					}else{
-						$('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
+				if ( r != -1 ){
+					r = JSON.parse(r);
+					gR = r
+					for (var i = 0; i < r.pInfo.length; i++) {
+						if(r.subject[i] != -1){
+							$('#cmbPeriod').append(`<option index="${i}">Período N°${r.pInfo[i][1]}</option>`);
+						}else{
+							$('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
+						}
 					}
+					$('#cmbPeriod option[index]:first-child').attr('selected', 1);
+					$('.gradesCont').append(r.subject[$('#cmbPeriod option:selected').attr('index')]);
+					$('.cmbCont').fadeIn('slow');
+					$('select').material_select();
+					$('.btnPrint').removeAttr('disabled');
+				}else{
+					$('main .gradesCont').html(`
+						<div style='margin-top: 5%;' class='alert_'>No se encontraron materias registradas a las sección del estudiante!</div>
+					`)
 				}
-				$('#cmbPeriod option[index]:first-child').attr('selected', 1);
-				$('.gradesCont').append(r.grades[$('#cmbPeriod option:selected').attr('index')]);
-				$('select').material_select();
+				$('main').fadeIn('slow', loader.out());
 			}
 		})
 
 		$('#cmbPeriod').change(function(){
-			alert($(this).children('option:selected').attr('index'));
+			$('.gradesCont').html(gR.subject[$('#cmbPeriod option:selected').attr('index')]);
 		})
 	})
 })()
