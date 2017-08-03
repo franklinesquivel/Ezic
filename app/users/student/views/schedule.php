@@ -60,6 +60,7 @@
             </li>
             <!-- <li><a class="subheader"></a></li> -->
             <li><a href="../" class="waves-effect">Inicio<i class="material-icons">home</i></a></li>
+            <li><a href="../views/grades.php" class="waves-effect">Ver Notas<i class="material-icons">grades</i></a></li>
             <li><a href="../views/record.php" class="waves-effect">Récord conductual<i class="material-icons">favorite</i></a></li>
             <li class="active"><a href="../views/schedule.php" class="waves-effect">Ver horario<i class="material-icons">schedule</i></a></li>
             <li><a class="subheader">Cuenta</a></li>

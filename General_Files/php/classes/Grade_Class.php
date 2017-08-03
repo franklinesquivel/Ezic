@@ -1,11 +1,13 @@
 <?php 
 
-	class Grade{
+	require_once 'Period.php';
+
+	class Grade extends Period{
 		
 		private $connection;
 		private $aux;
 		function __construct(){
-
+			parent::__construct();
 			require_once('Page_Constructor.php');
 			$const = new Constructor();
 
@@ -263,6 +265,65 @@
 			}
 
 			return ($this->connection->connection->query($query));
+		}
+
+		function getGrades($id)
+		{
+			$obj['pInfo'] = $this->getPeriods();
+
+			for ($i=0; $i < count($obj['pInfo']); $i++) {
+				$query = "
+				SELECT
+					g.grade, ep.name, ep.percentage, ep.idPeriod, t.name as tName, t.lastName, s.nameSubject, s.acronym, ac.acc, ac.approved
+				FROM grade g 
+				INNER JOIN evaluation_profile ep ON ep.idProfile = g.idProfile 
+				INNER JOIN subject s ON s.idSubject = ep.idSubject
+				INNER JOIN teacher t ON s.idTeacher = t.idTeacher
+				INNER JOIN accumulated_note ac ON ac.idSubject = s.idSubject
+				WHERE g.idStudent = '$id' AND ep.idPeriod = " . $obj['pInfo'][$i][0] . ";";
+
+				$res = $this->connection->connection->query($query);
+
+				$obj['grades'][$i] = "";
+				if ($res->num_rows == 0) {
+					 $obj['grades'][$i] = -1;
+				}else{
+					while ($row = $res->fetch_assoc()) {
+						$z = 0;
+						$obj['grades'][$i] .= "
+							<div class='grade-wrapper'>
+				                <div class='grade-header blue darken-2 white-text'>
+				                    <div class='subject'>Materia: <span class='content'>" . $row['nameSubject'] . " (" . $row['acronym'] . ")</span></div>
+				                    <div class='teacher'>Profesor: <span class='content'>" . $row['tName'] . " " . $row['lastName'] ."</span></div>
+				                </div>
+				                <table class='centered'>
+				                    <thead class='blue lighten-4'>
+					                    <tr>
+					                        <th>N°</th>
+					                        <th>Perfil de Evaluación</th>
+					                        <th><b>%</b></th>
+					                        <th>Nota</th>               
+					                    </tr>
+				                    </thead>
+				                    <tbody>
+				                        <tr>
+				                            <td>" . ++$z . "</td>
+				                            <td>" . $row['name'] . "</td>
+				                            <td>" . $row['percentage'] . "%</td>
+				                            <td><b>" . $row['grade'] . "</b></td>
+				                        </tr>
+				                    </tbody>
+				                </table>
+				                <div class='grade-footer blue darken-2'>
+									<div class='indicator'>Nota acumulada</div>
+									<div class='grade white-text " . ($row['approved'] ? 'green' : 'red') . "' darken-2 title=" . ($row['approved'] ? 'Aprobada' : 'Reprobada') . ">" . $row['acc'] . "</div>
+				                </div>
+				            </div>
+						";
+					}
+				}	
+			}
+			return $obj;
 		}
 	}
 ?>
