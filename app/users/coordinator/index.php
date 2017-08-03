@@ -88,7 +88,7 @@
                                 <li><a href="views/modify_period.php" class="waves-effect">Modificar<i class="material-icons">edit</i></a></li>
                             </ul>
                             <ul>
-                                <li><a href="v_period.php" class="waves-effect">Ver<i class="material-icons">visibility</i></a></li>
+                                <li><a href="views/v_period.php" class="waves-effect">Ver<i class="material-icons">visibility</i></a></li>
                             </ul>
                         </div>
                     </li>
