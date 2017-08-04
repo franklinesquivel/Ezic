@@ -6,16 +6,16 @@
     border-left-color: #5cd961;
 }
 
-.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label{
+.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label, textarea.materialize-textarea:focus:not([readonly]) + label, .input-field input[type=email]:focus + label{
     color: #4CAF50;
 }
 
-.input-field input[type=text]:focus, .input-field input[type=number]:focus {
+.input-field input[type=text]:focus, .input-field input[type=number]:focus, .input-field input[type=date]:focus, .input-field textarea.materialize-textarea:focus, .input-field input[type=email]:focus {
     border-bottom: 1px solid #4CAF50;
     box-shadow: 0 1px 0 0 #4CAF50;
 }
 
-.input-field input[type="date"]:focus + label, .input-field input[type=number]:focus + label{
+.input-field input[type="date"]:focus + label, .input-field input[type=number]:focus + label, .input-field textarea:focus + label{
     color: #4CAF50;
 }
 
@@ -65,7 +65,6 @@ table.assistance tr.permission, tr.expulsed td{
     justify-content: center;
     align-items: center;
     padding: 5px;
-
 }
 
 .collection-item.collection-subject .info-subject .r-divider div{
@@ -106,9 +105,6 @@ table.assistance tr.permission, tr.expulsed td{
 }
 
 
-
-
-
 .collection.container-profiles{
     border:none;
 }
@@ -133,6 +129,7 @@ table.assistance tr.permission, tr.expulsed td{
 }
 
 input[type="number"].error{border-bottom: 1px solid #B71C1C;}
+.dropdown-content li > a, .dropdown-content li > span{color: green;}
 
 @media only screen and (max-width: 768px){
     .alert_{
@@ -181,4 +178,36 @@ input[type="number"].error{border-bottom: 1px solid #B71C1C;}
     position: relative;
     top: 0;
     left: 0;
+}
+
+blockquote{
+    border-left: 5px solid #388e3c;
+}
+
+blockquote h5{
+    color:#388e3c;
+}
+
+.title-profile{
+    display: flex;
+}
+
+.title-profile blockquote{
+    width: 80%;
+}
+
+.title-profile .percentage{
+    width: 20%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    height: auto;
+    background: #388e3c;
+}
+
+.input-field .txtForm.error{
+    border-bottom:  1.5px solid #c0392b;
 }

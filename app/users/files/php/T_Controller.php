@@ -76,4 +76,27 @@
         }
         echo ($z = ($z > 0) ? 1 : 0);
     }
+
+    if (isset($_REQUEST['v_justification'])) {
+       echo ($profile->v_Justification());
+    }
+
+    if (isset($_REQUEST['table_Justification'])) {
+        echo ($profile->tableSubject_Justification($_REQUEST['period']));
+    }
+
+    if (isset($_REQUEST['getProfiles_Justification'])) {
+        echo ($profile->getForJustification($_REQUEST['subject']));
+    }
+
+    if (isset($_REQUEST['InsertJustification'])) {
+        $object = json_decode($_REQUEST['object']);
+        $z = 0;
+        for ($i=0; $i < count($object); $i++) { 
+            if ($profile->InsertJustification($object[$i]->id, $object[$i]->description)) {
+                $z++;
+            }
+        }
+        echo ($z = ($z == count($object)) ? 1 : 0);
+    }
 ?>

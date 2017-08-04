@@ -106,7 +106,7 @@
 					loader.out();
 				});
 			}else{
-				Materialize.toast('Favor no repetir información', 3000, " yellow accent-2");
+				Materialize.toast('Favor no repetir información', 3000);
 			}
 		}else{
 			Materialize.toast("Favor no dejar campos vacíos", 3000, "red darken-1");
@@ -129,7 +129,7 @@
 	const save_info = () =>{ /* Guarda la información */
 		for (var i = 0; i < $("blockquote").length; i++) {
 			info_profiles[i] = {
-				"id": $("blockquote").eq(0).attr("profile_id"),
+				"id": $("blockquote").eq(i).attr("profile_id"),
 				"name": $("#name"+i).val(),
 				"description": $("#description"+i).val()
 			};

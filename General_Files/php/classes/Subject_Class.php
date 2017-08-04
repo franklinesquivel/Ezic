@@ -92,7 +92,7 @@
 
 		function getForDelete(){
 			//Se obtienen las materias que si existen en las tablas
-			$query = "SELECT idSubject FROM subject WHERE idSubject != ( SELECT DISTINCT idSubject FROM evaluation_profile) UNION (SELECT idSubject FROM subject WHERE idSubject != (SELECT DISTINCT idSubject FROM averages)) UNION (SELECT idSubject FROM subject WHERE idSubject != (SELECT DISTINCT idSubject FROM schedule_register)) UNION (SELECT idSubject FROM subject WHERE idSubject != (SELECT DISTINCT idSubject FROM code))";
+			$query = "SELECT idSubject FROM subject WHERE idSubject NOT IN ( SELECT DISTINCT idSubject FROM evaluation_profile) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM averages)) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM schedule_register)) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM code))";
 			$result = $this->connection->connection->query($query);
 			$i = 0;
 			$subject = array();
