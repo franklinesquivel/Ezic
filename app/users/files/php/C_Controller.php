@@ -230,24 +230,16 @@
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-//		ELEGIR PERFIL PARA MODIFICAR
-	if (isset($_REQUEST['chose_modifyProfile'])) {
-		echo ($listSubject = $profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
-	}
-// FIN ELEGIR PERFIL PARA MODIFICAR
-//--------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------
 //		MODIFICACIÓN DE PERFILES DE EVALUACION
 	if (isset($_REQUEST['modifyProfile'])) {
-		$object = json_decode($_REQUEST['objectProfiles']);
+		$object = json_decode($_REQUEST['object']);
 		$z = 0;
 		for ($i=0; $i < count($object); $i++) { 
-			if ($profile->modifyProfile($object[$i]->id, $object[$i]->name, $object[$i]->percentage, $object[$i]->description)) {
+			if ($profile->modifyProfile($object[$i]->id, $object[$i]->name, $object[$i]->description)) {
 				$z++;
 			}
 		}
-		echo ($z = ($z > 0) ? 1 : 0);
+		echo ($z = ($z == count($object)) ? 1 : 0);
 	}
 // FIN MODIFICACIÓN DE PERFILES DE EVALUACION
 //--------------------------------------------------------------------------------------
@@ -591,6 +583,14 @@
 		echo ($profile->v_modifyProfile($teacher->getTeachers(), $period->getPeriods()));
 	}
 // FIN FORMULARIO INICIAL PARA MODIFICAR UN PERFIL DE EVALUACIÓN
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		ELEGIR PERFIL PARA MODIFICAR
+	if (isset($_REQUEST['chose_modifyProfile'])) {
+		echo ($listSubject = $profile->table_modifyProfile($_REQUEST['subject'], $_REQUEST['period']));
+	}
+// FIN ELEGIR PERFIL PARA MODIFICAR
 //--------------------------------------------------------------------------------------
 	
 	if (isset($_REQUEST['getUsers'])) {

@@ -61,8 +61,8 @@
 			return (json_encode($array));
 		}
 
-		function modifyProfile($id, $name, $percentage, $description){
-			$query = "UPDATE evaluation_profile SET name = '$name' , percentage = $percentage, description = '$description' WHERE idProfile = $id";
+		function modifyProfile($id, $name, $description){
+			$query = "UPDATE evaluation_profile SET name = '$name', description = '$description' WHERE idProfile = $id";
 
 			if ($this->connection->connection->query($query)) {
 				return true;
@@ -250,19 +250,21 @@
 			if ($result->num_rows > 0) {
 				$form = "<br><br><form  id='modifyProfile'>";
 				while ($fila = $result->fetch_assoc()) {
+					$clase_txt = ($fila['description'] != '') ? 'active' : '';
+
 					$form .= "<div class='row'>
 						<div class='title-profile col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
-							<blockquote><h5 class='center-align'>".$fila['name']."</h5></blockquote>
+							<blockquote profile_id='".$fila['idProfile']."'><h5 class='center-align'>".$fila['name']."</h5></blockquote>
 							<div class='percentage'>".$fila['percentage']." %</div>
 						</div>
 						
 						<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
-							<input type='text' id='name".$i."' name='name".$i."' value='".$fila['name']."'>
+							<input type='text' class='txtForm' id='name".$i."' name='name".$i."' value='".$fila['name']."'>
 							<label for='name".$i."' class='active'>Nombre: </label>
 						</div>
 						<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
-							<textarea class='materialize-textarea' name='description".$i."' data-length='500' id='description".$i."'>".$fila['description'] ."</textarea>
-							<label for='description".$i."' class='".$clase_txt = ($fila['description'] != "") ? 'active' : ''."'>Descripción</label>
+							<textarea class='materialize-textarea txtForm' name='description".$i."' data-length='500' id='description".$i."'>".$fila['description'] ."</textarea>
+							<label for='description".$i."' class='".$clase_txt."'>Descripción</label>
 						</div>
 					</div>";
 					$i++;
