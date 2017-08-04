@@ -112,7 +112,7 @@
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Notas.');
 			$this->mpdf->setAuthor('Ezic ©');
-			$this->openPDF("Notas de estudiante", $id);
+			$this->openPDF("Notas de estudiante", "Notas-" . $id . "-Periodo_$period");
 		}
 
 
@@ -121,9 +121,9 @@
 			$this->mpdf->WriteHTML($this->stylesheet, 1);
 			$this->genHeader($title);
 			$this->mpdf->WriteHTML($this->_print, 2);
-			$this->mpdf->Output($name.".pdf", "I");
-			// $this->mpdf->Output($name.".pdf", "D");
-			// header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+			// $this->mpdf->Output($name.".pdf", "I");
+			$this->mpdf->Output($name.".pdf", "D");
+			header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
 		}
 	}
 

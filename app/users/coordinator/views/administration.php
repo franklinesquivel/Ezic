@@ -334,23 +334,23 @@
         </ul>
     </div>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printRecord"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printRecord"> 
         <input type="hidden" name="printRecord" value="1">
         <input type="hidden" name="id" value="">
     </form>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printSchedule"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printSchedule"> 
         <input type="hidden" name="printSchedule" value="1">
         <input type="hidden" name="type" value="">
         <input type="hidden" name="id" value="">
     </form>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printUser"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printUser"> 
         <input type="hidden" name="printUser" value="1">
         <input type="hidden" name="id" value="">
     </form>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printGrades"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printGrades"> 
         <input type="hidden" name="printGrades" value="1">
         <input type="hidden" name="id" value="">
         <input type="hidden" name="period" value="">

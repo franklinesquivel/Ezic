@@ -71,7 +71,7 @@
 
     <main></main>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="print"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="print"> 
         <input type="hidden" name="printRecord" value="1">
         <input type="hidden" name="id" value="<?php echo $userRow['idStudent'] ?>">
     </form>

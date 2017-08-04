@@ -16,7 +16,7 @@
             $this->host = "localhost";
             $this->user  = "root";
             $this->pass = "";
-            $this->DB = "ezic_t";
+            $this->DB = "ezic";
         }
 
         function Connect()
