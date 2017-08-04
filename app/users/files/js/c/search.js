@@ -208,7 +208,7 @@
                     data: {showGrades: '1', id: id},
                     success: (r) => {
                         if (r == -1) {
-                            $('main').html(`<div style='margin-top: 5%;' class='alert_'>No se encontraron materias registradas a las sección del estudiante!</div>`)
+                            $('main').html(`<div class='container'><div style='margin-top: 5%;' class='alert_'>No se encontraron materias registradas a las sección del estudiante!</div></div>`)
                         }else{
                             r = JSON.parse(r);
                             gR = r
@@ -226,7 +226,7 @@
                             })
                             for (var i = 0; i < r.pInfo.length; i++) {
                                 if(r.subject[i] != -1){
-                                    $('#cmbPeriod').append(`<option index="${i}">Período N°${r.pInfo[i][1]}</option>`);
+                                    $('#cmbPeriod').append(`<option index="${i}" period="${r.pInfo[i][1]}">Período N°${r.pInfo[i][1]}</option>`);
                                 }else{
                                     $('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
                                 }
@@ -238,9 +238,14 @@
                             $('.btnPrint').removeAttr('disabled');
                         }
                         $('.btnBack').removeAttr('disabled');
-                        $('.btnPrint').removeAttr('disabled', 1);
                         $('.options_btn').attr('disabled', 1);
                         $('main').fadeIn('slow', loader.out());
+
+                        $('.btnPrint').click(() => {
+                            $('#printGrades input[name=id]').val(id);
+                            $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+                            $('#printGrades').submit();
+                        })
                     }
                 })
             }
@@ -309,7 +314,6 @@
     const sort_users = () => {
         users.sort((a, b) => {return ((a[attr] < b[attr]) ? -1 : ((a[attr] > b[attr]) ? 1 : 0));})
     }
-
 
     const search_user = (t, a, value) => {
         $('.user-cont').html('<li class="user-row"></li>');

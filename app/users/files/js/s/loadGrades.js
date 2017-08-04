@@ -14,7 +14,7 @@
 					gR = r
 					for (var i = 0; i < r.pInfo.length; i++) {
 						if(r.subject[i] != -1){
-							$('#cmbPeriod').append(`<option index="${i}">Período N°${r.pInfo[i][1]}</option>`);
+							$('#cmbPeriod').append(`<option index="${i}" period="${r.pInfo[i][0]}">Período N°${r.pInfo[i][1]}</option>`);
 						}else{
 							$('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
 						}
@@ -36,5 +36,10 @@
 		$('#cmbPeriod').change(function(){
 			$('.gradesCont').html(gR.subject[$('#cmbPeriod option:selected').attr('index')]);
 		})
+
+		$('.btnPrint').click(() => {
+            $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+            $('#printGrades').submit();
+        })
 	})
 })()

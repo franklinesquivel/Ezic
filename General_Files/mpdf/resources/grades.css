@@ -1,0 +1,104 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: DejaVuSansCondensed;
+}
+
+.PDF_header .logo{
+	width: 15%;
+	float: left;
+	position: relative;
+	top: 5%;
+}
+
+.PDF_header .info{
+}
+
+.PDF_header .info .date{
+	text-align: right;
+}
+
+.PDF_header .info .title{
+	text-align: center;
+	font-size: 30px;
+	margin-left: -10%;
+}
+
+table {
+	font-family: DejaVuSansCondensed;
+	border-collapse: collapse;
+	vertical-align: middle;
+	width: 100%;
+}
+
+th {
+	font-weight: bold; 
+	vertical-align: center;
+	text-align: center;
+	font-size: 15px;
+	padding: 10px 15px;
+	vertical-align: middle;
+}
+
+td{
+	font-size: 1em;
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px;
+}
+
+.grade-wrapper{
+	margin-top: 7%;
+}
+
+.first{margin: 0;}
+
+.grade-wrapper .grade-header{
+	font-weight: bold;
+	padding: 10px;
+}
+.grade-wrapper .grade-header span{
+	font-weight: normal;
+}
+
+.grade-wrapper .indicator, .grade-wrapper .grade{
+	font-weight: bold;
+	color: #fff;
+}
+
+.periodCont{
+	line-height: 0.1px;
+	margin-bottom: 3%;
+}
+
+.periodCont span{
+	font-weight: normal;
+}
+
+td, th{border: 1px solid #1976D2;}
+
+.infoTable{margin-bottom: 5%;}
+.infoTable td{
+	border: none;
+}
+
+.profile{
+	width: 20%;
+	height: 150px;
+}
+
+.data{
+	/*background: red;*/
+	width: 55%;
+	text-align: left;
+}
+
+.photoCell{
+	/*background: blue;*/
+	width: 45%;
+	text-align: right;
+}

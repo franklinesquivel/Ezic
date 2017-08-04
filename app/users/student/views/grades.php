@@ -82,9 +82,10 @@
         </div>
     </main>
 
-    <form action='../../../../General_Files/php/classes/Print.php' method="POST" id="print"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printGrades"> 
         <input type="hidden" name="printGrades" value="1">
         <input type="hidden" name="id" value="<?php echo $userRow['idStudent'] ?>">
+        <input type="hidden" name="period" value="">
     </form>
 
     <div class="fixed-action-btn vertical">

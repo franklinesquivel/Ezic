@@ -334,7 +334,7 @@
         </ul>
     </div>
 
-    <form action="../../../..//General_Files/php/classes/Print.php" method="POST" target="_blank" id="printRecord"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printRecord"> 
         <input type="hidden" name="printRecord" value="1">
         <input type="hidden" name="id" value="">
     </form>
@@ -345,9 +345,15 @@
         <input type="hidden" name="id" value="">
     </form>
 
-    <form action="../../../..//General_Files/php/classes/Print.php" method="POST" target="_blank" id="printUser"> 
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printUser"> 
         <input type="hidden" name="printUser" value="1">
         <input type="hidden" name="id" value="">
+    </form>
+
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" target="_blank" id="printGrades"> 
+        <input type="hidden" name="printGrades" value="1">
+        <input type="hidden" name="id" value="">
+        <input type="hidden" name="period" value="">
     </form>
 </body>
 </html>

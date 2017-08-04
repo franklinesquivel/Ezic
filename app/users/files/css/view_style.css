@@ -267,6 +267,10 @@ ul.side-nav.fixed:hover{
 	font-weight: bolder;
 }
 
+tfoot td{
+	text-align: center;
+}
+
 @media only screen and (max-width: 768px){
 	.grade-wrapper .grade-header{
 		flex-direction: column;
