@@ -1,10 +1,15 @@
 <?php 
 
-	class Grade{
+	require_once 'Period.php';
+	class Grade extends Period{
 		
 		private $connection;
 		private $aux;
+		private $admin;
 		function __construct(){
+			parent::__construct();
+			require_once 'Administration.php';
+			$this->admin = new Administration();
 
 			require_once('Page_Constructor.php');
 			$const = new Constructor();
@@ -263,6 +268,201 @@
 			}
 
 			return ($this->connection->connection->query($query));
+		}
+
+		function getGrades($id)
+		{
+			$styleHelper = ($_SESSION['type'] == 'S' ? 'blue' : ($_SESSION['type'] == 'T' ? 'green' : 'black'));
+			$obj['pInfo'] = $this->getPeriods();
+			for ($i=0; $i < count($obj['pInfo']); $i++) { 
+				$obj['subject'][$i] = "";
+			}
+
+			$accAux = 0;
+			$percentageAux = 0;
+			$approvedFlag = 0;
+
+			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
+
+			$subjectRes = $this->connection->connection->query($subjectQuery);
+
+			if ($subjectRes->num_rows == 0) {
+				return -1;
+			}else{
+				while ($subjectRow = $subjectRes->fetch_assoc()) {
+					for ($i=0; $i < count($obj['pInfo']); $i++) {
+						$percentageAux = 0;
+						$accAux = 0;
+						$obj['subject'][$i] .= "
+								<div class='grade-wrapper'>
+					                <div class='grade-header $styleHelper darken-2 white-text'>
+					                    <div class='subject'>Materia: <span class='content'>" . $subjectRow['nameSubject'] . " (" . $subjectRow['acronym'] . ")</span></div>
+					                    <div class='teacher'>Profesor: <span class='content'>" . $subjectRow['tName'] . " " . $subjectRow['lastName'] ."</span></div>
+					                </div>
+					                <table class='centered " . $_SESSION['type'] . "'>
+				                    <thead class='$styleHelper lighten-4 " . ($_SESSION['type'] == 'C' ? 'white-text' : '') . "'>
+					                    <tr>
+					                        <th>N°</th>
+					                        <th>Perfil de Evaluación</th>
+					                        <th><b>%</b></th>
+					                        <th>Nota</th>               
+					                    </tr>
+				                    </thead>
+				                    <tbody>";
+
+		                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0] . " ORDER BY percentage ASC";
+
+		                $epRes = $this->connection->connection->query($epQuery);
+
+		                if ($epRes->num_rows == 0) {
+		                	$obj['subject'][$i] .= "
+										<tr><td colspan='4' class='red-text'>No se encontraron perfiles de evaluación</td></tr>";
+		                }else{
+		                	$z = 0;
+			                while ($epRow = $epRes->fetch_assoc()) {
+			                	$gQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'];
+			                	$gRes = $this->connection->connection->query($gQuery);
+
+			                	$avQuery = "SELECT * FROM averages WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0];
+			                	$avRes = $this->connection->connection->query($avQuery);
+
+			                	if ($avRes->num_rows == 0) {
+			                		$accAux = 0;
+			                	}else{
+			                		$avRow = $avRes->fetch_assoc();
+			                		$accAux = $avRow['average'];
+			                		$approvedFlag = $avRow['approved'];
+			                	}
+			                	$obj['subject'][$i] .= "
+		                				<tr>
+				                            <td>" . ++$z . "</td>
+				                            <td>" . $epRow['name'] . "</td>
+				                            <td>" . $epRow['percentage'] . "</td>";
+	                            if ($gRes->num_rows == 0) {
+	                            	$obj['subject'][$i] .= "<td title='Nota por ingresar!'>NPI</td>";
+	                            }else{
+				                	$percentageAux += $epRow['percentage'];
+	                            	$obj['subject'][$i] .= "<td><b>" . $gRes->fetch_assoc()['grade'] . "</b></td>";
+	                            }
+				                $obj['subject'][$i] .= "</tr>";
+			                }
+		                }
+		                $obj['subject'][$i] .= "
+		                    	</tbody>
+			                </table>
+			                <div class='grade-footer $styleHelper darken-2'>
+								<div class='indicator'>Nota acumulada (Total Procesado: $percentageAux%)</div>
+								<div class='grade white-text " . ($approvedFlag ? 'green' : 'red') . " darken-1' title='" . ($approvedFlag ? 'Aprobada' : 'Reprobada') . "'>$accAux</div>
+			                </div>
+			            </div>";
+					}
+				}
+			}
+			return $obj;
+		}
+
+		function printGrades($id, $period)
+		{
+			$user_info = [];
+			$user_info = $this->admin->get_user_data($id);
+			$periodQuery = "SELECT * FROM period WHERE idPeriod = $period";
+			$periodRes = $this->connection->connection->query($periodQuery);
+			$periodRow = $periodRes->fetch_assoc();
+			$aux = "
+				<table class='infoTable'>
+					<tr>
+						<td class='photoCell'>
+							<img class='profile' src='../../../app/users/files/profile_photos/" . $user_info['photo'] . "'>
+						</td>
+						<td class='data'>
+							<p><span style='font-weight: bold;'>Nombre: </span>" . $user_info['name'] . " ". $user_info['lastName'] . "</p>
+							<p><span style='font-weight: bold;'>Código: </span>" . $user_info['id'] . "</p>
+							<p><span style='font-weight: bold;'>Grado: </span>" . $user_info['level'] . "°</p>
+							<p><span style='font-weight: bold;'>Sección: </span>\"" . $user_info['sectionIdentifier'] . "\"</p>
+							<p><span style='font-weight: bold;'>Especialidad: </span>" . $user_info['sName'] . "</p>
+						</td>
+					</tr>
+	            </table>
+	            <div class='periodCont'>
+				<h2 style='text-align: center;'>Período N° " . $periodRow['nthPeriod'] . "</h2>
+				<h3>Fecha de inicio: <span>" . $periodRow['startDate'] . "</span></h3>
+				<h3>Fecha de fin: <span>" . $periodRow['endDate'] . "</span></h3>
+			</div>";
+
+
+
+			$c = 0;
+			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
+
+			$subjectRes = $this->connection->connection->query($subjectQuery);
+			if ($subjectRes->num_rows == 0) {
+				$aux = "";
+			}else{
+				while ($subjectRow = $subjectRes->fetch_assoc()) {
+					$percentageAux = 0;
+					$accAux = 0;
+					$aux .= "
+							<div class='grade-wrapper " . ($c == 0 ? 'first' : '') . "'>
+				                <div class='grade-header blue darken-2 white-text'>
+				                    <div class='subject'>Materia: <span class='content'>" . $subjectRow['nameSubject'] . " (" . $subjectRow['acronym'] . ")</span></div>
+				                    <div class='teacher'>Profesor: <span class='content'>" . $subjectRow['tName'] . " " . $subjectRow['lastName'] ."</span></div>
+				                </div>
+				                <table>
+				                    <tr style='background: #BBDEFB;'>
+				                        <th>N°</th>
+				                        <th>Perfil de Evaluación</th>
+				                        <th><b>%</b></th>
+				                        <th>Nota</th>
+				                    </tr>";
+			        $c++;
+
+	                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $period . " ORDER BY percentage ASC";
+
+	                $epRes = $this->connection->connection->query($epQuery);
+
+	                if ($epRes->num_rows == 0) {
+	                	$aux .= "<tr><td colspan='4' class='red-text'>No se encontraron perfiles de evaluación</td></tr>";
+	                }else{
+	                	$z = 0;
+		                while ($epRow = $epRes->fetch_assoc()) {
+		                	$gQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'];
+		                	$gRes = $this->connection->connection->query($gQuery);
+
+		                	$avQuery = "SELECT * FROM averages WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $period;
+		                	$avRes = $this->connection->connection->query($avQuery);
+
+		                	if ($avRes->num_rows == 0) {
+		                		$accAux = 0;
+		                	}else{
+		                		$avRow = $avRes->fetch_assoc();
+		                		$accAux = $avRow['average'];
+		                		$approvedFlag = $avRow['approved'];
+		                	}
+		                	$aux .= "<tr>
+			                            <td>" . ++$z . "</td>
+			                            <td>" . $epRow['name'] . "</td>
+			                            <td>" . $epRow['percentage'] . "</td>";
+                            if ($gRes->num_rows == 0) {
+                            	$aux .= "<td title='Nota por ingresar!'>NPI</td>";
+                            }else{
+			                	$percentageAux += $epRow['percentage'];
+                            	$aux .= "<td><b>" . $gRes->fetch_assoc()['grade'] . "</b></td>";
+                            }
+			                $aux .= "</tr>";
+		                }
+	                }
+	                $aux .= "
+				                <tr>
+									<td colspan='3' class='indicator blue'>Nota acumulada (Total Procesado: $percentageAux%)</td>
+									<td class='grade white-text " . ($approvedFlag ? 'green' : 'red') . "'>$accAux</td>
+				                </tr>
+			                </table>
+			            </div>
+					";
+				}
+			}
+
+			return $aux;
 		}
 	}
 ?>

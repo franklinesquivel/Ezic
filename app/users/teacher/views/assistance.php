@@ -65,7 +65,7 @@
             
             <li class="active"><a href="../views/assistance.php" class="waves-effect">Asistencia<i class="material-icons">date_range</i></a></li>
 
-            <li><a href="../views/assistance.php" class="waves-effect">Agregar Notas<i class="material-icons">grade</i></a></li>
+            <li><a href="../views/addGrade.php" class="waves-effect">Agregar Notas<i class="material-icons">grade</i></a></li>
 
             <li><a class="subheader">Cuenta</a></li>
             <li><a href="#!" class="waves-effect">Configuración<i class="material-icons">settings</i></a></li>

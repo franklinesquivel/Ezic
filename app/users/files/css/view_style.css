@@ -102,19 +102,17 @@ ul.side-nav.fixed:hover{
 .record .gnrl-info{
     margin-top: 50px;
     display: flex;
-    /*width: 10%;*/
-    /*display: flex;*/
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
 }
 
 .record .gnrl-info .photo{
-    width: 20%;
-    height: 150px;
+    width: 25%;
+    height: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /*background: yellow;*/
 }
 
 .record .gnrl-info .photo img{
@@ -212,4 +210,83 @@ ul.side-nav.fixed:hover{
 
 .tap-target .tap-target-content p, .tap-target .tap-target-content h5{
     color: white;
+}
+
+.grade-wrapper{
+	padding-top: 10%; 
+	width: 100%;
+	margin: auto;
+}
+
+.grade-wrapper:first-child{
+	padding-top: 0;
+}
+
+.grade-wrapper:last-child{
+	padding-bottom: 25%;
+}
+
+.grade-wrapper .grade-header{
+	padding: 10px;
+	display: flex;
+	justify-content: space-around;
+	font-weight: bold;
+	font-size: 1em;
+}
+
+.grade-wrapper .grade-header div span{
+	font-weight: normal;
+}
+
+.grade-wrapper table.S th{border: 1px solid #1976D2;}
+.grade-wrapper table.T th{border: 1px solid #4CAF50;}
+.grade-wrapper table.C th{border: 1px solid #000;}
+
+.grade-wrapper table td{font-size: 1em;}
+.grade-wrapper table.S td{border: 1px solid #1976D2;}
+.grade-wrapper table.T td{border: 1px solid #4CAF50;}
+.grade-wrapper table.C td{border: 1px solid #000;}
+
+.grade-wrapper .grade-footer{
+	display: flex;
+	justify-content: space-between;
+	font-size: 1.3em;
+}
+
+.grade-wrapper .grade-footer .indicator{
+	color: #fff;
+	padding: 5px;
+	text-align: center;
+	width: 75%;
+}
+
+.grade-wrapper .grade-footer .grade{
+	width: 25%;
+	padding: 5px;
+	text-align: center;
+	font-weight: bolder;
+}
+
+tfoot td{
+	text-align: center;
+}
+
+@media only screen and (max-width: 768px){
+	.grade-wrapper .grade-header{
+		flex-direction: column;
+	}
+
+	.grade-wrapper .grade-footer{
+		flex-direction: column;
+	}
+
+	.grade-wrapper .grade-footer .indicator{
+		width: 100%;
+		font-size: .8em;
+	}
+
+	.grade-wrapper .grade-footer .grade{
+		width: 100%;
+		font-weight: bolder;
+	}
 }

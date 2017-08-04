@@ -2,6 +2,7 @@
 	require_once '../DB_Connection.php';
 	require_once 'Schedule.php';
 	require_once 'Administration.php';
+	require_once 'Grade_Class.php';
 
 
 	class Print_Class
@@ -21,6 +22,7 @@
 
 			$this->schedule = new Schedule();
 			$this->administration = new Administration();
+			$this->grade = new Grade();
 		}
 
 		function getSchedule($type, $id)
@@ -71,7 +73,7 @@
 		function genHeader($title)
 		{
 			ini_set("date.timezone", 'America/El_Salvador');
-            $date = date("j/m/Y");
+            $date = date("d/m/Y");
 			$aux .= "
 			<div class='PDF_header'>
 				<div class='logo'>
@@ -94,12 +96,23 @@
 
 			$this->_print = $this->administration->printUser($this->administration->get_user_data($id));
 
-			// $this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
-			$this->mpdf = new mPDF();
+			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Usuarios.');
 			$this->mpdf->setAuthor('Ezic ©');
 			$this->openPDF("Perfil de usuario", ($id));
+		}
+
+		function getGrades($id, $period)
+		{
+			$this->stylesheet = file_get_contents('../../mpdf/resources/grades.css');
+			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
+			$this->_print = $this->grade->printGrades($id, $period);
+			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
+			$this->mpdf->WriteHTML($auxCSS, 1);
+			$this->mpdf->setTitle('Ezic: Notas.');
+			$this->mpdf->setAuthor('Ezic ©');
+			$this->openPDF("Notas de estudiante", "Notas-" . $id . "-Periodo_$period");
 		}
 
 
@@ -108,9 +121,9 @@
 			$this->mpdf->WriteHTML($this->stylesheet, 1);
 			$this->genHeader($title);
 			$this->mpdf->WriteHTML($this->_print, 2);
-			$this->mpdf->Output($name.".pdf", "I");
-			// $this->mpdf->Output($name.".pdf", "D");
-			// header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+			// $this->mpdf->Output($name.".pdf", "I");
+			$this->mpdf->Output($name.".pdf", "D");
+			header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
 		}
 	}
 
@@ -126,5 +139,10 @@
 
 	if (isset($_POST['printUser'])) {
 		$print->getUser($_POST['id']);
+	}
+
+	if (isset($_POST['printGrades'])) {
+		echo $_POST['id'];
+		$print->getGrades($_POST['id'], $_POST['period']);
 	}
 ?>

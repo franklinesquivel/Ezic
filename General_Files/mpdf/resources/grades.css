@@ -36,14 +36,12 @@ table {
 }
 
 th {
-	/*width: calc(100%/6);*/
 	font-weight: bold; 
 	vertical-align: center;
 	text-align: center;
 	font-size: 15px;
 	padding: 10px 15px;
 	vertical-align: middle;
-	color: #fff;
 }
 
 td{
@@ -53,9 +51,39 @@ td{
 	padding: 10px;
 }
 
-.record{
-	width: 100%;
-	padding: 0px;
+.grade-wrapper{
+	margin-top: 7%;
+}
+
+.first{margin: 0;}
+
+.grade-wrapper .grade-header{
+	font-weight: bold;
+	padding: 10px;
+}
+.grade-wrapper .grade-header span{
+	font-weight: normal;
+}
+
+.grade-wrapper .indicator, .grade-wrapper .grade{
+	font-weight: bold;
+	color: #fff;
+}
+
+.periodCont{
+	line-height: 0.1px;
+	margin-bottom: 3%;
+}
+
+.periodCont span{
+	font-weight: normal;
+}
+
+td, th{border: 1px solid #1976D2;}
+
+.infoTable{margin-bottom: 5%;}
+.infoTable td{
+	border: none;
 }
 
 .profile{
@@ -63,31 +91,14 @@ td{
 	height: 150px;
 }
 
-.record .gnrl-info{
-	background: red;
-	width: 100%;
-}
-
-.record .gnrl-info .data{
-	
-}
-
-table td p .title{
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.record .codes .table-title{
-    padding: 10px;
-    margin: 0px;
-    color: #fff;
-}
-
-.infoTable{
+.data{
 	/*background: red;*/
+	width: 55%;
+	text-align: left;
 }
 
-.infoTable td.photoCell{
+.photoCell{
 	/*background: blue;*/
-	width: 50%;
+	width: 45%;
+	text-align: right;
 }

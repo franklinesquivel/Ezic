@@ -532,8 +532,8 @@
             $auxIndex;
             $auxIndex_2;
             if ($type == 'S') {
-                $indexInd = "nameSubject";
-                $indexInfo = "acronym";
+                $indexInd = "acronym";
+                $indexInfo = "nameSubject";
                 $studentQuery = "SELECT idSection FROM student WHERE idStudent = '$id';";
                 $sectionAux = $this->connection->connection->query($studentQuery)->fetch_assoc()['idSection'];
                 $query =

@@ -29,7 +29,7 @@
 
     <script src="../../files/js/init.js" charset="utf-8"></script>
     <script src="../../files/js/Loader.js" charset="utf-8"></script>
-    <script src="../../files/js/s/loadRecord.js" charset="utf-8"></script>
+    <script src="../../files/js/s/loadGrades.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -39,7 +39,7 @@
         ?> 
         <nav class="top-nav blue darken-2">
             <div class="container">
-                <div class="nav-wrapper"><a class="page-title">Récord conductual</a></div>
+                <div class="nav-wrapper"><a class="page-title">Notas</a></div>
             </div>
         </nav>
 
@@ -59,8 +59,8 @@
                 </div>
             </li>
             <li><a href="../" class="waves-effect">Inicio<i class="material-icons">home</i></a></li>
-            <li><a href="../views/grades.php" class="waves-effect">Ver Notas<i class="material-icons">grades</i></a></li>
-            <li class="active"><a href="../views/record.php" class="waves-effect">Récord conductual<i class="material-icons">favorite</i></a></li>
+            <li class="active"><a href="../views/grades.php" class="waves-effect">Ver Notas<i class="material-icons">grades</i></a></li>
+            <li><a href="../views/record.php" class="waves-effect">Récord conductual<i class="material-icons">favorite</i></a></li>
             <li><a href="../views/schedule.php" class="waves-effect">Ver horario<i class="material-icons">schedule</i></a></li>
             <li><a class="subheader">Cuenta</a></li>
             <li><a href="#!" class="waves-effect">Configuración<i class="material-icons">settings</i></a></li>
@@ -69,11 +69,23 @@
         </ul>
     </header>
 
-    <main></main>
+    <main>
+        <div class="row cmbCont" style="display: none;">
+            <div class="input-field col l4 m4 s10 offset-s1 offset-l4 offset-m4">
+                <select name="" id="cmbPeriod">
+                    <option disabled>Seleciona un período</option>
+                </select>
+            </div>
+        </div>
+        <div class="container gradesCont">
+            
+        </div>
+    </main>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="print"> 
-        <input type="hidden" name="printRecord" value="1">
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printGrades"> 
+        <input type="hidden" name="printGrades" value="1">
         <input type="hidden" name="id" value="<?php echo $userRow['idStudent'] ?>">
+        <input type="hidden" name="period" value="">
     </form>
 
     <div class="fixed-action-btn vertical">
@@ -81,7 +93,7 @@
             <i class="large material-icons">menu</i>
         </a>
         <ul>
-            <li title="Descargar"><a class="btn-floating blue lighten-2 btnPrint"><i class="material-icons">file_download</i></a></li>
+            <li title="Descargar"><a class="btn-floating blue lighten-2 btnPrint" disabled><i class="material-icons">file_download</i></a></li>
             <li title="Información"><a class="btn-floating amber btnInfo"><i class="material-icons">info_outline</i></a></li>
         </ul>
     </div>

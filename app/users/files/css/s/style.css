@@ -34,3 +34,19 @@
     left: 0;
     /*z-index: 999;*/
 }
+
+input.select-dropdown + ul.dropdown-content li > span{
+    color: #1976D2;
+}
+
+input.select-dropdown + ul.dropdown-content li[class*="disabled"] > span{
+    color: rgba(0, 0, 0, 0.3);
+}
+
+input.select-dropdown.error{
+    border-bottom: 1.5px solid #c0392b;
+}
+
+body{
+    /*background: red;*/
+}

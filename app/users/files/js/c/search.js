@@ -1,6 +1,6 @@
 (() => {
     var users, loader, type = 'all', attr = 'id', f;
-    var back_i = 1, back_2_i = 0, g_id, stage_aux = "";
+    var back_i = 1, back_2_i = 0, g_id, stage_aux = "", gR;
     var schedules_id = new Array(), x = 0, justification_id = new Array();
 
     // alert(':p');
@@ -199,15 +199,65 @@
                         $('main').fadeIn('slow', loader.out());
                     }
                 })
+            },
+            grade: id => {
+                loader.in();
+                $('main').fadeOut('slow');
+                $.ajax({
+                    url: '../../files/php/C_Controller.php',
+                    data: {showGrades: '1', id: id},
+                    success: (r) => {
+                        if (r == -1) {
+                            $('main').html(`<div class='container'><div style='margin-top: 5%;' class='alert_'>No se encontraron materias registradas a las sección del estudiante!</div></div>`)
+                        }else{
+                            r = JSON.parse(r);
+                            gR = r
+                            $('main').html(`
+                                <div class="row cmbCont" style="display: none;">
+                                    <div class="input-field col l4 m4 s10 offset-s1 offset-l4 offset-m4">
+                                        <select name="" id="cmbPeriod">
+                                            <option disabled>Seleciona un período</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="container gradesCont"></div>`);
+                            $('#cmbPeriod').change(function(){
+                                $('.gradesCont').html(gR.subject[$('#cmbPeriod option:selected').attr('index')]);
+                            })
+                            for (var i = 0; i < r.pInfo.length; i++) {
+                                if(r.subject[i] != -1){
+                                    $('#cmbPeriod').append(`<option index="${i}" period="${r.pInfo[i][1]}">Período N°${r.pInfo[i][1]}</option>`);
+                                }else{
+                                    $('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
+                                }
+                            }
+                            $('#cmbPeriod option[index]:first-child').attr('selected', 1);
+                            $('.gradesCont').append(r.subject[$('#cmbPeriod option:selected').attr('index')]);
+                            $('.cmbCont').fadeIn('slow');
+                            $('select').material_select();
+                            $('.btnPrint').removeAttr('disabled');
+                        }
+                        $('.btnBack').removeAttr('disabled');
+                        $('.options_btn').attr('disabled', 1);
+                        $('main').fadeIn('slow', loader.out());
+
+                        $('.btnPrint').click(() => {
+                            $('#printGrades input[name=id]').val(id);
+                            $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+                            $('#printGrades').submit();
+                        })
+                    }
+                })
             }
         }
     };
-    // alert(':p');
+
     const initFunctions = () => {
         if ($('.user-item').length > 0) {
             //ACCIONES PARA ESTUDIANTE
             $('.btnGrades').click(function() {
-                
+                g_id = $(this).parent().parent().parent().attr('id');
+                stage[2]['grade'](g_id);
             });
 
             $('.btnRecord').click(function(){
@@ -264,7 +314,6 @@
     const sort_users = () => {
         users.sort((a, b) => {return ((a[attr] < b[attr]) ? -1 : ((a[attr] > b[attr]) ? 1 : 0));})
     }
-
 
     const search_user = (t, a, value) => {
         $('.user-cont').html('<li class="user-row"></li>');
