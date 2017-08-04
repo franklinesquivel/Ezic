@@ -279,7 +279,7 @@
 			$percentageAux = 0;
 			$approvedFlag = 0;
 
-			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id';";
+			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
 
 			$subjectRes = $this->connection->connection->query($subjectQuery);
 
@@ -297,7 +297,7 @@
 					                    <div class='teacher'>Profesor: <span class='content'>" . $subjectRow['tName'] . " " . $subjectRow['lastName'] ."</span></div>
 					                </div>
 					                <table class='centered " . $_SESSION['type'] . "'>
-				                    <thead class='$styleHelper lighten-4'>
+				                    <thead class='$styleHelper lighten-4 " . ($_SESSION['type'] == 'C' ? 'white-text' : '') . "'>
 					                    <tr>
 					                        <th>N°</th>
 					                        <th>Perfil de Evaluación</th>
@@ -307,7 +307,7 @@
 				                    </thead>
 				                    <tbody>";
 
-		                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0];
+		                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0] . " ORDER BY percentage ASC";
 
 		                $epRes = $this->connection->connection->query($epQuery);
 

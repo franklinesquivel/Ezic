@@ -646,4 +646,9 @@
 	if (isset($_REQUEST['showTeacher'])) {
 		echo $admin->showUser($admin->get_user_data($_REQUEST['id']));
 	}
+
+	if (isset($_REQUEST['showGrades'])) {
+		session_start();
+		echo json_encode($grade->getGrades($_REQUEST['id']));
+	}
 ?>
