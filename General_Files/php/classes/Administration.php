@@ -596,5 +596,45 @@
 				return $aux;
 			}
 		}
+
+		function getStudentCodes($id)
+		{
+			$aux = "";
+			$z = 0;
+			$recordQuery = "SELECT * FROM record r INNER JOIN applied_code ac ON r.idApplied_Code = ac.idApplied_Code INNER JOIN code c ON c.idCode = ac.idCode WHERE r.idStudent = '$id'";
+
+			$recordRes = $this->connection->connection->query($recordQuery);
+
+			if ($recordRes->num_rows == 0) {
+				return -1;
+			}
+
+			while ($recordRow = $recordRes->fetch_object()) {
+				$aux .= "
+				<tr>
+					<td>".++$z."</td>
+					<td>$recordRow->date</td>
+					<td>$recordRow->hour</td>
+					<td>$recordRow->description</td>
+					<td></td>
+					<td>
+				      <input type='checkbox' class='filled-in checkRmvCode' id='check$recordRow->idRecord' idRecord='$recordRow->idRecord'/>
+				      <label for='check$recordRow->idRecord'></label>
+					</td>
+				</tr>";
+			}
+
+			return $aux;
+		}
+
+		function removeCode($ids)
+		{
+			for ($i=0; $i < count($ids); $i++) { 
+				$rmvQuery = "DELETE FROM record WHERE idRecord = $ids[$i]";
+				if ($this->connection->connection->query($rmvQuery) == 0) return 0;
+			}
+
+			return 1;
+		}
 	}
 ?>
