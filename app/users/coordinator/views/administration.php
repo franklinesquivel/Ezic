@@ -230,6 +230,34 @@
         </div>
     </div>
 
+    <div id="removeCode-modal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4 class="center">Remover Código</h4>
+            <p class="center" style="font-size: 1.2em;"><span class="apply-id"></span>  -  <span class="apply-name"></span></p>
+            <br>
+            <div class="row">
+                <table class="centered" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Código</th>
+                            <th>Selección</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tblRmvCode">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="waves-effect btn yellow darken-2 white-text btnRemoveCodes" style="margin-left: 2%;">Remover<i class="material-icons right">check</i></div>
+            <div class="modal-action modal-close waves-effect btn red white-text">Cancelar <i class="material-icons right">cancel</i></div>
+        </div>
+    </div>
+
     <div class="tap-target blue" data-activates="info">
         <div class="tap-target-content">
             <h5>Title</h5>

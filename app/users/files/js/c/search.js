@@ -3,8 +3,6 @@
     var back_i = 1, back_2_i = 0, g_id, stage_aux = "", gR;
     var schedules_id = new Array(), x = 0, justification_id = new Array();
 
-    // alert(':p');
-
     var stage = {
         1: () => {
             loader.in();
@@ -269,10 +267,41 @@
                 g_id = $(this).parent().parent().parent().attr('id');
                 let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
                     lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
-                $('.modal').find('.apply-id').html(g_id);
-                $('.modal').find('.apply-name').html(lastName + ", " + name);
+                $('#applyCode').find('.apply-id').html(g_id);
+                $('#applyCode').find('.apply-name').html(lastName + ", " + name);
                 $('#applyCode').modal('open');
             });
+
+            $('.btnRmvCode').click(function(){
+                loader.in();
+                g_id = $(this).parent().parent().parent().attr('id');
+                let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
+                    lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
+                $('#removeCode-modal').find('.apply-id').html(g_id);
+                $('#removeCode-modal').find('.apply-name').html(lastName + ", " + name);
+
+                $.ajax({
+                    url: '../../files/php/C_Controller.php',
+                    data: {getStudentCodes: 1, id: g_id},
+                    success: r => {
+                        if (r != -1) {
+                            if ($('#removeCode-modal .modal-content').find('.alert_').length > 0) {
+                                $('#removeCode-modal .modal-content .alert_').remove();
+                            }
+                            $('#removeCode-modal tbody').html(r);
+                            $('#removeCode-modal table').fadeIn('slow');
+                        }else{
+                            if ($('#removeCode-modal .modal-content').find('.alert_').length == 0) {
+                                $('#removeCode-modal .modal-content').append(`<div class='alert_'>El studiante no posee aplicación de códigos...</div>`);
+                            }
+                            $('#removeCode-modal table').fadeOut('slow');
+                        }
+                    }
+                })
+
+                loader.out();
+                $('#removeCode-modal').modal('open');
+            })
 
             //ACCIONES PARA DOCENTE Y COORDINADOR
             $('.btnSchedule').click(function(){
@@ -562,8 +591,6 @@
         })
     }
 
-    // alert(':p');
-
     $(document).on('click', '.btnApplyCode', function() {
         if (errorSelect($('#cmbCodes'))) {
             $.ajax({
@@ -586,6 +613,33 @@
         }
     });
 
+    $(document).on('click', '.btnRemoveCodes', function(){
+        let ids = [];
+        $('.checkRmvCode:checked').each(function(i, el){
+            ids.push(el.getAttribute('idrecord'));
+        })
+
+        if (ids.length == 0) {
+            Materialize.toast('Seleccione el código que desea remover!', 2000);
+        }else{
+            loader.in();
+            $.ajax({
+                url: '../../files/php/C_Controller.php',
+                data: {rmvCodes: 1, ids: ids},
+                success: r => {
+                    if (r) {
+                        Materialize.toast((ids.length == 1 ? "El código ha sido removido con éxito!" : "Los códigos han sido removidos con éxito!"), 2000);
+                    }else{
+                        Materialize.toast('Ha ocurrido un error :(', 2000);
+                    }
+
+                    $('#removeCode-modal').modal('close');
+                    loader.out();
+                }
+            })
+        }
+    })
+
     $(document).ready(() => {
         loader = new Loader();
         stage[1]();
@@ -602,6 +656,8 @@
             },
             complete: function() { initCodes(); } // Callback for Modal close
         });
+
+        $('#removeCode-modal').modal();
         
         $('#cmbCategory').change(function(){
             $('#cmbCodes').html('<option selected disabled>Código</option>');

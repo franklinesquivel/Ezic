@@ -651,4 +651,12 @@
 		session_start();
 		echo json_encode($grade->getGrades($_REQUEST['id']));
 	}
+
+	if (isset($_REQUEST['getStudentCodes'])) {
+		echo $admin->getStudentCodes($_REQUEST['id']);
+	}
+
+	if (isset($_REQUEST['rmvCodes'])) {
+		echo $admin->removeCode($_REQUEST['ids']);
+	}
 ?>

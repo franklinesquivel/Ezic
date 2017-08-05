@@ -16,7 +16,7 @@
             $this->host = "localhost";
             $this->user  = "root";
             $this->pass = "";
-            $this->DB = "ezic";
+            $this->DB = "ezic_t";
         }
 
         function Connect()
@@ -24,16 +24,6 @@
             $this->connection = new mysqli($this->host, $this->user, $this->pass, $this->DB);
             $this->connection->set_charset("utf8");
         }
-
-        // function Error()
-        // {
-        //     echo $this->connection->connect_errno;
-        // }
-
-        // function Disconnect()
-        // {
-        //     $this->connection->close();
-        // }
     }
 
 
