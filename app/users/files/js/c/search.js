@@ -288,12 +288,14 @@
                             if ($('#removeCode-modal .modal-content').find('.alert_').length > 0) {
                                 $('#removeCode-modal .modal-content .alert_').remove();
                             }
+                            $('#removeCode-modal .btnRemoveCodes').removeAttr('disabled');
                             $('#removeCode-modal tbody').html(r);
                             $('#removeCode-modal table').fadeIn('slow');
                         }else{
                             if ($('#removeCode-modal .modal-content').find('.alert_').length == 0) {
                                 $('#removeCode-modal .modal-content').append(`<div class='alert_'>El studiante no posee aplicación de códigos...</div>`);
                             }
+                            $('#removeCode-modal .btnRemoveCodes').attr('disabled', 1);
                             $('#removeCode-modal table').fadeOut('slow');
                         }
                     }
@@ -657,7 +659,12 @@
             complete: function() { initCodes(); } // Callback for Modal close
         });
 
-        $('#removeCode-modal').modal();
+        $('#removeCode-modal').modal({
+            complete: () => {
+                $('#removeCode-modal table').fadeOut('slow');
+                $('#removeCode-modal .alert_').remove();
+            }
+        });
         
         $('#cmbCategory').change(function(){
             $('#cmbCodes').html('<option selected disabled>Código</option>');
@@ -787,7 +794,6 @@
                         if (schedules_id.length > 0) {
                             loader.in();
                             let object = JSON.stringify(schedules_id);
-                            console.log($("#selectPermission").val());
                             $.ajax({
                                 type: 'POST',
                                 url: '../../files/php/C_Controller.php',
@@ -849,7 +855,6 @@
                 removeIndex($(this).attr("id"), justification_id);
                 x--;
             }
-            console.log(JSON.stringify(justification_id));
         });
 
         $(document).on("click", ".btnSaveJustification", function(){
