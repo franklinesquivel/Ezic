@@ -460,11 +460,33 @@ body{
     /*background: red;*/
 }
 
+.chart-container{
+    margin: auto;
+    margin-top: 10vh;
+    position: relative;
+    height: 40vh; 
+    width: 40vw;
+    /*background: red;*/
+}
+
+.chart-cont-cont{
+    padding-left: 300px;
+}
+
+.card-image img{
+    widows: 100%;
+    height: 40vh;
+}
+
 @media only screen and (max-width: 768px){
     ul#options_slide .title{
         text-align: center;
         font-size: 28px;
         padding: 10px;
+    }
+
+    .chart-cont-cont{
+        padding: 0px;
     }
 
     #options_slide .collapsible-body ul li{
@@ -669,4 +691,14 @@ body{
     .user-show-cont .gnrl-info .info h5{
         font-size: 20px;
     }
+
+    .chart-container{
+        /*background: green;*/
+        height: 40vh;
+        width: 90vw;
+    }
+}
+
+canvas {
+  /*border: 1px dotted red;*/
 }

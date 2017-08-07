@@ -178,6 +178,7 @@
                     </li>
                 </ul>
             </li>
+            <li><a href="views/stadistics.php" class="waves-effect">Estadísticas<i class="material-icons">insert_chart</i></a></li>
             <li><a class="subheader">Cuenta</a></li>
             <li><a href="#!" class="waves-effect">Configuración<i class="material-icons">settings</i></a></li>
             <li><div class="divider"></div></li>
