@@ -239,9 +239,8 @@
     
     <div class="chart-cont-cont">
         <div class="chart-container">
-            <canvas id="actualChart"></canvas>
+            <canvas id="chart"></canvas>
         </div>
-        
     </div>
 
     <div class="fixed-action-btn vertical btn_options">
