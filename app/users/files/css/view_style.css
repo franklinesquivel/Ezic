@@ -310,21 +310,6 @@ tfoot td{
     height: 100%;
 }
 
-.banda{
-    width: 100%;
-    height: auto;
-    text-align: center;
-    font-weight: bold;
-    background: #e74c3c;
-    color: #B71C1C;
-    font-style: italic;
-    font-size: 15px;
-    padding: 3px;
-    position: relative;
-    top: 0;
-    left: 0;
-}
-
 @media only screen and (max-width: 768px){
 	.grade-wrapper .grade-header{
 		flex-direction: column;
