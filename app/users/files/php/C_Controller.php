@@ -96,7 +96,8 @@
 	}
 
 	if (isset($_REQUEST['newForm'])) {
-		$id = $_REQUEST['id'];
+		session_start();
+		$id = (isset($_REQUEST['id']) ? $_REQUEST['id'] : $_SESSION['id']);
 		echo $modify->load_Form($id);
 	}
 

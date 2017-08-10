@@ -2,7 +2,8 @@
     /**
      *
      */
-    class Constructor
+    require_once 'Router.php';
+    class Constructor extends Router
     {
         private $user;
         private $idLog;
@@ -30,7 +31,10 @@
 
         function verify_Log($type)
         {
-            session_start();
+            parent::__construct($type);
+            if (!isset($_SESSION)) {
+                session_start();
+            }
 
             if (isset($_SESSION['log'])) {
                 if ($_SESSION['type'] == 'S') {
