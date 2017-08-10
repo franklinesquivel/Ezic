@@ -3,12 +3,14 @@
 
     Materialize.updateTextFields();
 
+    console.log(':p');
+
     var id = $("#userId").html(), photoFlag = false, photoSuccess = true, idLog, table, type;
     $('.frmPhoto_cont .btnModifyPhoto').click(function(){
         $('.photoFile').trigger('click');
     })
 
-    $("#cmbLvl").change("value", function(){
+    $("#cmbLvl_Mod").change("value", function(){
             if((validateSelect($("#cmbLvl").val()))==true){
 
                 $.ajax({
@@ -20,8 +22,8 @@
                     }
                 }).done(function(sectionObject){
                     let object = JSON.parse(sectionObject);
-                    $("#cmbSection").empty();
-                    $("#cmbSection").append("<option value='' disabled selected>Elegir Sección</option>");
+                    $("#cmbSection_Mod").empty();
+                    $("#cmbSection_Mod").append("<option value='' disabled selected>Elegir Sección</option>");
                     if (object.length > 0) {
                         
                         for (var i in object) {
@@ -142,12 +144,12 @@
                     lastName: $('#txtLastName').val(),
                     password: $('#txtPass').val(),
                     email: $('#txtEmail').val(),
-                    residence: $('#txtRes').val(),
-                    birthday: $("#txtDate").val(),
-                    section: ( document.getElementById('cmbSection') != null ? document.getElementById('cmbSection').value : ''),
-                    level: ( document.getElementById('cmbLvl') != null ? document.getElementById('cmbLvl').value : ''),
-                    profession: ( document.getElementById('txtProf') != null ? document.getElementById('txtProf').value : '' ),
-                    sex: $("input[name='txtSex']:checked").val()
+                    residence: $('#txtRed').length > 0 ? $('#txtRes').val() : null,
+                    birthdate:  $('#txtDate').length > 0 ? $("#txtDate").val() : null,
+                    idSection: $('#cmbSection_Mod').length > 0 ? $('#cmbSection_Mod').val() : null,
+                    idLevel: $('cmbLvl_Mod').length > 0 ? $('cmbLvl').val() : null,
+                    profession: $('txtProf').length > 0 ? $('txtProf').val() : null,
+                    sex: $("input[name='txtSex']").length > 0 ? $("input[name='txtSex']:checked").val() : null
                 };
 
                 loader.in();
@@ -158,7 +160,14 @@
                         loader.out();
                         if (parseInt(r) && photoSuccess) {
                             Materialize.toast("Los cambios se han guardado con éxito!", 2000);
-                            setTimeout(() => $.getScript('../../files/js/c/search.js'), 1000);
+                            if (document.URL.split('/')[document.URL.split('/').length - 1].split('.')[0] == 'config') {
+                                setTimeout( () => {
+                                    $.getScript(`../../files/js/c/config.js`);
+                                    $("html, body").animate({ scrollTop: 0 }, 800);
+                                }, 800);
+                            }else{
+                                setTimeout( () => $.getScript(`../../files/js/c/search.js`), 800);
+                            }
                         }else{
                             Materialize.toast("Ha ocurrido un error", 2000);
                         }
@@ -175,7 +184,12 @@
     })
 
     $('.btnCancel_User').click(function(){
-        $.getScript('../../files/js/c/search.js');
+        if (document.URL.split('/')[document.URL.split('/').length - 1].split('.')[0] == 'config') {
+            $.getScript(`../../files/js/c/config.js`);
+            $("html, body").animate({ scrollTop: 0 }, 800);
+        }else{
+            $.getScript(`../../files/js/c/search.js`);
+        }
     });
 })()
 

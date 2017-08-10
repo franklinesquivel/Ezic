@@ -65,10 +65,10 @@
 				datasets: [{
 					label: "Cant. de Estudiantes por especialidad",
 					data: lblAux.map((i) => i[1]),
-					borderColor: cAux.map(i => i),
-		            backgroundColor: cAux.map(i => hexToRgbA(i))
+		            backgroundColor: cAux.map(i => hexToRgbA(i)),
+					borderColor: cAux.map(i => i)
 				}],
-				borderWidth: 1,
+				borderWidth: 4,
 				labels: lblAux.map(i => i[0])
 			};
 
@@ -133,25 +133,6 @@
 
 		$('.chart-cont-cont').fadeIn('slow');
 		$('.btnBack').removeAttr('disabled');
-	}
-
-	function addData(chart, data) {
-	    chart.data.datasets.forEach((dataset) => {
-	        dataset.data.push(data);
-	    });
-	    chart.update();
-	}
-
-	function removeData(chart) {
-	    if(chart.data.datasets){
-		    chart.data.datasets.forEach((dataset) => {
-		        dataset.data.pop();
-		    });
-		    chart.data.options.forEach((option) => {
-		        option.data.pop();
-		    });
-	    }
-	    chart.update();
 	}
 
 	function getRandomColor() {

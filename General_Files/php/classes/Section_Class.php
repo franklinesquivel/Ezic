@@ -58,5 +58,27 @@
 
 		   	return (json_encode($info));
 		}
+
+		function filterSections($lvl, $spcty, $sctn)
+		{
+			$aux = "";
+			$query = "SELECT * FROM section sn INNER JOIN level ll ON sn.idLevel = ll.idLevel INNER JOIN specialty sy ON sn.idSpecialty = sy.idSpecialty " . ($lvl != '' ? "WHERE ll.idLevel = $lvl " . ($spcty != '' ? "AND sy.idSpecialty = $spcty " . ($sctn != '' ? "AND sn.idSection = $sctn" : '') : '') : ';');
+
+			$res = $this->connection->connection->query($query);
+
+			if($res->num_rows == 0) return -1;
+
+			while ($row = $res->fetch_assoc()) {
+				$aux .= "
+					<a class='collection-item waves-effect waves-black ' idSn='" . $row['idSection'] . "'>
+	                    <span class='title black-text'> " . ($row['level'] == 1 ? '1er' : ($row['level'] == 2 ? '2do' : '3er')) . " Año, &nbsp</span>
+	                    <span class='title black-text'><i>" . $row['sName'] . "</i>: &nbsp </span>
+	                    <span class='title black-text'><b>Sección \"<i>". $row['sectionIdentifier'] ."</i>\"</b></span>
+	                </a>
+				";
+			}
+
+			return $aux;
+		}
 	}
 ?>

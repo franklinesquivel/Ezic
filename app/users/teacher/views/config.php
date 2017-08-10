@@ -1,14 +1,14 @@
 <?php 
     require_once("../../../../General_Files/php/classes/Page_Constructor.php");
     $const = new Constructor();
-    $const->verify_Log('C');
-    $userRow = $const->getData('C');
+    $const->verify_Log('T');
+    $userRow = $const->getData('T');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#343434">
     <meta name="msapplication-navbutton-color" content="#343434">
@@ -25,17 +25,17 @@
     <script src="../../../../General_Files/materialize/js/materialize.js" charset="utf-8"></script>
 
     <link rel="stylesheet" href="../../files/css/view_style.css">
-    <link rel="stylesheet" href="../../files/css/c/style.css">
+    <link rel="stylesheet" href="../../files/css/t/style.css">
 
     <script src="../../files/js/init.js" charset="utf-8"></script>
     <script src="../../files/js/Loader.js" charset="utf-8"></script>
-    <script src="../../files/js/c/modify_code.js" charset="utf-8"></script>
+    <script src="../../files/js/c/config.js" charset="utf-8"></script>
 </head>
 <body>
-	<header>
-        <nav class="top-nav black">
+    <header>
+        <nav class="top-nav green darken-2">
             <div class="container">
-                <div class="nav-wrapper"><a class="page-title">Modificar Código</a></div>
+                <div class="nav-wrapper"><a class="page-title">Configuración</a></div>
             </div>
         </nav>
 
@@ -46,32 +46,25 @@
         <?php echo $const->createElement() ?>
     </header>
 
-    <main>
-    	<br>
-    	<div class="container form">
-    		
-    	</div>
+    <main></main>
 
-        <div class="codes_modify">
+    <div class="fixed-action-btn vertical btn_options">
+        <a class="btn-floating btn-large black" id="info">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li title="Refrescar"><a class="btn-floating green refresh"><i class="material-icons">cached</i></a></li>
+            <li title="Regresar"><a disabled class="btn-floating grey btnBack"><i class="material-icons">arrow_back</i></a></li>
+            <li title="Recomendaciones"><a class="btn-floating amber info_btn"><i class="material-icons">info_outline</i></a></li>
+        </ul>  
+    </div>
 
+    <div class="tap-target black" data-activates="info">
+        <div class="tap-target-content">
+            <h5>Acerca de este apartado:</h5>
+            <p>Fill.</p>
         </div>
-
-        <div class="fixed-action-btn vertical btn_options">
-            <a class="btn-floating btn-large black" id="info">
-                <i class="large material-icons">menu</i>
-            </a>
-            <ul>
-                <li title="Refrescar"><a class="btn-floating green refresh"><i class="material-icons">cached</i></a></li>
-                <li title="Recomendaciones"><a class="btn-floating amber info_btn"><i class="material-icons">info_outline</i></a></li>
-            </ul>  
-        </div>
-
-        <div class="tap-target black" data-activates="info">
-            <div class="tap-target-content">
-                <h5>Acerca de este apartado:</h5>
-                <p>Se podran modificar los códigos registrados.</p>
-            </div>
-        </div>
-    </main>
+    </div>
 </body>
+
 </html>

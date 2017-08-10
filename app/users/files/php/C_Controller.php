@@ -96,7 +96,8 @@
 	}
 
 	if (isset($_REQUEST['newForm'])) {
-		$id = $_REQUEST['id'];
+		session_start();
+		$id = (isset($_REQUEST['id']) ? $_REQUEST['id'] : $_SESSION['id']);
 		echo $modify->load_Form($id);
 	}
 
@@ -666,5 +667,9 @@
 
 	if (isset($_REQUEST['totalUsers'])) {
 		echo json_encode($stadistic->countUsers());
+	}
+
+	if (isset($_REQUEST['filterSections'])) {
+		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}
 ?>

@@ -23,7 +23,11 @@
 
         function load_Form($id)
         {
+            if (!isset($_SESSION)) {
+                session_start();
+            }
             $type = $id[0];
+            $coordiFlag = $_SESSION['type'] == 'C' ? 1 : 0;
 
             if ($type[0] == 'C') {
     			$type = 'C'; $idLog = 'idCoor'; $table = 'coordinator';
@@ -87,8 +91,10 @@
                             <input class='txtEmail' id='txtEmail' type='email' name='txtEmail' value='" . $row['email'] . "'>
                             <label for='txtEmail'>Correo Electrónico</label>
                         </div>
-                    </div>
-                    <div class='row'>
+                    </div>";
+            
+            if ($coordiFlag) {
+                $frm .= "<div class='row'>
                         <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
                             <textarea id='txtRes' name='txtRes' class='materialize-textarea'>" . $row['residence'] . "</textarea>
                             <label for='txtRes'>Residencia</label>
@@ -109,7 +115,7 @@
             }else{
                 $frm = $frm . "
                 <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
-                    <select name='cmbLvl' id='cmbLvl' class='cmbUpdate'>
+                    <select name='cmbLvl_Mod' id='cmbLvl_Mod' class='cmbUpdate'>
                         <option value='' disabled>Seleccione una opción</option>";
 
                 $lvlRes = $this->connection->connection->query("SELECT * FROM level");
@@ -124,7 +130,7 @@
                     <label>Grado</label>
                 </div>
                 <div class='input-field col l5 m5 s10 offset-s1'>
-                    <select name='cmbSection' id='cmbSection'  class='cmbUpdate'>
+                    <select name='cmbSection_Mod' id='cmbSection_Mod'  class='cmbUpdate'>
                         <option disabled >Seleccione una opción</option>
                         <option value='" . $row['idSection'] . "' selected>" . $row['sName'] . ", " . $row['sectionIdentifier'] . "</option>    
                     </select>
@@ -141,14 +147,15 @@
                         <input " . ($row['sex'] == 'M' ? "checked='true'" : "") . " class='txtSex_M with-gap' id='txtSex_M' type='radio' name='txtSex' value='M'>
                         <label for='txtSex_M'>Masculino</label>
                     </div>
-                </form>
+                </form>";
+            }
 
-                <div class='col s12 row btn_cont'>
+            $frm .= "<div class='col s12 row btn_cont'>
                     <button class='col l3 m3 s8 offset-l3 offset-m3 offset-s2 btn waves-effect waves-light red btnCancel_User'>Cancelar
                         <i class='material-icons right'>cancel</i>
                     </button>
                     <br class='hide-on-large-only'>
-                    <button class='col l3 m3 s8 offset-l1 offset-m1 offset-s2 btn waves-effect waves-light black btnSave_User'>Guardar Datos
+                    <button class='col l3 m3 s8 offset-l1 offset-m1 offset-s2 btn waves-effect waves-light " . ($_SESSION['type'] == 'C' ? 'black' : ($_SESSION['type'] == 'T' ? 'green darken-2' : 'blue darken-2')) . " btnSave_User'>Guardar Datos
                         <i class='material-icons right'>save</i>
                     </button>
                 </div>
@@ -206,22 +213,23 @@
 
         function insert_Mod($data_obj)
         {
+            $fields = "";
             $query = "
             UPDATE " . $data_obj['table'] . "
-            SET
-                name = '" . $data_obj['name'] . "', 
-                lastName = '" . $data_obj['lastName'] . "',
-                password = '" . $this->ArmedEncryption($data_obj['password']) . "', 
-                email = '" . $data_obj['email'] . "', 
-                sex = '" . $data_obj['sex'] . "',
-                residence = '" . $data_obj['residence'] . "', 
-                birthdate = '" . $data_obj['birthday'] . "',
-                " . ($data_obj['type'] != 'S' ? "profession = '" . $data_obj['profession'] . "'" : "idSection = " . $data_obj['section']) . "
-            WHERE " . $data_obj['idLog'] . " = '" . $data_obj['id'] . "';";
+            SET ";
 
+            foreach ($data_obj as $key => $value) {
+                $cond = $value != '' && $key != 'idLog' && $key != 'id' && $key !='type' && $key != 'table' && $key != 'idLevel';
+                if ($cond) {
+                    $fields .= "$key = '" . ($key == 'password' ? $this->ArmedEncryption($value) : $value) . "', ";
+                }
+            }
+            for ($i=0; $i < strlen($fields) - 2; $i++) { 
+                $query .= $fields[$i];
+            }
+            $query .=  "\nWHERE " . $data_obj['idLog'] . " = '" . $data_obj['id'] . "';";
             // return $query;
             $res = $this->connection->connection->query($query);
-
             return ( $res ? 1 : 0 );
         }
     }

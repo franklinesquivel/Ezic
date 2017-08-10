@@ -43,29 +43,7 @@
             <a href="#" data-activates="user_nav" class="button-collapse top-nav full hide-on-large-only"><i class="material-icons">menu</i></a>
         </div>
 
-        <ul id="user_nav" class="side-nav fixed">
-            <li>
-                <div class="userView">
-                    <div class="background">
-                        <img src="../../files/img/teacher.jpg" width="100%">
-                    </div>
-                    <img class="circle" src="../../files/profile_photos/<?php echo $userRow['photo']; ?>">
-                    <span class="white-text name"><?php echo explode(' ', $userRow['name'])[0] . " " . explode(' ', $userRow['lastName'])[0]; ?></span>
-                    <span class="white-text email">Docente</span>
-                </div>
-            </li>
-            <li><a href="../" class="waves-effect">Inicio<i class="material-icons">home</i></a></li>
-            <li><a href="../views/schedule.php" class="waves-effect">Ver horario<i class="material-icons">schedule</i></a></li>
-            
-            <li><a href="../views/assistance.php" class="waves-effect">Asistencia<i class="material-icons">date_range</i></a></li>
-
-			<li class="active"><a href="../views/addGrade.php" class="waves-effect">Agregar Notas<i class="material-icons">grade</i></a></li>
-
-            <li><a class="subheader">Cuenta</a></li>
-            <li><a href="#!" class="waves-effect">Configuración<i class="material-icons">settings</i></a></li>
-            <li><div class="divider"></div></li>
-            <li><a class="waves-effect btnUnlog"><i class="material-icons">cancel</i>Cerrar Sesión</a></li>
-        </ul>
+        <?php echo $const->createElement() ?>
     </header>
     
     <main>

@@ -42,7 +42,6 @@
 
                 <ul class="right hide-on-med-and-down">
                     <li class="active"><a class="blue-text text-darken-2" href="#">Inicio</a></li>
-                    <li><a class="blue-text text-darken-2" href="#">Aula Virtual</a></li>
                     <li><a class="blue-text text-darken-2" href="#">Acerca de Nosotros</a></li>
                     <li><a href="#logModal" class="modal-trigger waves-effect waves-light btn blue darken-2"><i class="material-icons right">person</i> Iniciar Sesión</a></li>
                 </ul>
@@ -156,23 +155,9 @@
         <div class="footer-copyright">
             <div class="container">
                 © 2017 Ezic, Inc.
-                <!-- <a class="grey-text text-lighten-4 right" href="">Contáctanos</a> -->
             </div>
         </div>
     </footer>
-
-    <!-- <form class="col s12" action="">
-        <div class="row">
-            <div class="input-field col s6">
-                <input id="txt" type="text" class="validate">
-                <label for="first_name">First Name</label>
-            </div>
-            <div class="input-field col s6">
-                <input id="last_name" type="text" class="validate">
-                <label for="last_name">Last Name</label>
-            </div>
-        </div>
-    </form> -->
 
     <div id="logModal" class="modal bottom-sheet white">
         <div class="modal-content">

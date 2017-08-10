@@ -157,7 +157,9 @@ $(document).ready(function(){
         row.add_el(input_res.element);
 
         var section = new Element('div');
-        section.setClass('section scale-transition scale-out');
+        // section.setClass('form_cont scale-transition scale-out');
+        section.setClass('form_cont');
+        section.element.style.display = "none";
         section.content("<h5 class='center'>Registro " + (i + 1) + "</h5>");
 
         form.add_el(row.element);
@@ -179,18 +181,19 @@ $(document).ready(function(){
 
     $('.btnAddFrm').click(function(){
         $('main .container').append(createForm(i));
-        $('main .container').append("<div class='divider'></div><br><br>");
         setTimeout(function(){
-            $('main .container .section:last').addClass('scale-in');
+            $('main .container .form_cont:last').fadeIn(200, () => {
+                $('main .container').append("<div class='divider'></div><br><br>");
+            });
         }, 100)
         i++;
         $.getScript('../../files/js/init.js');
     })
 
     $(".btnRmvFrm").click(function(){
-        $('main .container .section:last').removeClass('scale-in');
+        $('main .container .form_cont:last').fadeOut(300);
         setTimeout(function(){
-            $('main .container .section:last').remove();
+            $('main .container .form_cont:last').remove();
             $('main .container .divider:last').remove();
             $('main .container br:last').remove();
             $('main .container br:last').remove();

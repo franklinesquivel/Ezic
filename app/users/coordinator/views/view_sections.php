@@ -1,5 +1,5 @@
 <?php 
-    require_once("../../../../General_Files/php/classes/Page_Constructor.php");
+	require_once("../../../../General_Files/php/classes/Page_Constructor.php");
     $const = new Constructor();
     $const->verify_Log('C');
     $userRow = $const->getData('C');
@@ -29,13 +29,13 @@
 
     <script src="../../files/js/init.js" charset="utf-8"></script>
     <script src="../../files/js/Loader.js" charset="utf-8"></script>
-    <script src="../../files/js/c/modify_code.js" charset="utf-8"></script>
+    <script src="../../files/js/c/viewSections.js" charset="utf-8"></script>
 </head>
 <body>
 	<header>
         <nav class="top-nav black">
             <div class="container">
-                <div class="nav-wrapper"><a class="page-title">Modificar Código</a></div>
+                <div class="nav-wrapper"><a class="page-title">Ver Código</a></div>
             </div>
         </nav>
 
@@ -46,30 +46,31 @@
         <?php echo $const->createElement() ?>
     </header>
 
-    <main>
-    	<br>
-    	<div class="container form">
-    		
-    	</div>
+    <main class='show'>
+    	<div class='container'>
+            <br>
+            <div class='row'>
+               <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
+                   <select id="cmbLevel">
+                       <option selected disabled>Nivel</option>
+                   </select>
+                   <label>Selecciona un nivel</label>
+               </div>
 
-        <div class="codes_modify">
+               <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
+                   <select id="cmbSpecialty">
+                       <option selected disabled>Especialidad</option>
+                   </select>
+                   <label>Selecciona una especialidad</label>
+               </div>
 
-        </div>
-
-        <div class="fixed-action-btn vertical btn_options">
-            <a class="btn-floating btn-large black" id="info">
-                <i class="large material-icons">menu</i>
-            </a>
-            <ul>
-                <li title="Refrescar"><a class="btn-floating green refresh"><i class="material-icons">cached</i></a></li>
-                <li title="Recomendaciones"><a class="btn-floating amber info_btn"><i class="material-icons">info_outline</i></a></li>
-            </ul>  
-        </div>
-
-        <div class="tap-target black" data-activates="info">
-            <div class="tap-target-content">
-                <h5>Acerca de este apartado:</h5>
-                <p>Se podran modificar los códigos registrados.</p>
+               <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
+                   <select id="cmbSection">
+                       <option selected disabled>Sección</option>
+                   </select>
+                   <label>Selecciona una sección</label>
+               </div>
+                <div class='col l6 m6 s10 offset-s1 offset-l3 offset-m3 collection sectionCollection'></div>
             </div>
         </div>
     </main>
