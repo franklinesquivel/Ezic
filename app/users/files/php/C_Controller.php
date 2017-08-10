@@ -22,6 +22,8 @@
 //FIN DE CLASES REQUERIDAS HASTA EZIC 1.8
 //--------------------------------------------------------------------------------------------
 
+	require_once '../../../../General_Files/php/classes/Stadistics.php';
+
 //--------------------------------------------------------------------------------------------
 //CLASES INSTANCIADAS HASTA EZIC 1.5
 	$period = new Period();
@@ -43,6 +45,8 @@
 	$justification = new Justification();
 //FIN DE CLASES INTANCIADAS HASTA EZIC 1.8	
 //--------------------------------------------------------------------------------------------
+
+	$stadistic = new Stadistics();
 
 //--------------------------------------------------------------------------------------------
 //		AGREGAR NUEVO PERIODO
@@ -92,7 +96,8 @@
 	}
 
 	if (isset($_REQUEST['newForm'])) {
-		$id = $_REQUEST['id'];
+		session_start();
+		$id = (isset($_REQUEST['id']) ? $_REQUEST['id'] : $_SESSION['id']);
 		echo $modify->load_Form($id);
 	}
 
@@ -658,5 +663,13 @@
 
 	if (isset($_REQUEST['rmvCodes'])) {
 		echo $admin->removeCode($_REQUEST['ids']);
+	}
+
+	if (isset($_REQUEST['totalUsers'])) {
+		echo json_encode($stadistic->countUsers());
+	}
+
+	if (isset($_REQUEST['filterSections'])) {
+		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}
 ?>

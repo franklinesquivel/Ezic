@@ -130,6 +130,7 @@
         }
 
         function getUsers(){
+            session_start();
             $users_array = [];
             $user = [];
             $i = 1;
@@ -228,7 +229,7 @@
                 // return -1;
             }
 
-            $query = "SELECT * FROM coordinator WHERE state = 1";
+            $query = "SELECT * FROM coordinator WHERE state = 1 AND idCoor <> '" . $_SESSION['id'] . "';";
 
             $res = $this->connection->connection->query($query);
             if ($res->num_rows > 0) {

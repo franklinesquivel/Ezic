@@ -6,16 +6,22 @@
     border-left-color: #5cd961;
 }
 
-.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label{
+.input-field input[type=text]:focus + label, 
+.input-field input[type=number]:focus + label, 
+.input-field input[type=email]:focus + label{
     color: #4CAF50;
 }
 
-.input-field input[type=text]:focus, .input-field input[type=number]:focus {
+.input-field input[type=text]:focus, 
+.input-field input[type=number]:focus, 
+.input-field input[type=email]:focus {
     border-bottom: 1px solid #4CAF50;
     box-shadow: 0 1px 0 0 #4CAF50;
 }
 
-.input-field input[type="date"]:focus + label, .input-field input[type=number]:focus + label{
+.input-field input[type="date"]:focus + label, 
+.input-field input[type="number"]:focus + label, 
+.input-field input[type="email"]:focus + label{
     color: #4CAF50;
 }
 
@@ -29,7 +35,7 @@ table.assistance tr.permission, tr.expulsed td{
 	color: white;
 }
 
-.tap-target-content p, h5{
+.tap-target-content p, .tap-target-content h5{
 	color: white;
 }
 
@@ -166,19 +172,4 @@ input[type="number"].error{border-bottom: 1px solid #B71C1C;}
         display: flex;
         align-items: center;
     }
-}
-
-.banda{
-    width: 100%;
-    height: auto;
-    text-align: center;
-    font-weight: bold;
-    background: #e74c3c;
-    color: #B71C1C;
-    font-style: italic;
-    font-size: 15px;
-    padding: 3px;
-    position: relative;
-    top: 0;
-    left: 0;
 }
