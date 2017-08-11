@@ -1,5 +1,5 @@
 (() => {
-    var loader;
+    var loader, g_id;
 	$(document).ready(function(){
         loader = new Loader();
         loader.in()
@@ -12,7 +12,7 @@
                     $('select').material_select();
                     search_section();
                 }
-                loader.out();
+                $('main').fadeIn('slow', loader.out());
             }
         })
 
@@ -65,16 +65,85 @@
 
 	})
 
+    $(document).on('click', '.collection-item', function(){
+        g_id = $(this).attr('idsn')
+        loader.in();
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {showSection: 1, idSn: g_id},
+            success: r => {
+                if (r != -1) {
+                    $('.btnBack').removeAttr('disabled');
+                    $('.btnPrint').removeAttr('disabled');
+                    $('main').fadeOut('slow', function(){
+                        $('.listCont').fadeOut(1);
+                        $('.sectionCont').html(r);
+                        $('.sectionCont').fadeIn('slow', function(){
+                            $('main').fadeIn(loader.out());
+                        })
+                    })
+                }else{
+                    console.log(r);
+                }
+            }
+        })
+    })
+
+    $(document).on('click', '.btnBack', function(){
+        loader.in();
+        $(this).attr('disabled', 1);
+        $('.btnPrint').attr('disabled', 1);
+        $('main').fadeOut('slow', function(){
+            init_search(function(){
+                $('.sectionCont').fadeOut(1);
+                $('.listCont').fadeIn('slow', function(){
+                    $('main').fadeIn(loader.out());
+                })
+            })
+        })
+    })
+
+    $(document).on('click', '.btnPrint', function(){
+        $('#printSection [name=id]').val(g_id);
+        $('#printSection').submit();
+    })
+
+    $(document).on('submit', '#printSection', function(e){
+        e.preventDefault;
+    })
+
     const search_section = (lvl = '', spcty = '', sctn = '') => {
         loader.in()
     	$.ajax({
     		url: '../../files/php/C_Controller.php',
     		data: {filterSections: 1, lvl, spcty, sctn},
     		success: r => {
-    			// console.log(r);
     			$(".sectionCollection").html(r);
                 loader.out();
     		}
     	})
+    }
+
+    const init_search = (callback) => {
+        $("#cmbLevel").empty();
+        $("#cmbSpecialty").empty();
+        $("#cmbSection").empty();
+
+        $("#cmbLevel").html("<option selected disabled>Nivel</option>");
+        $("#cmbSpecialty").html("<option selected disabled>Especialidad</option>");
+        $("#cmbSection").html("<option selected disabled>Sección</option>");
+
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {getLvls: 1},
+            success: (r) => {
+                if (r != -1) {
+                    $('#cmbLevel').append(r);
+                    $('select').material_select();
+                    search_section();
+                }
+                callback();
+            }
+        })
     }
 })()

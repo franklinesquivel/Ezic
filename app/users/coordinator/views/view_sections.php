@@ -46,33 +46,64 @@
         <?php echo $const->createElement() ?>
     </header>
 
-    <main class='show'>
-    	<div class='container'>
-            <br>
-            <div class='row'>
-               <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
-                   <select id="cmbLevel">
-                       <option selected disabled>Nivel</option>
-                   </select>
-                   <label>Selecciona un nivel</label>
-               </div>
+    <main>
+        <div class='container'>
+            <div class="listCont">
+                <br>
+                <div class='row'>
+                    <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
+                        <select id="cmbLevel">
+                            <option selected disabled>Nivel</option>
+                        </select>
+                        <label>Selecciona un nivel</label>
+                    </div>
 
-               <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
-                   <select id="cmbSpecialty">
-                       <option selected disabled>Especialidad</option>
-                   </select>
-                   <label>Selecciona una especialidad</label>
-               </div>
+                    <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
+                        <select id="cmbSpecialty">
+                            <option selected disabled>Especialidad</option>
+                        </select>
+                        <label>Selecciona una especialidad</label>
+                    </div>
 
-               <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
-                   <select id="cmbSection">
-                       <option selected disabled>Sección</option>
-                   </select>
-                   <label>Selecciona una sección</label>
-               </div>
-                <div class='col l6 m6 s10 offset-s1 offset-l3 offset-m3 collection sectionCollection'></div>
+                    <div class='input-field col l6 m6 s10 offset-s1 offset-l3 offset-m3'>
+                        <select id="cmbSection">
+                            <option selected disabled>Sección</option>
+                        </select>
+                        <label>Selecciona una sección</label>
+                    </div>
+
+                    <div class="col l6 m6 s10 offset-s1 offset-l3 offset-m3">
+                        <br>
+                        <h4 class="center">Lista de Secciones</h4>
+                        <ul class='collection sectionCollection'></ul>
+                    </div>
+                </div>
             </div>
+            <div class="sectionCont" style="display: none;"></div>
         </div>
     </main>
+
+    <div class="fixed-action-btn vertical btn_options">
+        <a class="btn-floating btn-large black" id="info">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li title="Descargar"><a disabled class="btn-floating blue lighten-2 btnPrint"><i class="material-icons">file_download</i></a></li>
+            <li title="Regresar"><a disabled class="btn-floating grey btnBack"><i class="material-icons">arrow_back</i></a></li>
+            <li title="Información"><a class="btn-floating yellow darken-2 info_btn"><i class="material-icons">info_outline</i></a></li>
+        </ul>  
+    </div>
+
+    <div class="tap-target black" data-activates="info">
+        <div class="tap-target-content">
+            <h5>Acerca de este apartado:</h5>
+            <p>Se muestra la sección correspondiente al horario para que se pase lista. Así mismo el apartado tiene en cuenta los permisos previos y el estado conductual de los alumnos</p>
+        </div>
+    </div>
+
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printSection" target="_blank"> 
+        <input type="hidden" name="printSection" value="1">
+        <input type="hidden" name="id" value="">
+    </form>
 </body>
 </html>

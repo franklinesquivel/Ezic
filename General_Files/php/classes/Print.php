@@ -3,6 +3,7 @@
 	require_once 'Schedule.php';
 	require_once 'Administration.php';
 	require_once 'Grade_Class.php';
+	require_once 'Section_Class.php';
 
 
 	class Print_Class
@@ -10,6 +11,7 @@
 		private $mpdf;
 		private $schedule;
 		private $administration;
+		private $section;
 		private $connection;
 		private $_print;
 		private $stylesheet;
@@ -23,6 +25,7 @@
 			$this->schedule = new Schedule();
 			$this->administration = new Administration();
 			$this->grade = new Grade();
+			$this->section = new Section();
 		}
 
 		function getSchedule($type, $id)
@@ -115,15 +118,30 @@
 			$this->openPDF("Notas de estudiante", "Notas-" . $id . "-Periodo_$period");
 		}
 
+		function getSection($id)
+		{
+			$this->stylesheet = file_get_contents('../../mpdf/resources/sections.css');
+			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
+			$this->_print = $this->section->printSection($id);
+			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
+			$this->mpdf->WriteHTML($auxCSS, 1);
+			$this->mpdf->setTitle('Ezic: Secciones.');
+			$this->mpdf->setAuthor('Ezic ©');
+			$query = "SELECT * FROM section sn INNER JOIN level ll ON sn.idLevel = ll.idLevel INNER JOIN specialty sy ON sn.idSpecialty = sy.idSpecialty WHERE sn.idSection = $id";
+			$res = $this->connection->connection->query($query);
+			$row = $res->fetch_assoc();
+			$this->openPDF("Listado de sección", "Lista_" . $row['level'] . $row['sectionIdentifier']);
+		}
+
 
 		function openPDF($title, $name)
 		{
+			header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
 			$this->mpdf->WriteHTML($this->stylesheet, 1);
 			$this->genHeader($title);
 			$this->mpdf->WriteHTML($this->_print, 2);
-			// $this->mpdf->Output($name.".pdf", "I");
-			$this->mpdf->Output($name.".pdf", "D");
-			header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+			$this->mpdf->Output($name.".pdf", "I");
+			// $this->mpdf->Output($name.".pdf", "D");
 		}
 	}
 
@@ -142,7 +160,10 @@
 	}
 
 	if (isset($_POST['printGrades'])) {
-		echo $_POST['id'];
 		$print->getGrades($_POST['id'], $_POST['period']);
+	}
+
+	if (isset($_POST['printSection'])) {
+		$print->getSection($_POST['id']);
 	}
 ?>

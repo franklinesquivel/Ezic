@@ -672,4 +672,8 @@
 	if (isset($_REQUEST['filterSections'])) {
 		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}
+
+	if (isset($_REQUEST['showSection'])) {
+		echo $section->showSection($_REQUEST['idSn']);
+	}
 ?>

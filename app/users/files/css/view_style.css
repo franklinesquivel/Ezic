@@ -271,6 +271,21 @@ tfoot td{
 	text-align: center;
 }
 
+.banda{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-weight: bold;
+    background: #e74c3c;
+    color: #B71C1C;
+    font-style: italic;
+    font-size: 15px;
+    padding: 3px;
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
 .header_info_cont{
     display: flex;
     justify-content: space-around;
@@ -308,6 +323,19 @@ tfoot td{
 .header_info_cont .frmPhoto_cont .frmPhoto{
     width: 100%;
     height: 100%;
+}
+
+.section-header{margin-top: 5%;}
+
+.section-header > *{text-align: center; margin: 0; line-height: 30px}
+
+.section-header > *:nth-child(1){font-size: 35px;}
+.section-header > *:nth-child(2){font-size: 25px;}
+.section-header > *:nth-child(3){font-size: 20px;}
+
+.section-header + table{
+	margin: auto;
+	margin-top: 5%;
 }
 
 @media only screen and (max-width: 768px){
@@ -362,4 +390,12 @@ tfoot td{
     .btn_cont > *{
         margin: 2%;
     }
+
+    .section-header > *:first-child{margin-top: 10%;}
+
+    .section-header + table{
+    	margin: auto;
+		margin-top: 10%;
+		margin-bottom: 15%;
+	}
 }

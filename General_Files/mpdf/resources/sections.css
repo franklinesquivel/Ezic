@@ -1,0 +1,75 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: DejaVuSansCondensed;
+}
+
+.PDF_header .logo{
+	width: 15%;
+	float: left;
+	position: relative;
+	top: 5%;
+}
+
+.PDF_header .info{
+}
+
+.PDF_header .info .date{
+	text-align: right;
+}
+
+.PDF_header .info .title{
+	text-align: center;
+	font-size: 30px;
+	margin-left: -10%;
+}
+
+table {
+	font-family: DejaVuSansCondensed;
+	border-collapse: collapse;
+	vertical-align: middle;
+	width: 100%;
+	margin-top: -100px;
+}
+
+tr.header{}
+
+th {
+	font-weight: bold; 
+	vertical-align: center;
+	text-align: center;
+	font-size: .7em;
+	/*padding: 10px 15px;*/
+	padding: 7px;
+	vertical-align: middle;
+	border: 1px solid #000;
+	background: #ccc;
+}
+
+td{
+	font-size: 11px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 7px;
+	border: 1px solid #000;
+}
+
+td.optionCell, th.optionCell{
+	padding: 5px 13px;
+}
+
+th.optionCell{border-top: none;}
+th.optionCellTop{
+	/*background: red;*/
+	border-bottom: none;
+	padding-bottom: 100px;
+}
+
+th.hideTh{
+	background: none;
+	border: none;
+}
