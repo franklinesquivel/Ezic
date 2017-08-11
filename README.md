@@ -1,3 +1,2 @@
-Ezic
-===
-> Actual Version: __2.1__
+# Ezic
+> Actual Version: __2.5__
