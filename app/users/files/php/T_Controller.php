@@ -6,6 +6,9 @@
     require_once("../../../../General_Files/php/classes/Grade_Class.php");
     require_once("../../../../General_Files/php/classes/Profile_Class.php");
     require_once("../../../../General_Files/php/classes/Student_Class.php");
+    require_once("../../../../General_Files/php/classes/Email_Class.php");
+    require_once("../../../../General_Files/php/classes/Period.php");
+    require_once("../../../../General_Files/php/classes/Permission_Grade.php");
 
     $schedule = new Schedule();
     $assistance = new Assistance();
@@ -14,6 +17,9 @@
     $grade = new Grade();
     $profile = new Profile();
     $student = new Student();
+    $email = new Email();
+    $period = new Period();
+    $permission_grade = new Permission_Grade();
 
     if (isset($_REQUEST['loadSchedule'])) {
         session_start();
@@ -75,5 +81,49 @@
             }
         }
         echo ($z = ($z > 0) ? 1 : 0);
+    }
+
+    if (isset($_REQUEST['v_justification'])) {
+       echo ($profile->v_Justification());
+    }
+
+    if (isset($_REQUEST['table_Justification'])) {
+        echo ($profile->tableSubject_Justification($_REQUEST['period']));
+    }
+
+    if (isset($_REQUEST['getProfiles_Justification'])) {
+        echo ($profile->getForJustification($_REQUEST['subject']));
+    }
+
+    if (isset($_REQUEST['InsertJustification'])) {
+        $object = json_decode($_REQUEST['object']);
+        $z = 0;
+        for ($i=0; $i < count($object); $i++) { 
+            if ($profile->InsertJustification($object[$i]->id, $object[$i]->description)) {
+                $z++;
+            }
+        }
+        echo ($z = ($z == count($object)) ? 1 : 0);
+    }
+
+    if(isset($_REQUEST['v_permissionTeacher'])){
+        echo($permission_grade->v_permissionTeacher());
+    }
+
+    if (isset($_REQUEST['getStudents_Permission'])) {
+        echo ($student->v_permission($_REQUEST['subject']));
+    }
+
+    if(isset($_REQUEST['getFormEmail'])){ /* Solicita el formulario para enviar el correo */
+        echo ($email->FormEmailTeacher($period->getPeriods()));
+    }
+
+    if(isset($_REQUEST['getProfiles_Permission'])){
+        echo ($profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
+    }
+
+    if(isset($_REQUEST['register_permission'])){
+        $students = $email->setStudents(json_decode($_REQUEST['students']));
+        echo($email->SendEmail_FromTeacher($students, $_REQUEST['justification'], json_decode($period->selectPeriod($_REQUEST['period'])), $_REQUEST['subject'], $_REQUEST['profiles']));
     }
 ?>

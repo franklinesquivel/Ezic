@@ -64,6 +64,24 @@
         <div class="container">
             
         </div>
+        <div class='result_cont row'>
+        </div>
     </main>
+    <div class="fixed-action-btn vertical btn_options">
+        <a class="btn-floating btn-large black" id="info">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li title="Regresar"><a disabled class="btn-floating grey btnBack"><i class="material-icons">arrow_back</i></a></li>
+            <li title="Recomendaciones"><a class="btn-floating amber info_btn"><i class="material-icons">info_outline</i></a></li>
+        </ul>  
+    </div>
+
+    <div class="tap-target black" data-activates="info">
+        <div class="tap-target-content">
+            <h5>Acerca de este apartado:</h5>
+            <p>El coordinador podrá modificar los perfiles de evaluación según profesor, materia y periodo seleccionado.</p>
+        </div>
+    </div>
 </body>
 </html>
