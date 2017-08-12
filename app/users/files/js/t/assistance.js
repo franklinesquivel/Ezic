@@ -173,16 +173,16 @@
         return (r = (z == y) ? JSON.stringify(assistance_values) : false);
     };
 
-    $(document).on('click', '.btnCodeModal', () => {
-        g_id = $($(this).attr('btn')).parent().parent().attr('id');
-        console.log(g_id);
-        let fullname = ($($(this).attr('btn')).parent().parent().children('.info').text()).split(", "),
+    $(document).on("click", ".btnCodeModal", function(event){
+        g_id = $("#"+$(this).attr("id")).parent().parent().attr("id");
+        let fullname = ($("#"+$(this).attr("id")).parent().parent().children('.info').text()).split(", "),
             name = fullname[0],
             lastName = fullname[1];
+            
         $('.modal').find('.apply-id').html(g_id);
         $('.modal').find('.apply-name').html(lastName + ", " + name);
         $('#applyCode').modal('open');
-    })
+    });
 
     const initCodes = () => {
         $('#cmbCategory').html("<option selected disabled>Categoría</option>");

@@ -86,7 +86,7 @@
 			          				<label for='".$fila['idStudent']."_2'></label>
 			        			</td>
 								<td>
-			          				<div btn='btnStudent_".$i."' class='btn btnCodeModal waves-effect waves-light green darken-2' ".$disabled.">Abrir
+			          				<div id='btnStudent_".$i."' class='btn btnCodeModal waves-effect waves-light green darken-2' ".$disabled.">Abrir
 			    	    				<i class='material-icons right'>save</i>
 			    	    			</div>
 			        			</td>
