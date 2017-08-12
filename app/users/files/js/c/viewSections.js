@@ -1,6 +1,9 @@
 (() => {
     var loader, g_id;
+
 	$(document).ready(function(){
+        $('#getRowsData').modal();
+        $('#getRowsData').modal('open');
         loader = new Loader();
         loader.in()
 		$.ajax({
@@ -63,6 +66,45 @@
             search_section($("#cmbLevel").val(), $("#cmbSpecialty").val(), $("#cmbSection").val());
         })
 
+        jQuery.validator.setDefaults({
+          debug: true,
+          success: "valid"
+        });
+
+        $('.frmPrint').validate({
+            rules: {
+                txtRows: {
+                    required: true,
+                    min: 1,
+                    max: 15
+                }
+            },
+            messages: {
+                txtRows: {
+                    required: "Este campo es requerido!",
+                    min: "Ingrese un valor dentro del intervalo permitido!",
+                    max: "Ingrese un valor dentro del intervalo permitido!"
+                }
+            },
+            errorElement : 'div',
+            errorPlacement: function(error, element) {
+                var placement = $(element).data('error');
+                if (placement) {
+                    $(placement).append(error)
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                $('#printSection [name=id]').val(g_id);
+                $("#printSection [name=rows").val($("#txtRows").val());
+                $('#printSection').submit();
+            }
+        })
+
+        $('.btnPrintSectionOption').click(function(){
+            $('.frmPrint').submit();
+        })
 	})
 
     $(document).on('click', '.collection-item', function(){
@@ -104,12 +146,7 @@
     })
 
     $(document).on('click', '.btnPrint', function(){
-        $('#printSection [name=id]').val(g_id);
-        $('#printSection').submit();
-    })
-
-    $(document).on('submit', '#printSection', function(e){
-        e.preventDefault;
+        $('#getRowsData').modal('open');
     })
 
     const search_section = (lvl = '', spcty = '', sctn = '') => {

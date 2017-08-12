@@ -106,7 +106,7 @@
 			$this->openPDF("Perfil de usuario", ($id));
 		}
 
-		function getGrades($id, $period)
+		function getGrades($id, $period, $f = 1, $dir = 0)
 		{
 			$this->stylesheet = file_get_contents('../../mpdf/resources/grades.css');
 			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
@@ -115,7 +115,7 @@
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Notas.');
 			$this->mpdf->setAuthor('Ezic ©');
-			$this->openPDF("Notas de estudiante", "Notas-" . $id . "-Periodo_$period");
+			$this->openPDF("Notas de estudiante", "Notas_" . $id . "_Periodo_$period", $f, $dir);
 		}
 
 		function getSection($id)
@@ -133,15 +133,62 @@
 			$this->openPDF("Listado de sección", "Lista_" . $row['level'] . $row['sectionIdentifier']);
 		}
 
-
-		function openPDF($title, $name)
+		function multiGrades($id, $period)
 		{
-			header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id;";
+			$res = $this->connection->connection->query($query);
+			$resAux = $this->connection->connection->query($query);
+
+			$rowAux = $resAux->fetch_assoc();
+			$dirName = "Notas_" . $rowAux['level'] . $rowAux['sectionIdentifier'] . "_Periodo-" . $period;
+
+			mkdir("../../../app/users/files/tmp/$dirName", 0700);
+
+			while ($row = $res->fetch_assoc()) {
+				$this->getGrades($row['idStudent'], $period, 0, $dirName);
+			}
+
+			$this->createRar($dirName);
+		}
+
+
+		function openPDF($title, $name, $f = 1, $dir = 0)
+		{
+			if ($f) {
+				header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
+			}
 			$this->mpdf->WriteHTML($this->stylesheet, 1);
 			$this->genHeader($title);
 			$this->mpdf->WriteHTML($this->_print, 2);
-			$this->mpdf->Output($name.".pdf", "I");
-			// $this->mpdf->Output($name.".pdf", "D");
+			// $this->mpdf->Output($name.".pdf", "I");
+			$this->mpdf->Output( ($f ? '' : "../../../app/users/files/tmp/$dir/") . $name.".pdf", ($f ? "D" : "F"));
+		}
+
+		function createRar($name)
+		{
+			$zip = new ZipArchive();
+			$filename = "../../../app/users/files/tmp/$name.rar";
+			$tmp_file = tempnam("../../../app/users/files/tmp/$name.rar", "");
+
+			$zip->open($tmp_file, ZipArchive::CREATE);
+
+			foreach (glob("../../../app/users/files/tmp/$name/*.*") as $file) {
+				$zip->addFile($file, explode('/', $file)[count(explode('/', $file)) - 1]);
+			}
+
+		    $zip->close();
+
+		    header("Content-disposition: attachment; filename=$name.zip");
+		    header("Content-Type: application/zip");
+		    readfile($tmp_file);
+
+		    foreach (glob("../../../app/users/files/tmp/$name/*.*") as $file) {
+				unlink($file);
+			}
+		    rmdir("../../../app/users/files/tmp/$name");
+		    // header("Content-Transfer-Encoding: Binary");
+		    // header("Content-Length: ".filesize($tmp_file));
+		    // header("Content-Disposition: attachment; filename=\"".basename($tmp_file)."\"");
 		}
 	}
 
@@ -165,5 +212,9 @@
 
 	if (isset($_POST['printSection'])) {
 		$print->getSection($_POST['id']);
+	}
+
+	if (isset($_POST['printSectionGrades'])) {
+		$print->multiGrades($_POST['id'], 1);
 	}
 ?>

@@ -125,7 +125,7 @@
 			return $aux;
 		}
 
-		function printSection($id, $c = 15)
+		function printSection($id, $c = 5)
 		{
 			$aux = "";
 			$f = 1;
