@@ -34,6 +34,7 @@
 					["Ver", "visibility", "v_period"]
 				]];
 				$this->options[count($this->options)] = ["Perfiles de evaluación", "starts", [
+					["Añadir", "library_add","add_profile"],
 					["Eliminar", "delete", "delete_profile"],
 					['Modificar', "edit", "modify_profile"],
 					["Ver", "visibility", "v_profile"]
@@ -58,6 +59,8 @@
 				$this->options[count($this->options)] = ["Ver horario", "schedule", "schedule"];
 				$this->options[count($this->options)] = ["Asistencia", "date_range", "assistance"];
 				$this->options[count($this->options)] = ["Agregar notas", "grade", "addGrade"];
+				$this->options[count($this->options)] = ["Descripción de Perfiles", "format_align_justify", "addJustification"];
+				$this->options[count($this->options)] = ["Solicitar Permiso", "lock_open", "request_permission"];
 			}else{
 				$this->options[count($this->options)] = ['Ver notas', "grades", "grades"];
 				$this->options[count($this->options)] = ['Récord conductual', "favorite", "record"];
