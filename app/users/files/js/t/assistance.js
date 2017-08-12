@@ -174,9 +174,11 @@
     };
 
     $(document).on('click', '.btnCodeModal', () => {
-        g_id = $(this).parent().parent().parent().attr('id');
-        let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
-            lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
+        g_id = $($(this).attr('btn')).parent().parent().attr('id');
+        console.log(g_id);
+        let fullname = ($($(this).attr('btn')).parent().parent().children('.info').text()).split(", "),
+            name = fullname[0],
+            lastName = fullname[1];
         $('.modal').find('.apply-id').html(g_id);
         $('.modal').find('.apply-name').html(lastName + ", " + name);
         $('#applyCode').modal('open');
