@@ -250,6 +250,8 @@
 			if ($result->num_rows > 0) {
 				$form = "<br><br><form  id='modifyProfile'>";
 				while ($fila = $result->fetch_assoc()) {
+					$clase_txt = ($fila['description'] != '') ? 'active' : '';
+
 					$form .= "<div class='row'>
 						<div class='title-profile col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
 							<blockquote><h5 class='center-align'>".$fila['name']."</h5></blockquote>
@@ -262,7 +264,7 @@
 						</div>
 						<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
 							<textarea class='materialize-textarea' name='description".$i."' data-length='500' id='description".$i."'>".$fila['description'] ."</textarea>
-							<label for='description".$i."' class='".$clase_txt = ($fila['description'] != "") ? 'active' : ''."'>Descripción</label>
+							<label for='description".$i."' class='".$clase_txt."'>Descripción</label>
 						</div>
 					</div>";
 					$i++;
@@ -275,10 +277,11 @@
 						</button>
 					</div>
 				</form>";
+				return $form;
 			}else{
-				$form = "0";
+				$a = "-2";
+				return $a;
 			}
-			return $form;
 		}
 
 		function v_modifyProfile($list_teachers, $list_periods){
@@ -317,6 +320,110 @@
 			</form>";
 
 			return $form;
+		}
+
+		function v_Justification(){ /* Vista se carga cuando el profesor quiere agregar justificación */
+			$query = "SELECT * FROM period";
+			$result = $this->connection->connection->query($query);
+			if ($result->num_rows > 0) {
+				$form = "<div class='row'>
+					<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<select id='selectPeriod' name='selectPeriod'>
+							<option value='' disabled selected>Elegir Período</option>";
+				while ($fila = $result->fetch_assoc()) {
+					$form .= "<option value='".$fila['idPeriod']."' >Período N° ".$fila['nthPeriod']."</option>";
+				}
+				$form .= "
+						</select>
+						<label>Período</label>
+					</div>
+				</div>";
+			}else{
+				$form = "<div class='.alert_ col s8 offset-s2'><span>No hay períodos ingresados</span></div>";
+			}
+			return $form;
+		}
+
+		function tableSubject_Justification($period){
+			session_start();
+			$query = "SELECT subject.acronym, subject.nameSubject, GROUP_CONCAT(DISTINCT section.SectionIdentifier  ORDER BY section.SectionIdentifier ASC  SEPARATOR ', ') AS section, GROUP_CONCAT(DISTINCT section.idSection  ORDER BY section.idSection ASC  SEPARATOR ', ') AS IdSection,  level.level AS level, COUNT(DISTINCT evaluation_profile.idProfile) AS num_profile, subject.idSubject FROM `subject` INNER JOIN register_subject ON subject.idSubject = register_subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN evaluation_profile ON evaluation_profile.idSubject = subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE evaluation_profile.nthPeriod = '".$period."' AND subject.idTeacher = '".$_SESSION['id']."' AND evaluation_profile.description = '' GROUP BY subject.idSubject ORDER BY level.level";
+
+			$result = $this->connection->connection->query($query);
+			if ($result->num_rows > 0) {
+				$form ="<div class='row'>
+					<ul class='collection subject with-header col l10 m10 s12 offset-l1 offset-m1'>
+					<li class='collection-header container-subject'><h4 class='center-align'>Asignaturas</h4></li>";
+				while ($fila = $result->fetch_assoc()) {
+					$form .= "
+					<li class='collection-item collection-subject'>
+						<div class='name-subject' title='".$fila['nameSubject']."'>
+							<h4>".$fila['acronym']."</h4>
+						</div>
+						<div class='info-subject'>
+						    <div class='r-divider'>
+						    	<div class='level'>
+						        	<span class='title'>Nivel: </span><span class='result'> ".$fila['level']."°</span>
+							    </div>
+							    <div class='n-sections'>
+							        <span class='title'>Secciones: </span><span class='result'>".$fila['section']."</span>
+							    </div>
+						    </div>
+						    <div class='r-divider'>
+						    	<div class=''>
+									<div class='n-perfiles'>
+						        		<span class='title'>Por ingresar: </span><span class='result n-perfiles'>".$fila['num_profile']."</span>
+						        	</div>
+						    	</div>
+						    	<div>
+						    		<button class='btn waves-effect waves-light green btnProfiles' id='".$fila['idSubject']."'>Ver Perfiles
+    									<i class='material-icons right'>send</i>
+  									</button>
+						    	</div>
+						    </div>
+						</div>
+					</li>";
+				}
+				$form .= "</ul></div>";
+			}else{
+				$form = "<div class='alert_ col s8 offset-s2'><span>No hay perfiles de evaluación con descriciones por ingresar en este período</span></div>";
+			}
+
+			return $form;
+		}
+
+		function getForJustification($subject){
+			$query = "SELECT evaluation_profile.name, evaluation_profile.percentage, evaluation_profile.idProfile FROM evaluation_profile WHERE evaluation_profile.idSubject = '$subject' AND evaluation_profile.description = ''";
+			$result = $this->connection->connection->query($query);
+			$form = "";
+			$i = 0;
+			while ($fila = $result->fetch_assoc()) {
+				$form .= "
+				<div class='row'>
+					<div class='title-profile col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<blockquote profile_id='".$fila['idProfile']."'><h5 class='center-align'>".$fila['name']."</h5></blockquote>
+						<div class='percentage'>".$fila['percentage']." %</div>
+					</div>
+					<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<textarea class='materialize-textarea txtForm' name='description".$i."' data-length='500' id='description".$i."'></textarea>
+						<label for='description".$i."'>Descripción</label>
+					</div>
+				</div>";
+				$i++;
+			}
+			$form .= "
+					<div class='row col s12'>
+						<button class='SaveJustification btn waves-effect waves-light col l2 m2 s4 offset-l5 offset-m5 offset-s4 green darken-2' >
+							Guardar
+							<i class='material-icons right'>save</i>
+						</button>
+					</div>
+				</form>";
+			return $form;
+		}
+
+		function InsertJustification($id, $description){
+			$query = "UPDATE evaluation_profile SET description = '$description' WHERE idProfile = $id ";
+			return ($this->connection->connection->query($query));
 		}
 	}
 ?>
