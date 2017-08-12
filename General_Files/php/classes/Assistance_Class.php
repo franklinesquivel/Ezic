@@ -24,7 +24,7 @@
 			$query = "SHOW TABLES FROM ezic WHERE TABLES_IN_ezic LIKE 'teacher_schedule_".$_SESSION['id']."'";
 			$result = $this->connection->connection->query($query);
 			if ($result->num_rows > 0) {
-				$query = "SELECT schedule_register.idS_Register, student.idStudent, student.name, student.lastName, student.stateAcademic FROM `teacher_schedule_" . $_SESSION['id'] . "` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_" . $_SESSION['id'] . ".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON section.idLevel = level.idLevel INNER JOIN student ON student.idSection = section.idSection  WHERE student.stateAcademic = 'A' AND student.verified =1 AND schedule_register.startTime BETWEEN schedule_register.startTime AND '$horaLocal' AND schedule_register.endTime BETWEEN '$horaLocal' AND schedule_register.endTime ORDER BY student.lastName ASC";
+				$query = "SELECT schedule_register.idS_Register, student.idStudent, student.name, student.lastName, student.stateAcademic FROM `teacher_schedule_" . $_SESSION['id'] . "` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_" . $_SESSION['id'] . ".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON section.idLevel = level.idLevel INNER JOIN student ON student.idSection = section.idSection  WHERE student.stateAcademic = 'A' AND student.verified = 1 AND schedule_register.startTime BETWEEN schedule_register.startTime AND '$horaLocal' AND schedule_register.endTime BETWEEN '$horaLocal' AND schedule_register.endTime ORDER BY student.lastName ASC";
 				$result = $this->connection->connection->query($query);
 				$column = $this->connection->connection->query($query);
 				$idSchedule = $column->fetch_assoc();
@@ -40,6 +40,7 @@
 			                    <th>Asistió</th>
 			                    <th>Llegada Tardía</th>
 			                    <th>No asistió</th>
+								<th>Aplicar Código</th>
 		                    </tr>
 	                	</thead>
 						";
@@ -71,7 +72,7 @@
 							$table .="<tr id='".$fila['idStudent']."' class='".$tr_class."' title='".$title."'>
 								<td>".($i+1)."</td>
 								<td>".$fila['idStudent']."</td>
-								<td>".$fila['lastName'].", ".$fila['name']."</td>
+								<td class='info'>".$fila['lastName'].", ".$fila['name']."</td>
 								<td>
 			          				<input name='student_".$i."' type='radio' class='btn_radio' value='S' id='".$fila['idStudent']."_0' ".$disabled."/>
 			          				<label for='".$fila['idStudent']."_0'></label>
@@ -83,6 +84,11 @@
 			        			<td>
 			          				<input name='student_".$i."' type='radio' value='N' class='btn_radio' id='".$fila['idStudent']."_2' ".$disabled."/>
 			          				<label for='".$fila['idStudent']."_2'></label>
+			        			</td>
+								<td>
+			          				<div class='btn btnCodeModal waves-effect waves-light green darken-2' ".$disabled.">Abrir
+			    	    				<i class='material-icons right'>save</i>
+			    	    			</div>
 			        			</td>
 							</tr>";
 							$i++;

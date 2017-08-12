@@ -36,24 +36,6 @@
 			return $array;
 		}
 
-		// function getSubjects(){
-		// 	$query = "SELECT register_subject.idSubject AS idSubject, subject.nameSubject AS nameSubject, subject.idTeacher AS idTeacher, section.sectionIdentifier As section, section.idLevel AS level  FROM `register_subject` INNER JOIN subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON register_subject.idSection = section.idSection INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher WHERE teacher.state = 'A' ORDER BY section.idLevel";
-			
-		// 	$result = $this->connection->connection->query($query);
-		// 	$array = array();
-		// 	$i = 0;
-		// 	while($fila = $result->fetch_assoc()){
-		// 		$array[$i][0] = $fila['idSubject'];
-		// 		$array[$i][1] = $fila['level'];
-		// 		$array[$i][2] = $fila['section'];
-		// 		$array[$i][3] = $fila['nameSubject'];
-		// 		$array[$i][4] = $fila['idTeacher'];
-		// 		$i++;
-		// 	}
-
-		// 	return $array;
-		// }
-
 		function newSubject($name, $teacher, $acronym, $description){
 			$query = "INSERT INTO subject(nameSubject, idTeacher, acronym, description) VALUES('$name', '$teacher', '$acronym', '$description')";
 			$result = $this->connection->connection->query($query);
@@ -92,7 +74,7 @@
 
 		function getForDelete(){
 			//Se obtienen las materias que si existen en las tablas
-			$query = "SELECT idSubject FROM subject WHERE idSubject != ( SELECT DISTINCT idSubject FROM evaluation_profile) UNION (SELECT idSubject FROM subject WHERE idSubject != (SELECT DISTINCT idSubject FROM averages)) UNION (SELECT idSubject FROM subject WHERE idSubject != (SELECT DISTINCT idSubject FROM schedule_register)) UNION (SELECT idSubject FROM subject WHERE idSubject != (SELECT DISTINCT idSubject FROM code))";
+			$query = "SELECT idSubject FROM subject WHERE idSubject NOT IN ( SELECT DISTINCT idSubject FROM evaluation_profile) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM averages)) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM schedule_register)) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM code))";
 			$result = $this->connection->connection->query($query);
 			$i = 0;
 			$subject = array();

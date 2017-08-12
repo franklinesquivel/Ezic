@@ -91,10 +91,11 @@
 			$query = "SELECT * FROM period WHERE idPeriod = $idPeriod";
 			$result = $this->connection->connection->query($query);
 			$fila = $result->fetch_assoc();
-			$array = [
+			$array[0] = [
 				"startDate" => $fila['startDate'],
 				"endDate" => $fila['endDate'],
-				"percentage" => $fila['percentage']
+				"percentage" => $fila['percentage'],
+				"numPeriod" => $fila['nthPeriod']
 			];
 
 			return json_encode($array);
