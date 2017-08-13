@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-08-2017 a las 05:07:18
+-- Tiempo de generación: 13-08-2017 a las 05:26:26
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `ezic_limpia`
+-- Base de datos: `ezic`
 --
 
 -- --------------------------------------------------------
@@ -163,8 +163,8 @@ CREATE TABLE `coordinator` (
 --
 
 INSERT INTO `coordinator` (`idCoor`, `name`, `lastName`, `dui`, `password`, `email`, `birthdate`, `sex`, `profession`, `residence`, `phone`, `state`, `photo`) VALUES
-('C1425', 'Glenda Luisa', 'Martinez Cocoa', '12345678-9', '10473!111153?108113*9702!73352*110133*10363!108113-10583/115193/10473-53L2?', 'glenda2@gmail.com', '1998-09-26', 'F', 'Licenciada en Idiomas', 'Santa Elena', '7499-2136', 1, 'C1425.jpg'),
-('C1625', 'Oscar Antonio', 'Acosta Ramos', '98745612-3', '9702!112163?111153-114183?108113?9702-49l2!50a2/65272?', 'oscarito44@outlook.com', '1955-10-09', 'M', 'Licenciado en comunicaciones', 'Santa Ana', '2598-3122', 1, 'C1625.jpg');
+('C1425', 'Glenda Luisa', 'Martinez Cocoa', '12345678-9', '10473!111153?108113*9702!73352*110133*10363!108113-10583/115193/10473-53L2?', 'lopezleonardo282@gmail.com', '1998-09-26', 'F', 'Licenciada en Idiomas', 'Santa Elena', '7499-2136', 1, 'C1425.jpg'),
+('C1625', 'Oscar Antonio', 'Acosta Ramos', '98745612-3', '9702!112163?111153-114183?108113?9702-49l2!50a2/65272?', 'franklin.esquivel@outlook.com', '1955-10-09', 'M', 'Licenciado en comunicaciones', 'Santa Ana', '2598-3122', 1, 'C1625.jpg');
 
 -- --------------------------------------------------------
 
@@ -180,6 +180,13 @@ CREATE TABLE `evaluation_profile` (
   `description` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
   `idSubject` int(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `evaluation_profile`
+--
+
+INSERT INTO `evaluation_profile` (`idProfile`, `name`, `percentage`, `nthPeriod`, `description`, `idSubject`) VALUES
+(1, 'prueba 1', 10, 1, 'HIIIIII', 1);
 
 -- --------------------------------------------------------
 
@@ -363,7 +370,8 @@ CREATE TABLE `permission_grade` (
   `idStudent` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
   `idProfile` int(15) NOT NULL,
   `approved` tinyint(1) NOT NULL,
-  `modified` tinyint(1) NOT NULL
+  `modified` tinyint(1) NOT NULL,
+  `description` varchar(400) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
@@ -885,7 +893,7 @@ ALTER TABLE `code`
 -- AUTO_INCREMENT de la tabla `evaluation_profile`
 --
 ALTER TABLE `evaluation_profile`
-  MODIFY `idProfile` int(15) NOT NULL AUTO_INCREMENT;
+  MODIFY `idProfile` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `gnrl_code`
 --
