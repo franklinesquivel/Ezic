@@ -311,6 +311,13 @@ input[type="checkbox"].checkbox-list + label{transform: scale(1.6);}
 
 .list-add .message-error{display: none;}
 .list-add .message-error h5{color: #B71C1C;}
+ul#slide-filter{padding: 10px;}
+ul#slide-filter h5{color: white;}
+ul#slide-filter .section-select .select-dropdown{
+    color: white;
+    border-bottom: 1px solid white;
+    font-size: 14px;
+}
 
 @media only screen and (max-width: 768px){
     .alert_{
@@ -375,3 +382,8 @@ input[type="checkbox"].checkbox-list + label{transform: scale(1.6);}
         margin: 0px auto 20px auto;
     }
 }
+
+/* ul#slide-filters{
+    width: 100%;
+    background: green;
+} */

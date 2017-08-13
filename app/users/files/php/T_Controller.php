@@ -9,6 +9,7 @@
     require_once("../../../../General_Files/php/classes/Email_Class.php");
     require_once("../../../../General_Files/php/classes/Period.php");
     require_once("../../../../General_Files/php/classes/Permission_Grade.php");
+    require_once("../../../../General_Files/php/classes/Section_Class.php");
 
     $schedule = new Schedule();
     $assistance = new Assistance();
@@ -20,6 +21,7 @@
     $email = new Email();
     $period = new Period();
     $permission_grade = new Permission_Grade();
+    $section = new Section();
 
     if (isset($_REQUEST['loadSchedule'])) {
         session_start();
@@ -111,7 +113,7 @@
     }
 
     if (isset($_REQUEST['getStudents_Permission'])) {
-        echo ($student->v_permission($_REQUEST['subject']));
+        echo ($student->v_permission($_REQUEST['subject'], $_REQUEST['section']));
     }
 
     if(isset($_REQUEST['getFormEmail'])){ /* Solicita el formulario para enviar el correo */
@@ -122,8 +124,16 @@
         echo ($profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
     }
 
-    if(isset($_REQUEST['register_permission'])){
-        $students = $email->setStudents(json_decode($_REQUEST['students']));
+    if(isset($_REQUEST['register_permission'])){ /* Ingresa Todo del envío del email */
+        $object = json_decode($_REQUEST['students']);
+        $students = $email->setStudents($object);
+        for($i = 0; $i < count($object); $i++){
+            $email->InsertPermission($object[$i]->id, $_REQUEST['justification'], $_REQUEST['profiles']);
+        }
         echo($email->SendEmail_FromTeacher($students, $_REQUEST['justification'], json_decode($period->selectPeriod($_REQUEST['period'])), $_REQUEST['subject'], $_REQUEST['profiles']));
+    }
+
+    if(isset($_REQUEST['getSection'])){/* Función que carga las secciones en request_permission.php */
+        echo($section->getAllForSubject($_REQUEST['subject']));
     }
 ?>
