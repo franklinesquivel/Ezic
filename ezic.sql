@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-08-2017 a las 22:24:45
+-- Tiempo de generación: 13-08-2017 a las 05:07:18
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `ezic`
+-- Base de datos: `ezic_limpia`
 --
 
 -- --------------------------------------------------------
@@ -352,6 +352,23 @@ CREATE TABLE `permission` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `permission_grade`
+--
+
+CREATE TABLE `permission_grade` (
+  `idPermission_Grade` int(15) NOT NULL,
+  `startDate` date NOT NULL,
+  `endDate` date NOT NULL,
+  `idCoor` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+  `idStudent` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+  `idProfile` int(15) NOT NULL,
+  `approved` tinyint(1) NOT NULL,
+  `modified` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `record`
 --
 
@@ -427,9 +444,9 @@ CREATE TABLE `section` (
 -- Volcado de datos para la tabla `section`
 --
 
-INSERT INTO `section` (`idSection`, `idLevel`, `idSpecialty`, `sectionIdentifier`) VALUES
-(1, 1, 1, 'B'),
-(2, 2, 2, 'A');
+INSERT INTO `section` (`idSection`, `idLevel`, `idSpecialty`, `sectionIdentifier`, `sState`) VALUES
+(1, 1, 1, 'B', 0),
+(2, 2, 2, 'A', 0);
 
 -- --------------------------------------------------------
 
@@ -732,6 +749,15 @@ ALTER TABLE `permission`
   ADD KEY `idSchedule` (`idSchedule`);
 
 --
+-- Indices de la tabla `permission_grade`
+--
+ALTER TABLE `permission_grade`
+  ADD PRIMARY KEY (`idPermission_Grade`),
+  ADD KEY `idCoor` (`idCoor`),
+  ADD KEY `idStudent` (`idStudent`),
+  ADD KEY `idProfile` (`idProfile`);
+
+--
 -- Indices de la tabla `record`
 --
 ALTER TABLE `record`
@@ -905,6 +931,11 @@ ALTER TABLE `period`
 --
 ALTER TABLE `permission`
   MODIFY `idPermission` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `permission_grade`
+--
+ALTER TABLE `permission_grade`
+  MODIFY `idPermission_Grade` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `record`
 --
