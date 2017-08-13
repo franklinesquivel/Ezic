@@ -94,7 +94,7 @@
 
 			$i = 0;
 			for ($x=0; $x < count($profiles) ; $x++) { 
-				$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idProfile != '".$profiles[$x]."' ORDER BY evaluation_profile.name GROUP BY evaluation_profile.idProfile";
+				$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idProfile != '".$profiles[$x]."' GROUP BY evaluation_profile.idProfile ORDER BY evaluation_profile.name ";
 				$result = $this->connection->connection->query($query);
 				while ($fila = $result->fetch_assoc()) {
 
