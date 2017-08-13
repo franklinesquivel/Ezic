@@ -420,6 +420,7 @@ CREATE TABLE `section` (
   `idLevel` int(15) NOT NULL,
   `idSpecialty` int(15) NOT NULL,
   `sectionIdentifier` varchar(1) COLLATE utf8_spanish2_ci NOT NULL
+  `sState` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
