@@ -191,20 +191,20 @@ ul.side-nav.fixed:hover{
     margin-top: 20px;
 }
 
-.user-show-cont .user-data .data-block{
+.user-show-cont .user-data .data-block, .data-block{
     display: flex;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ecf0f1;
 }
 
-.user-show-cont .user-data .data-block .data-title{
+.user-show-cont .user-data .data-block .data-title, .data-block .data-title{
     font-size: 25px;
     color: #ADADAD;
     text-align: right;
 }
 
-.user-show-cont .user-data .data-block .data-content{
+.user-show-cont .user-data .data-block .data-content, .data-block .data-content{
     font-size: 18px;
 }
 

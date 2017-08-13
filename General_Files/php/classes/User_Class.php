@@ -173,6 +173,7 @@
                                     <li function='record' class='red btnRecord'><a class='waves-effect white-text'>Conducta<i class='material-icons left'>favorite</i></a></li>
                                     <li function='appliedCode' class='blue-grey btnAppliedCode'><a class='waves-effect white-text'>Aplicar Código<i class='material-icons left'>warning</i></a></li>
                                     <li function='removeCode' class='pink btnRmvCode'><a class='waves-effect white-text'>Remover Código<i class='material-icons left'>remove_circle</i></a></li>
+                                    <li class='indigo btnMandated'><a disabled class='waves-effect white-text'z>Ver responsable<i class='material-icons left'>folder_shared</i></a></li>
                                     <li function='edit' class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
                                 </ul>
                             </div>

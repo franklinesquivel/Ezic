@@ -64,7 +64,7 @@
              <div class="col s12 m6">
                 <div class="card">
                     <div class="card-image">
-                        <img src="../../../../General_Files/img/users.jpg">
+                        <img src="../../../../General_Files/img/sections.jpg">
                         <span class="card-title">Secciones</span>
                         <a class="btn-floating btn-large halfway-fab waves-effect waves-light grey darken-3 btnSections"><i class="material-icons">forward</i></a>
                     </div>

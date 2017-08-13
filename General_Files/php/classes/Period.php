@@ -138,5 +138,24 @@
 
 			return ($this->connection->connection->query($query));
 		}
+
+		function returnJSONPeriods()
+		{
+			$obj = [];
+			$query = "SELECT * FROM period";
+			$res = $this->connection->connection->query($query);
+
+			if ($res->num_rows > 0) {
+				while ($row = $res->fetch_assoc()) {
+					$aux = [];
+					foreach ($row as $key => $value) {
+						$aux[$key] = $value;
+					}
+					array_push($obj, $aux);
+				}
+			}
+
+			return $obj;
+		}
 	}
 ?>

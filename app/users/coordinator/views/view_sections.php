@@ -102,37 +102,45 @@
     </div>
 
     <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printSection"> 
-        <!-- <input type="hidden" name="printSection" value="1"> -->
-        <!-- <input type="hidden" name="printSectionGrades" value="1"> -->
-        <input type="hidden" name="printSectionGrades" value="1">
-        <input type="hidden" name="rows" value="">
-        <input type="hidden" name="id" value="">
+        <input type="hidden" id="action">
+        <input type="hidden" name="rows">
+        <input type="hidden" name="id">
+        <input type="hidden" name="idPeriod">
     </form>
 
     <div id="getRowsData" class="modal">
         <div class="modal-content">
             <div class="row">
                 <form class="frmPrint">
-                    <div class="col m8 l8 s10 offset-s1 offset-m2 offset-l2 input-field">
-                        <p>
-                            <input type="radio" class="with-gap" id="rdoList" name="file" checked="checked" value="printSection"/>
-                            <label for="rdoList">Listado</label>
-                        </p>
-                        <div class="divider"></div>
+                    <h5 class="center">Selecciona la opción del o los archivos que deseas descargar</h5>
+                    <br>
+                    <div class="col m4 l4 s12 input-field rdo">
+                        <input type="radio" class="with-gap" id="rdoList" name="file" checked="checked" value="printSection"/>
+                        <label for="rdoList">Listado</label>
                     </div>
-                    <div class="col m8 l8 s10 offset-s1 offset-m2 offset-l2 input-field">
+                    <div class="col m8 l8 s12 input-field">
                         <input placeholder="Max(15) - Min(1)" type="number" name="txtRows" id="txtRows">
                         <label for="txtRows">Ingresa la cantidad de columnas extras que desea en el PDF</label>
                     </div>
-                    <div class="col m8 l8 s10 offset-s1 offset-l2 offset-m2 input-field">
-                        <p>
-                          <input type="radio" class="with-gap" id="rdoGrades" name="file" value="printSectionGrades"/>
-                          <label for="rdoGrades">Notas</label>
-                        </p>
+
+                    <div class="col m4 l4 s12 input-field rdo" >
+                      <input type="radio" class="with-gap" id="rdoGrades" name="file" value="printSectionGrades"/>
+                      <label for="rdoGrades">Notas</label>
+                    </div>
+                    <div class="col m8 l8 s12 input-field">
+                        <select name="cmbPeriod" id="cmbPeriod" disabled>
+                            <option disabled selected></option> 
+                        </select>
+                        <label for="cmbPeriod">Selecciona el período</label>
+                    </div>
+
+                    <div class="col m12 l12 s12 input-field rdo" >
+                      <input type="radio" class="with-gap" id="rdoRecords" name="file" value="printSectionRecord"/>
+                      <label for="rdoRecords">Record's Conductuales</label>
                     </div>
                 </form>
             </div>
-            <center>
+            <center style='margin-top: 10%;'>
                 <a class="btn waves-effect waves-light black btnPrintSectionOption"><i class="material-icons right">file_download</i>Descargar</a>
             </center>
         </div>

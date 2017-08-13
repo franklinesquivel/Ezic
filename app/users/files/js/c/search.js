@@ -305,6 +305,31 @@
                 $('#removeCode-modal').modal('open');
             })
 
+            $('.btnMandated').click(function(){
+                g_id = $(this).parent().parent().parent().attr('id');
+
+                let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
+                    lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
+
+                $('#mandated-modal').find('.student-id').html(g_id);
+                $('#mandated-modal').find('.student-name').html(lastName + ", " + name);
+
+                loader.in();
+                $.ajax({
+                    url: '../../files/php/C_Controller.php',
+                    data: {getMandated: 1, id: g_id},
+                    success: r => {
+                        if (r != -1) {
+                            $('#mandated-modal .row').html(r);
+                            $('#mandated-modal').modal('open');
+                        }else{
+                            Materialize.toast("No posee un responsable registrado!", 2000);
+                        }
+                        loader.out();
+                    }
+                })
+            })
+
             //ACCIONES PARA DOCENTE Y COORDINADOR
             $('.btnSchedule').click(function(){
                 g_id = $(this).parent().parent().parent().attr('id');
@@ -665,6 +690,8 @@
                 $('#removeCode-modal .alert_').remove();
             }
         });
+
+         $('#mandated-modal').modal();
         
         $('#cmbCategory').change(function(){
             $('#cmbCodes').html('<option selected disabled>Código</option>');

@@ -1,11 +1,38 @@
 (() => {
-    var loader, g_id;
+    var loader, g_id, rules = {}, messages;
 
 	$(document).ready(function(){
+        rules = {
+            txtRows: {
+                required: true,
+                min: 1,
+                max: 15
+            }
+        }
+
+        messages = {
+            txtRows: {
+                required: "Este campo es requerido!",
+                min: "Ingrese un valor dentro del intervalo permitido!",
+                max: "Ingrese un valor dentro del intervalo permitido!"
+            }
+        }
+
         $('#getRowsData').modal();
-        $('#getRowsData').modal('open');
         loader = new Loader();
-        loader.in()
+        loader.in();
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {periodsJSON: 1},
+            success: (r) => {
+                if (r != -1) {
+                    r = JSON.parse(r);
+                    for (var i = 0; i < r.length; i++) {
+                        $("#cmbPeriod").append(`<option value="${r[i].idPeriod}">Período N° ${r[i].nthPeriod}</option>`);
+                    }
+                }
+            }
+        })
 		$.ajax({
             url: '../../files/php/C_Controller.php',
             data: {getLvls: 1},
@@ -72,20 +99,8 @@
         });
 
         $('.frmPrint').validate({
-            rules: {
-                txtRows: {
-                    required: true,
-                    min: 1,
-                    max: 15
-                }
-            },
-            messages: {
-                txtRows: {
-                    required: "Este campo es requerido!",
-                    min: "Ingrese un valor dentro del intervalo permitido!",
-                    max: "Ingrese un valor dentro del intervalo permitido!"
-                }
-            },
+            rules,
+            messages,
             errorElement : 'div',
             errorPlacement: function(error, element) {
                 var placement = $(element).data('error');
@@ -96,8 +111,24 @@
                 }
             },
             submitHandler: function(form) {
+                if($("input[name=file]:checked").attr('id') == "rdoGrades"){
+                    if (errorSelect($('#cmbPeriod'))) {
+                        $('#printSection [id=action]').attr("name", "printSectionGrades");
+                        $('#printSection [name=idPeriod]').val($('#cmbPeriod').val());
+                    }else{
+                        Materialize.toast("Este dato es necesario!", 2000);
+                    }
+                }else if($("input[name=file]:checked").attr('id') == "rdoRecords"){
+                    $('#printSection [id=action]').attr("name", "printSectionRecords");
+                }else if($("input[name=file]:checked").attr('id') == "rdoList"){
+                    $('#printSection [id=action]').attr("name", "printSection");
+                    $("#printSection [name=rows").val($("#txtRows").val());
+                }else{
+                    Materialize.toast('Debes seleccionar una opción!', 2000);
+                    return;
+                }
+
                 $('#printSection [name=id]').val(g_id);
-                $("#printSection [name=rows").val($("#txtRows").val());
                 $('#printSection').submit();
             }
         })
@@ -108,7 +139,7 @@
 	})
 
     $(document).on('click', '.collection-item', function(){
-        g_id = $(this).attr('idsn')
+        g_id = $(this).attr('idsn');
         loader.in();
         $.ajax({
             url: '../../files/php/C_Controller.php',
@@ -129,6 +160,44 @@
                 }
             }
         })
+    })
+
+    $(document).on("change", "input[name=file]", function(){
+        $("#cmbPeriod").children().eq(0).attr("selected");
+        $("input#txtRows").val("");
+        $('input#txtRows').attr('disabled', 1);
+        $('#cmbPeriod').attr('disabled', 1);
+        $("select").material_select();
+    })
+
+    $(document).on('change', '#rdoList', function(){
+        $('input#txtRows').removeAttr('disabled');
+        rules = {
+            txtRows: {
+                required: true,
+                min: 1,
+                max: 15
+            }
+        }
+        messages = {
+            txtRows: {
+                required: "Este campo es requerido!",
+                min: "Ingrese un valor dentro del intervalo permitido!",
+                max: "Ingrese un valor dentro del intervalo permitido!"
+            }
+        }
+    })
+
+    $(document).on('change', "#rdoGrades", function(){
+        $('#cmbPeriod').removeAttr('disabled');
+        $("select").material_select();
+        rules = {};
+        messages = {};
+    })
+
+    $(document).on('change', "#rdoRecords", function(){
+        rules = {};
+        messages = {};
     })
 
     $(document).on('click', '.btnBack', function(){

@@ -636,5 +636,36 @@
 
 			return 1;
 		}
+
+		function getMandated($id)
+		{
+			$aux = "";
+			$query = "SELECT * FROM mandated WHERE idStudent = '$id'";
+			$res = $this->connection->connection->query($query);
+			if ($res->num_rows == 0) return -1;
+
+			while ($row = $res->fetch_object()) {
+				$aux .= "
+					<div class='data-block col l12 m12 s12'>
+	                    <div class='data-title col l6 m6 s12'>Nombre: </div>
+	                    <div class='data-content col l6 m6 s12'>$row->name $row->lastName</div>
+	                </div>
+	                <div class='data-block col l12 m12 s12'>
+	                    <div class='data-title col l6 m6 s12'>DUI: </div>
+	                    <div class='data-content col l6 m6 s12'>$row->dui</div>
+	                </div>
+	                <div class='data-block col l12 m12 s12'>
+	                    <div class='data-title col l6 m6 s12'>Email: </div>
+	                    <div class='data-content col l6 m6 s12'>$row->email</div>
+	                </div>
+	                <div class='data-block col l12 m12 s12'>
+	                    <div class='data-title col l6 m6 s12'>Teléfono: </div>
+	                    <div class='data-content col l6 m6 s12'>$row->phone</div>
+	                </div>
+				";
+			}
+
+			return $aux;
+		}
 	}
 ?>

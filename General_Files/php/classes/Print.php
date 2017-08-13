@@ -57,7 +57,7 @@
 			$this->openPDF($title, $name);
 		}
 
-		function getRecord($id)
+		function getRecord($id, $f = 1, $dir = 0)
 		{
 			$this->stylesheet = file_get_contents('../../mpdf/resources/record.css');
 			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
@@ -69,8 +69,7 @@
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Records.');
 			$this->mpdf->setAuthor('Ezic ©');
-			$this->openPDF("Récord Conductual", ($id . "_record"));
-			
+			$this->openPDF("Récord Conductual", ($id . "_record"), $f, $dir);
 		}
 
 		function genHeader($title)
@@ -118,11 +117,11 @@
 			$this->openPDF("Notas de estudiante", "Notas_" . $id . "_Periodo_$period", $f, $dir);
 		}
 
-		function getSection($id)
+		function getSection($id, $c)
 		{
 			$this->stylesheet = file_get_contents('../../mpdf/resources/sections.css');
 			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
-			$this->_print = $this->section->printSection($id);
+			$this->_print = $this->section->printSection($id, $c);
 			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Secciones.');
@@ -146,6 +145,24 @@
 
 			while ($row = $res->fetch_assoc()) {
 				$this->getGrades($row['idStudent'], $period, 0, $dirName);
+			}
+
+			$this->createRar($dirName);
+		}
+
+		function multiRecords($id)
+		{
+			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id;";
+			$res = $this->connection->connection->query($query);
+			$resAux = $this->connection->connection->query($query);
+
+			$rowAux = $resAux->fetch_assoc();
+			$dirName = "Records_" . $rowAux['level'] . $rowAux['sectionIdentifier'];
+
+			mkdir("../../../app/users/files/tmp/$dirName", 0700);
+
+			while ($row = $res->fetch_assoc()) {
+				$this->getRecord($row['idStudent'], 0, $dirName);
 			}
 
 			$this->createRar($dirName);
@@ -211,10 +228,14 @@
 	}
 
 	if (isset($_POST['printSection'])) {
-		$print->getSection($_POST['id']);
+		$print->getSection($_POST['id'], $_POST['rows']);
 	}
 
 	if (isset($_POST['printSectionGrades'])) {
-		$print->multiGrades($_POST['id'], 1);
+		$print->multiGrades($_POST['id'], $_POST['idPeriod']);
+	}
+
+	if (isset($_POST['printSectionRecords'])) {
+		$print->multiRecords($_POST['id']);
 	}
 ?>
