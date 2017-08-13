@@ -111,6 +111,17 @@
         </div>
     </div>
 
+    <div id="mandated-modal" class="modal">
+        <div class="modal-content">
+            <h4 class="center">Responsable</h4>
+            <p class="center" style="font-size: 1.2em;"><span class="student-id"></span>  -  <span class="student-name"></span></p>
+            <br>
+            <div class="row">
+                
+            </div>
+        </div>
+    </div>
+
     <div class="tap-target blue" data-activates="info">
         <div class="tap-target-content">
             <h5>Title</h5>

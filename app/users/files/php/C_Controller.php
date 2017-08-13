@@ -680,4 +680,16 @@
 	if (isset($_REQUEST['filterSections'])) {
 		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}
+
+	if (isset($_REQUEST['showSection'])) {
+		echo $section->showSection($_REQUEST['idSn']);
+	}
+
+	if (isset($_REQUEST['periodsJSON'])) {
+		echo json_encode($period->returnJSONPeriods());
+	}
+
+	if (isset($_REQUEST['getMandated'])) {
+		echo $admin->getMandated($_REQUEST['id']);
+	}
 ?>

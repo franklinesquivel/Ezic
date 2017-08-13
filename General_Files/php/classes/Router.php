@@ -55,6 +55,7 @@
 
 				$this->options[count($this->options)] = ['Administración', "folder", "administration"];
 				$this->options[count($this->options)] = ['Estadísticas', "insert_chart", "stadistics"];
+				$this->options[count($this->options)] = ['Correos', "mail", "#!"];
 			}elseif($type == 'T'){
 				$this->options[count($this->options)] = ["Ver horario", "schedule", "schedule"];
 				$this->options[count($this->options)] = ["Asistencia", "date_range", "assistance"];

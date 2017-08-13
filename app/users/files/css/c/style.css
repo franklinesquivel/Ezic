@@ -588,13 +588,13 @@ a.showTeacher{
         margin-top: 15px;
     }
 
-    .user-show-cont .user-data .data-block{
+    .user-show-cont .user-data .data-block, .data-block{
         display: block;
         padding: 10px;
         /*background: red;*/
     }
 
-    .user-show-cont .user-data .data-block .data-title{
+    .user-show-cont .user-data .data-block .data-title, .data-block .data-title{
         text-align: left;
     }
 
@@ -621,8 +621,12 @@ a.showTeacher{
         height: 40vh;
         width: 100vw;
     }
-}
 
-canvas {
-  /*border: 1px dotted red;*/
+    #getRowsData .input-field.rdo{
+        margin-bottom: 3%;
+    }
+
+    body{
+        /*background: red;*/
+    }
 }

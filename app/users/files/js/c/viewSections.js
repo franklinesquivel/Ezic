@@ -1,8 +1,38 @@
 (() => {
-    var loader;
+    var loader, g_id, rules = {}, messages;
+
 	$(document).ready(function(){
+        rules = {
+            txtRows: {
+                required: true,
+                min: 1,
+                max: 15
+            }
+        }
+
+        messages = {
+            txtRows: {
+                required: "Este campo es requerido!",
+                min: "Ingrese un valor dentro del intervalo permitido!",
+                max: "Ingrese un valor dentro del intervalo permitido!"
+            }
+        }
+
+        $('#getRowsData').modal();
         loader = new Loader();
-        loader.in()
+        loader.in();
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {periodsJSON: 1},
+            success: (r) => {
+                if (r != -1) {
+                    r = JSON.parse(r);
+                    for (var i = 0; i < r.length; i++) {
+                        $("#cmbPeriod").append(`<option value="${r[i].idPeriod}">Período N° ${r[i].nthPeriod}</option>`);
+                    }
+                }
+            }
+        })
 		$.ajax({
             url: '../../files/php/C_Controller.php',
             data: {getLvls: 1},
@@ -12,7 +42,7 @@
                     $('select').material_select();
                     search_section();
                 }
-                loader.out();
+                $('main').fadeIn('slow', loader.out());
             }
         })
 
@@ -63,7 +93,130 @@
             search_section($("#cmbLevel").val(), $("#cmbSpecialty").val(), $("#cmbSection").val());
         })
 
+        jQuery.validator.setDefaults({
+          debug: true,
+          success: "valid"
+        });
+
+        $('.frmPrint').validate({
+            rules,
+            messages,
+            errorElement : 'div',
+            errorPlacement: function(error, element) {
+                var placement = $(element).data('error');
+                if (placement) {
+                    $(placement).append(error)
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                if($("input[name=file]:checked").attr('id') == "rdoGrades"){
+                    if (errorSelect($('#cmbPeriod'))) {
+                        $('#printSection [id=action]').attr("name", "printSectionGrades");
+                        $('#printSection [name=idPeriod]').val($('#cmbPeriod').val());
+                    }else{
+                        Materialize.toast("Este dato es necesario!", 2000);
+                    }
+                }else if($("input[name=file]:checked").attr('id') == "rdoRecords"){
+                    $('#printSection [id=action]').attr("name", "printSectionRecords");
+                }else if($("input[name=file]:checked").attr('id') == "rdoList"){
+                    $('#printSection [id=action]').attr("name", "printSection");
+                    $("#printSection [name=rows").val($("#txtRows").val());
+                }else{
+                    Materialize.toast('Debes seleccionar una opción!', 2000);
+                    return;
+                }
+
+                $('#printSection [name=id]').val(g_id);
+                $('#printSection').submit();
+            }
+        })
+
+        $('.btnPrintSectionOption').click(function(){
+            $('.frmPrint').submit();
+        })
 	})
+
+    $(document).on('click', '.collection-item', function(){
+        g_id = $(this).attr('idsn');
+        loader.in();
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {showSection: 1, idSn: g_id},
+            success: r => {
+                if (r != -1) {
+                    $('.btnBack').removeAttr('disabled');
+                    $('.btnPrint').removeAttr('disabled');
+                    $('main').fadeOut('slow', function(){
+                        $('.listCont').fadeOut(1);
+                        $('.sectionCont').html(r);
+                        $('.sectionCont').fadeIn('slow', function(){
+                            $('main').fadeIn(loader.out());
+                        })
+                    })
+                }else{
+                    console.log(r);
+                }
+            }
+        })
+    })
+
+    $(document).on("change", "input[name=file]", function(){
+        $("#cmbPeriod").children().eq(0).attr("selected");
+        $("input#txtRows").val("");
+        $('input#txtRows').attr('disabled', 1);
+        $('#cmbPeriod').attr('disabled', 1);
+        $("select").material_select();
+    })
+
+    $(document).on('change', '#rdoList', function(){
+        $('input#txtRows').removeAttr('disabled');
+        rules = {
+            txtRows: {
+                required: true,
+                min: 1,
+                max: 15
+            }
+        }
+        messages = {
+            txtRows: {
+                required: "Este campo es requerido!",
+                min: "Ingrese un valor dentro del intervalo permitido!",
+                max: "Ingrese un valor dentro del intervalo permitido!"
+            }
+        }
+    })
+
+    $(document).on('change', "#rdoGrades", function(){
+        $('#cmbPeriod').removeAttr('disabled');
+        $("select").material_select();
+        rules = {};
+        messages = {};
+    })
+
+    $(document).on('change', "#rdoRecords", function(){
+        rules = {};
+        messages = {};
+    })
+
+    $(document).on('click', '.btnBack', function(){
+        loader.in();
+        $(this).attr('disabled', 1);
+        $('.btnPrint').attr('disabled', 1);
+        $('main').fadeOut('slow', function(){
+            init_search(function(){
+                $('.sectionCont').fadeOut(1);
+                $('.listCont').fadeIn('slow', function(){
+                    $('main').fadeIn(loader.out());
+                })
+            })
+        })
+    })
+
+    $(document).on('click', '.btnPrint', function(){
+        $('#getRowsData').modal('open');
+    })
 
     const search_section = (lvl = '', spcty = '', sctn = '') => {
         loader.in()
@@ -71,10 +224,32 @@
     		url: '../../files/php/C_Controller.php',
     		data: {filterSections: 1, lvl, spcty, sctn},
     		success: r => {
-    			// console.log(r);
     			$(".sectionCollection").html(r);
                 loader.out();
     		}
     	})
+    }
+
+    const init_search = (callback) => {
+        $("#cmbLevel").empty();
+        $("#cmbSpecialty").empty();
+        $("#cmbSection").empty();
+
+        $("#cmbLevel").html("<option selected disabled>Nivel</option>");
+        $("#cmbSpecialty").html("<option selected disabled>Especialidad</option>");
+        $("#cmbSection").html("<option selected disabled>Sección</option>");
+
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {getLvls: 1},
+            success: (r) => {
+                if (r != -1) {
+                    $('#cmbLevel').append(r);
+                    $('select').material_select();
+                    search_section();
+                }
+                callback();
+            }
+        })
     }
 })()
