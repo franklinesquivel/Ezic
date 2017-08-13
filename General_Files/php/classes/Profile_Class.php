@@ -17,7 +17,7 @@
 		}
 
 		function NewProfile($name, $percentage, $period, $subject){
-			$query = "INSERT INTO evaluation_profile(name, percentage, nthPeriod, idSubject) VALUES('$name', $percentage, $period, $subject)";
+			$query = "INSERT INTO evaluation_profile(name, percentage, idPeriod, idSubject) VALUES('$name', $percentage, $period, $subject)";
 			if ($this->connection->connection->query($query)) {
 				return true;
 			}else{
@@ -27,18 +27,19 @@
 
 		function countPercentage($percentage, $nthPeriod, $idSubject){
 
-			$query = "SELECT percentage FROM evaluation_profile WHERE nthPeriod = $nthPeriod AND idSubject = $idSubject ";
+			$query = "SELECT percentage FROM evaluation_profile WHERE idPeriod = $nthPeriod AND idSubject = $idSubject ";
 			$result = $this->connection->connection->query($query);
-
-			while ($fila = $result->fetch_assoc()) {
-				$percentage += $fila['percentage'];
+			if($result->num_rows > 0){
+				while ($fila = $result->fetch_assoc()) {
+					$percentage += $fila['percentage'];
+				}
 			}
-
+			
 			return $res = ($percentage > 100) ? false : true;
 		}
 
 		function getProfiles($idSubject, $idPeriod){
-			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile, teacher.lastName FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.nthPeriod = period.idPeriod WHERE evaluation_profile.idSubject = $idSubject AND evaluation_profile.nthPeriod = $idPeriod ORDER BY evaluation_profile.percentage";
+			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile, teacher.lastName FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idSubject = $idSubject AND evaluation_profile.idPeriod = $idPeriod ORDER BY evaluation_profile.percentage";
 
 			$result	= $this->connection->connection->query($query);
 			$array = array();
@@ -75,7 +76,7 @@
 		}
 
 		function getProfilesForDelete($idSubject, $idPeriod){
-			$query = "SELECT evaluation_profile.idProfile FROM evaluation_profile WHERE evaluation_profile.idProfile IN (SELECT evaluation_profile.idProfile FROM evaluation_profile INNER JOIN grade ON grade.idProfile = evaluation_profile.idProfile WHERE evaluation_profile.nthPeriod = $idPeriod AND evaluation_profile.idSubject = $idSubject)";
+			$query = "SELECT evaluation_profile.idProfile FROM evaluation_profile WHERE evaluation_profile.idProfile IN (SELECT evaluation_profile.idProfile FROM evaluation_profile INNER JOIN grade ON grade.idProfile = evaluation_profile.idProfile WHERE evaluation_profile.idPeriod = $idPeriod AND evaluation_profile.idSubject = $idSubject)";
 
 			$result = $this->connection->connection->query($query);
 			$profiles = array();
@@ -93,7 +94,7 @@
 
 			$i = 0;
 			for ($x=0; $x < count($profiles) ; $x++) { 
-				$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.nthPeriod = period.nthPeriod WHERE evaluation_profile.idProfile != $profiles[$x] ORDER BY evaluation_profile.name";
+				$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idProfile != '".$profiles[$x]."' ORDER BY evaluation_profile.name";
 				$result = $this->connection->connection->query($query);
 				while ($fila = $result->fetch_assoc()) {
 
@@ -114,7 +115,7 @@
 		}
 
 		function getProfilesForView($idSubject){
-			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.nthPeriod = period.nthPeriod WHERE evaluation_profile.idSubject = $idSubject ORDER BY period.nthPeriod";
+			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.nthPeriod WHERE evaluation_profile.idSubject = $idSubject ORDER BY period.nthPeriod";
 			$result	= $this->connection->connection->query($query);
 			$array = array();
 			$i = 0;
@@ -152,7 +153,7 @@
 				";
 				while ($fila = $result->fetch_assoc()) {
 
-					$query_profiles = "SELECT * FROM evaluation_profile WHERE idSubject = '".$fila['idSubject']."' AND evaluation_profile.nthPeriod = '".$period."'";
+					$query_profiles = "SELECT * FROM evaluation_profile WHERE idSubject = '".$fila['idSubject']."' AND evaluation_profile.idPeriod = '".$period."'";
 					$result_profile = $this->connection->connection->query($query_profiles);
 					$percentage = 0;
 
@@ -243,7 +244,7 @@
 		}
 
 		function table_modifyProfile($subject, $period){
-			$query = "SELECT * FROM evaluation_profile WHERE idSubject = $subject AND nthPeriod = $period  ORDER BY percentage";
+			$query = "SELECT * FROM evaluation_profile WHERE idSubject = $subject AND idPeriod = $period  ORDER BY percentage";
 			$result = $this->connection->connection->query($query);
 			$i = 0;
 
@@ -346,7 +347,7 @@
 
 		function tableSubject_Justification($period){
 			session_start();
-			$query = "SELECT subject.acronym, subject.nameSubject, GROUP_CONCAT(DISTINCT section.SectionIdentifier  ORDER BY section.SectionIdentifier ASC  SEPARATOR ', ') AS section, GROUP_CONCAT(DISTINCT section.idSection  ORDER BY section.idSection ASC  SEPARATOR ', ') AS IdSection,  level.level AS level, COUNT(DISTINCT evaluation_profile.idProfile) AS num_profile, subject.idSubject FROM `subject` INNER JOIN register_subject ON subject.idSubject = register_subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN evaluation_profile ON evaluation_profile.idSubject = subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE evaluation_profile.nthPeriod = '".$period."' AND subject.idTeacher = '".$_SESSION['id']."' AND evaluation_profile.description = '' GROUP BY subject.idSubject ORDER BY level.level";
+			$query = "SELECT subject.acronym, subject.nameSubject, GROUP_CONCAT(DISTINCT section.SectionIdentifier  ORDER BY section.SectionIdentifier ASC  SEPARATOR ', ') AS section, GROUP_CONCAT(DISTINCT section.idSection  ORDER BY section.idSection ASC  SEPARATOR ', ') AS IdSection,  level.level AS level, COUNT(DISTINCT evaluation_profile.idProfile) AS num_profile, subject.idSubject FROM `subject` INNER JOIN register_subject ON subject.idSubject = register_subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN evaluation_profile ON evaluation_profile.idSubject = subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE evaluation_profile.idPeriod = '".$period."' AND subject.idTeacher = '".$_SESSION['id']."' AND evaluation_profile.description = '' GROUP BY subject.idSubject ORDER BY level.level";
 
 			$result = $this->connection->connection->query($query);
 			if ($result->num_rows > 0) {
