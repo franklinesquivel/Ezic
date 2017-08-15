@@ -59,3 +59,45 @@ span.space-helper{
     align-items: center;
     display: none;
 }
+
+#logo-container{
+    display: flex;
+    align-items: center;
+}
+
+#logo-container i{
+    width: 25%;
+}
+
+#logo-container img{
+    width: 100%;
+    height: 100%;
+}
+
+@media only screen and (max-width: 768px){
+    #logo-container i{
+        width: 100%;
+    }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-height: 640px) and (orientation : landscape){
+    #logo-container i{
+        width: 40%;
+    }
+
+    .fx{
+        /*width: 100%;*/
+    }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-height: 350px) and (orientation : landscape) and (-webkit-device-pixel-ratio: 3){
+    #logo-container i{
+        width: 40%;
+    }
+}
+
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
+    #logo-container i{
+        width: 40%;
+    }
+}

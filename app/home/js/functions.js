@@ -30,11 +30,10 @@ $(document).ready(function(){
 
     $('.modal').modal();
 
-    if ($('ul#tabs_').length) {
-        $('ul#tabs_').tabs();
-    }
+    // if ($('ul#tabs_').length) {
+    //     $('ul#tabs_').tabs();
+    // }
 
-    // alert('...');
 
     $('#logModal').modal({
         dismissible: true, // Modal can be dismissed by clicking outside of the modal

@@ -37,12 +37,12 @@
     <div class="navbar-fixed">
         <nav class="white" role="navigation">
             <div class="nav-wrapper container">
-                <a id="logo-container" href="#" class="brand-logo blue-text text-darken-2"> <i class="material-icons">polymer</i> Ezic</a>
+                <a id="logo-container" href="#" class="brand-logo blue-text text-darken-2"> <i class=""><img src="../../General_Files/img/ezic.png"></i> Ezic</a>
                 <a href="#" data-activates="nav-mobile" class="button-collapse btnHome"><i class="material-icons blue-text text-darken-2">menu</i></a>
 
                 <ul class="right hide-on-med-and-down">
                     <li class="active"><a class="blue-text text-darken-2" href="#">Inicio</a></li>
-                    <li><a class="blue-text text-darken-2" href="#">Acerca de Nosotros</a></li>
+                    <li><a class="blue-text text-darken-2" href="../about/">Acerca de Nosotros</a></li>
                     <li><a href="#logModal" class="modal-trigger waves-effect waves-light btn blue darken-2"><i class="material-icons right">person</i> Iniciar Sesión</a></li>
                 </ul>
 
@@ -53,8 +53,7 @@
 
     <ul id="nav-mobile" class="side-nav blue darken-2">
         <li class="active"><a class="white-text" href="#">Inicio</a></li>
-        <li><a class="white-text" href="#">Aula Virtual</a></li>
-        <li><a class="white-text" href="#">Acerca de Nosotros</a></li>
+        <li><a class="white-text" href="../about/">Acerca de Nosotros</a></li>
         <li><a href="#logModal" class="modal-trigger waves-effect waves-blue btn white blue-text text-darken-2"><i class="material-icons right blue-text text-darken-2">person</i> Iniciar Sesión</a></li>
     </ul>
 
@@ -75,14 +74,14 @@
                 </div>
             </li>
             <li>
-                <img src="img/img_3.jpg">
+                <img src="img/img_8.jpg">
                 <div class="caption right-align">
                     <h3>Implementación Estudiantil</h3>
 <!--                    <h5 class="light grey-text text-lighten-3">gg.</h5>-->
                 </div>
             </li>
             <li>
-                <img src="img/img_4.jpg">
+                <img src="img/img_5.jpg">
                 <div class="caption center-align">
                     <h3>Nuevas Tecnologías</h3>
 <!--                    <h5 class="light grey-text text-lighten-3">anuma.</h5>-->
@@ -105,7 +104,7 @@
     </div>
 
     <div class="parallax-container">
-        <div class="parallax"><img class="" src="img/img_5.jpg"></div>
+        <div class="parallax"><img class="fx" src="img/img_7.jpg"></div>
     </div>
 
     <div class="container">
