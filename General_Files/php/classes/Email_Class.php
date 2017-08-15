@@ -72,17 +72,16 @@
             $coordinators = $this->getCoordinator();
             $subject = $this->getSubject($subject);
             $x = 0;
-            $bodyMessage = "Petición de permiso para modificar notas del período #". $period[0]->numPeriod .".  de la materia  de ". $subject[0][1] ."° ". $subject[0][0] ." que a mi persona concierne. <br><br>";
-            $bodyMessage .= "Motivo: ". $justification ." <br><br> Estudiantes: ";
+
+            $bodyMessage = "Petición de permiso para modificar notas del período #". $period[0]->numPeriod ."  de la materia  de ". $subject[0][1] ."° ". $subject[0][0] .". <br><br>";
+            $bodyMessage .= "Motivo: '<em>". $justification ."</em>'";
+            $bodyMessage .= $profiles;
+            $bodyMessage .= $students;
+
             for($i = 0; $i < count($coordinators); $i++){ /* Se hace el envío a coordinadores  */
                 parent::AddCC("". $coordinators[$i][0] ."", "". $coordinators[$i][1] ."");
                 $x++;
             }			
-
-            $bodyMessage .= "$students <br> <br> Periles de Evaluación: ";
-            for($x = 0; $x < count($profiles); $x++){/* Se agregan los perfiles de evauación */
-                $bodyMessage .= "* ". $this->getInfoProfile($profiles[$x]) ." <br>";
-            }
 
             $this->Subject = "".$this->getTeacher().""; /* Se arega que profesor lo envía*/
 			$this->msgHTML($bodyMessage); /* Cuerpo de email */
@@ -126,25 +125,32 @@
             $result = $this->connection->connection->query($query);
             $profile = array();
             $fila = $result->fetch_assoc();
-            $profile[0][0] = "". $fila['name']. " (" . $fila['percentage'] . ")";
+            $profile[0][0] = "". $fila['name']. " (" . $fila['percentage'] . "%)";
             return ($profile[0][0]);
         }
 
-        function setStudents($students){
-            $list = "";
+        function listStudents($students){/* Formato de lista estudiantes que se envía */
+            $list = "<h5>Alumnos</h5>
+                <ul>
+            ";
+
             for($x = 0; $x < count($students); $x++){  /* Se agrega los alumnos  */
-                 $list .= "* ". $students[$x]->id ." - ". $students[$x]->name ." <br>";
+                 $list .= "<li> ". $students[$x]->id ." - ". $students[$x]->name ." </li>";
             }
+
+            $list .= "</ul>";
             return $list;
         }
 
-        function InsertPermission($student, $justification, $profiles){
-            ini_set("date.timezone", 'America/El_Salvador');
-            $date = date("Y-m-d");
-            for($i = 0; $i < count($profiles); $i++){
-                $query = "INSERT INTO permission_grade(startDate, idStudent, idProfile, description) VALUES('$date', '$student', '".$profiles[$i]."', '$justification')";
-                $this->connection->connection->query($query);
+        function listProfiles($profiles){
+            $list = "<h5>Perfiles de Evaluación</h5>
+                <ul>
+            ";
+            for($x = 0; $x < count($profiles); $x++){/* Se agregan los perfiles de evauación */
+                $list .= "<li> ". $this->getInfoProfile($profiles[$x]) ."</li>";
             }
+            $list .= "</ul>";
+            return $list;
         }
     }
 ?>

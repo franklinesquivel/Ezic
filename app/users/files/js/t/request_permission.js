@@ -35,6 +35,9 @@
 			$("main").fadeIn("slow");
 			id_subject = 0;
 			student.length = 0;
+			y = 0;
+			k = 0;
+			z = 0;
 			$(".btnBack").attr("disabled", true);
 			$(".btnFilters").attr("disabled", true);
 			loader.out();
@@ -90,6 +93,8 @@
 	}
 
 	function showUsers(section){/* Función que trae todos los alumnos */	
+		student.length = 0;
+		y = 0;
 		$.ajax({
 			type: 'POST',
 			url:'../../files/php/T_Controller.php',
@@ -172,6 +177,8 @@
 			},
 			submitHandler: function(form) {
 				if(errorSelect($("form.Send Email select"))){
+					let loader = new Loader();
+					loader.in();
 					let object = JSON.stringify(student);
 					$.ajax({
 						type: 'POST',
@@ -185,8 +192,14 @@
 							justification: $("#justification").val()
 						}
 					}).done(function(r){
-						load_page();
-						Materialize.toast("Solicitud exitosa!", 3000);
+						alert(r);
+						if(r == 0){
+							loader.out();
+							Materialize.toast("ERROR, algunos de los datos ya estan en un permiso aún no procesado", 3000);
+						}else{
+							load_page();
+							Materialize.toast("Solicitud exitosa!", 3000);
+						}	
 					});
 				}else{
 					Materialize.toast("Faltan campos por seleccionar", 3000, "red");

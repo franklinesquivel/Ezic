@@ -52,7 +52,8 @@
 					["Eliminar", "delete", "delete_code"],
 					["Ver", "visibility", "v_code"],
 				]];
-
+				
+				$this->options[count($this->options)] = ['Aceptar Permisos', "lock_open", "accept_permission"];
 				$this->options[count($this->options)] = ['Administración', "folder", "administration"];
 				$this->options[count($this->options)] = ['Estadísticas', "insert_chart", "stadistics"];
 			}elseif($type == 'T'){

@@ -126,11 +126,22 @@
 
     if(isset($_REQUEST['register_permission'])){ /* Ingresa Todo del envío del email */
         $object = json_decode($_REQUEST['students']);
-        $students = $email->setStudents($object);
-        for($i = 0; $i < count($object); $i++){
-            $email->InsertPermission($object[$i]->id, $_REQUEST['justification'], $_REQUEST['profiles']);
+        $z = 0;
+
+        for($i = 0; $i < count($object); $i++){/* Se verifica la existencia de los permisos según los datos */
+            if(($permission_grade->verifyPermission($object[$i]->id, $_REQUEST['profiles'])) == false){$z++;}
         }
-        echo($email->SendEmail_FromTeacher($students, $_REQUEST['justification'], json_decode($period->selectPeriod($_REQUEST['period'])), $_REQUEST['subject'], $_REQUEST['profiles']));
+
+        if($z > 0){ /* Si existe algún registro similar*/
+            echo "0";
+        }else{
+            $students = $email->listStudents($object);
+            $profiles = $email->listProfiles($_REQUEST['profiles']);
+            $permission_grade->InsertPermission($_REQUEST['students'], $_REQUEST['justification'], $_REQUEST['profiles']);
+
+            echo($email->SendEmail_FromTeacher($students, $_REQUEST['justification'], json_decode($period->selectPeriod($_REQUEST['period'])), $_REQUEST['subject'],  $profiles));
+        }
+        
     }
 
     if(isset($_REQUEST['getSection'])){/* Función que carga las secciones en request_permission.php */

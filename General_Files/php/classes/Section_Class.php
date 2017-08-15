@@ -82,7 +82,7 @@
 		}
 
 		function getAllForSubject($subject){
-			$query = "SELECT section.idSection, level.level, section.sectionIdentifier FROM section INNER JOIN level ON level.idLevel = section.idSection  INNER JOIN register_subject ON register_subject.idSection = section.idSection WHERE register_subject.idSubject = $subject";
+			$query = "SELECT section.idSection, level.level, section.sectionIdentifier FROM section INNER JOIN level ON level.idLevel = section.idLevel  INNER JOIN register_subject ON register_subject.idSection = section.idSection WHERE register_subject.idSubject = $subject";
 			$result = $this->connection->connection->query($query);
 			$option = "<option value='0'>Todos</option>";
 

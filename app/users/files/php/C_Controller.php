@@ -23,6 +23,7 @@
 //--------------------------------------------------------------------------------------------
 
 	require_once '../../../../General_Files/php/classes/Stadistics.php';
+	require_once '../../../../General_Files/php/classes/Permission_Grade.php';
 
 //--------------------------------------------------------------------------------------------
 //CLASES INSTANCIADAS HASTA EZIC 1.5
@@ -47,7 +48,7 @@
 //--------------------------------------------------------------------------------------------
 
 	$stadistic = new Stadistics();
-
+	$permission_grade = new Permission_Grade();
 //--------------------------------------------------------------------------------------------
 //		AGREGAR NUEVO PERIODO
 	if(isset($_REQUEST['periodNew'])){
@@ -604,6 +605,37 @@
 		echo ($profile->table_modifyProfile($_REQUEST['subject'], $_REQUEST['period']));
 	}
 // FIN ELEGIR PERFIL PARA MODIFICAR
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		OBTENCIÓN DE VISTA PARA ACEPTAR PERMISOS DE MODIFICACIÓN DE NOTAS
+	if (isset($_REQUEST['v_permissionCoordinator'])) {
+		echo ($permission_grade->v_permissionCoordinator());
+	}
+// OBTENCIÓN DE VISTA PARA ACEPTAR PERMISOS DE MODIFICACIÓN DE NOTAS
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		OBTENEMOS LA INFORMACIÓN PARA EL MODAL DE PERMISOS DE MODIFICAR NOTAS
+	if (isset($_REQUEST['infoPermission'])) {
+		echo ($permission_grade->getInfoPermission($_REQUEST['idPermission']));
+	}
+// OBTENEMOS LA INFORMACIÓN PARA EL MODAL DE PERMISOS DE MODIFICAR NOTAS
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		SE ACEPTAN LOS PERMISOS PARA MODIFICAR NOTAS
+	if (isset($_REQUEST['accept_permission'])) {
+		$object = json_decode($_REQUEST['permissions']);
+		$z = 0;
+		for($i = 0; $i < count($object); $i++){
+			if($permission_grade->AcceptPermission($object[$i]->id)){
+				$z++;
+			}
+		}
+		echo($z = ($z == count($object)) ? 1 : 0);
+	}
+// SE ACEPTAN LOS PERMISOS PARA MODIFICAR NOTAS
 //--------------------------------------------------------------------------------------
 	
 	if (isset($_REQUEST['getUsers'])) {
