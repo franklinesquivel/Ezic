@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-08-2017 a las 05:26:26
+-- Tiempo de generación: 15-08-2017 a las 05:12:42
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -176,7 +176,7 @@ CREATE TABLE `evaluation_profile` (
   `idProfile` int(15) NOT NULL,
   `name` varchar(40) COLLATE utf8_spanish2_ci NOT NULL,
   `percentage` float NOT NULL,
-  `nthPeriod` int(15) NOT NULL,
+  `idPeriod` int(15) NOT NULL,
   `description` varchar(500) COLLATE utf8_spanish2_ci NOT NULL,
   `idSubject` int(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -185,8 +185,10 @@ CREATE TABLE `evaluation_profile` (
 -- Volcado de datos para la tabla `evaluation_profile`
 --
 
-INSERT INTO `evaluation_profile` (`idProfile`, `name`, `percentage`, `nthPeriod`, `description`, `idSubject`) VALUES
-(1, 'prueba 1', 10, 1, 'HIIIIII', 1);
+INSERT INTO `evaluation_profile` (`idProfile`, `name`, `percentage`, `idPeriod`, `description`, `idSubject`) VALUES
+(1, 'prueba 1', 10, 1, 'HIIIIII', 1),
+(2, 'qqqq', 10, 1, '', 1),
+(3, 'CURRO', 20, 1, 'aaaaaaaaaaaaaaa', 2);
 
 -- --------------------------------------------------------
 
@@ -365,14 +367,62 @@ CREATE TABLE `permission` (
 CREATE TABLE `permission_grade` (
   `idPermission_Grade` int(15) NOT NULL,
   `startDate` date NOT NULL,
-  `endDate` date NOT NULL,
   `idCoor` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
-  `idStudent` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
-  `idProfile` int(15) NOT NULL,
   `approved` tinyint(1) NOT NULL,
-  `modified` tinyint(1) NOT NULL,
   `description` varchar(400) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `permission_grade`
+--
+
+INSERT INTO `permission_grade` (`idPermission_Grade`, `startDate`, `idCoor`, `approved`, `description`) VALUES
+(2, '2017-08-12', 'C1425', 1, 'la dvd no c bro, discupla X2'),
+(12, '2017-08-14', 'C1425', 1, 'NO hago na, nose na like Curro');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pg_profiles`
+--
+
+CREATE TABLE `pg_profiles` (
+  `idRP` int(15) NOT NULL,
+  `idProfile` int(15) NOT NULL,
+  `idPermission` int(15) NOT NULL,
+  `modified` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `pg_profiles`
+--
+
+INSERT INTO `pg_profiles` (`idRP`, `idProfile`, `idPermission`, `modified`) VALUES
+(1, 1, 2, 0),
+(2, 2, 2, 0),
+(11, 3, 12, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pg_students`
+--
+
+CREATE TABLE `pg_students` (
+  `idRegisterPermission` int(15) NOT NULL,
+  `idStudent` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+  `idPermission` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `pg_students`
+--
+
+INSERT INTO `pg_students` (`idRegisterPermission`, `idStudent`, `idPermission`) VALUES
+(1, 'AA1625', 2),
+(2, 'AA1797', 2),
+(3, 'AA1625', 12),
+(4, 'AA1797', 12);
 
 -- --------------------------------------------------------
 
@@ -404,7 +454,9 @@ CREATE TABLE `register_subject` (
 
 INSERT INTO `register_subject` (`idRegisterSubject`, `idSubject`, `idSection`) VALUES
 (1, 1, 1),
-(2, 2, 1);
+(2, 2, 1),
+(3, 1, 3),
+(4, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -454,7 +506,8 @@ CREATE TABLE `section` (
 
 INSERT INTO `section` (`idSection`, `idLevel`, `idSpecialty`, `sectionIdentifier`, `sState`) VALUES
 (1, 1, 1, 'B', 0),
-(2, 2, 2, 'A', 0);
+(2, 2, 2, 'A', 0),
+(3, 1, 1, 'C', 0);
 
 -- --------------------------------------------------------
 
@@ -548,8 +601,9 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`idStudent`, `name`, `lastName`, `password`, `email`, `birthdate`, `sex`, `residence`, `idSection`, `state`, `stateAcademic`, `photo`, `verified`) VALUES
+('AA1625', 'Selena', 'Gomez', '49l2!50a2!51y2/52A2/', 'selenita@gmail.com', '1999-08-06', 'F', 'Los ángeles USA', 1, 1, 'A', 'AA1625.jpg', 1),
 ('AA1767', 'Bryan Steven', 'Polanco Suarez', '118223!10583!118223-65272!10583?108113*53L2?', 'elbryan1@gmail.com', '1998-09-26', 'M', 'Apopa', 2, 1, 'A', 'AA1767.jpeg', 0),
-('AA1797', 'Mario Alberto', 'Moreno Perez', '49l2!50a2!51y2/52A2/', 'marito55@gmail.com', '1998-09-26', 'M', 'Soyapango', 1, 1, 'A', 'AA1797.png', 0);
+('AA1797', 'Mario Alberto', 'Moreno Perez', '49l2!50a2!51y2/52A2/', 'marito55@gmail.com', '1998-09-26', 'M', 'Soyapango', 3, 1, 'A', 'AA1797.png', 1);
 
 -- --------------------------------------------------------
 
@@ -686,7 +740,7 @@ ALTER TABLE `coordinator`
 --
 ALTER TABLE `evaluation_profile`
   ADD PRIMARY KEY (`idProfile`),
-  ADD KEY `nthPeriod` (`nthPeriod`),
+  ADD KEY `nthPeriod` (`idPeriod`),
   ADD KEY `idSubject` (`idSubject`);
 
 --
@@ -761,9 +815,23 @@ ALTER TABLE `permission`
 --
 ALTER TABLE `permission_grade`
   ADD PRIMARY KEY (`idPermission_Grade`),
-  ADD KEY `idCoor` (`idCoor`),
+  ADD KEY `idCoor` (`idCoor`);
+
+--
+-- Indices de la tabla `pg_profiles`
+--
+ALTER TABLE `pg_profiles`
+  ADD PRIMARY KEY (`idRP`),
+  ADD KEY `idProfile` (`idProfile`),
+  ADD KEY `idPermission` (`idPermission`);
+
+--
+-- Indices de la tabla `pg_students`
+--
+ALTER TABLE `pg_students`
+  ADD PRIMARY KEY (`idRegisterPermission`),
   ADD KEY `idStudent` (`idStudent`),
-  ADD KEY `idProfile` (`idProfile`);
+  ADD KEY `idPermission` (`idPermission`);
 
 --
 -- Indices de la tabla `record`
@@ -893,7 +961,7 @@ ALTER TABLE `code`
 -- AUTO_INCREMENT de la tabla `evaluation_profile`
 --
 ALTER TABLE `evaluation_profile`
-  MODIFY `idProfile` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idProfile` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `gnrl_code`
 --
@@ -943,7 +1011,17 @@ ALTER TABLE `permission`
 -- AUTO_INCREMENT de la tabla `permission_grade`
 --
 ALTER TABLE `permission_grade`
-  MODIFY `idPermission_Grade` int(15) NOT NULL AUTO_INCREMENT;
+  MODIFY `idPermission_Grade` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT de la tabla `pg_profiles`
+--
+ALTER TABLE `pg_profiles`
+  MODIFY `idRP` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT de la tabla `pg_students`
+--
+ALTER TABLE `pg_students`
+  MODIFY `idRegisterPermission` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `record`
 --
@@ -953,7 +1031,7 @@ ALTER TABLE `record`
 -- AUTO_INCREMENT de la tabla `register_subject`
 --
 ALTER TABLE `register_subject`
-  MODIFY `idRegisterSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idRegisterSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `schedule_register`
 --
@@ -968,7 +1046,7 @@ ALTER TABLE `schedule_teacher_gnrl_info`
 -- AUTO_INCREMENT de la tabla `section`
 --
 ALTER TABLE `section`
-  MODIFY `idSection` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idSection` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `section_schedule_1`
 --
@@ -1038,7 +1116,7 @@ ALTER TABLE `code`
 -- Filtros para la tabla `evaluation_profile`
 --
 ALTER TABLE `evaluation_profile`
-  ADD CONSTRAINT `evaluation_profile_ibfk_1` FOREIGN KEY (`nthPeriod`) REFERENCES `period` (`idPeriod`),
+  ADD CONSTRAINT `evaluation_profile_ibfk_1` FOREIGN KEY (`idPeriod`) REFERENCES `period` (`idPeriod`),
   ADD CONSTRAINT `evaluation_profile_ibfk_2` FOREIGN KEY (`idSubject`) REFERENCES `subject` (`idSubject`);
 
 --
@@ -1088,6 +1166,20 @@ ALTER TABLE `mandated`
 ALTER TABLE `permission`
   ADD CONSTRAINT `permission_ibfk_1` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`),
   ADD CONSTRAINT `permission_ibfk_2` FOREIGN KEY (`idSchedule`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `pg_profiles`
+--
+ALTER TABLE `pg_profiles`
+  ADD CONSTRAINT `pg_profiles_ibfk_1` FOREIGN KEY (`idProfile`) REFERENCES `evaluation_profile` (`idProfile`),
+  ADD CONSTRAINT `pg_profiles_ibfk_2` FOREIGN KEY (`idPermission`) REFERENCES `permission_grade` (`idPermission_Grade`);
+
+--
+-- Filtros para la tabla `pg_students`
+--
+ALTER TABLE `pg_students`
+  ADD CONSTRAINT `pg_students_ibfk_1` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`),
+  ADD CONSTRAINT `pg_students_ibfk_2` FOREIGN KEY (`idPermission`) REFERENCES `permission_grade` (`idPermission_Grade`);
 
 --
 -- Filtros para la tabla `record`
