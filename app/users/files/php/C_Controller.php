@@ -96,7 +96,9 @@
 	}
 
 	if (isset($_REQUEST['newForm'])) {
-		session_start();
+		if (!isset($_SESSION)) {
+			session_start();
+		}
 		$id = (isset($_REQUEST['id']) ? $_REQUEST['id'] : $_SESSION['id']);
 		echo $modify->load_Form($id);
 	}
@@ -652,7 +654,9 @@
 	}
 
 	if (isset($_REQUEST['applyCode'])) {
-		session_start();
+		if (!isset($_SESSION)) {
+			session_start();
+		}
 		echo $code->applyCode($_REQUEST['idCode'], $_REQUEST['idStudent'], $_SESSION['id'], $_SESSION['type']);
 	}
 
@@ -661,7 +665,9 @@
 	}
 
 	if (isset($_REQUEST['showGrades'])) {
-		session_start();
+		if (!isset($_SESSION)) {
+			session_start();
+		}
 		echo json_encode($grade->getGrades($_REQUEST['id']));
 	}
 
@@ -691,5 +697,9 @@
 
 	if (isset($_REQUEST['getMandated'])) {
 		echo $admin->getMandated($_REQUEST['id']);
+	}
+
+	if (isset($_REQUEST['userDown'])) {
+		echo $admin->userDown($_REQUEST['id']);
 	}
 ?>

@@ -130,7 +130,9 @@
         }
 
         function getUsers(){
-            session_start();
+            if (!isset($_SESSION)) {
+                session_start();
+            }
             $users_array = [];
             $user = [];
             $i = 1;
@@ -138,8 +140,7 @@
             SELECT * FROM student st 
             INNER JOIN section s ON st.idSection = s.idSection 
             INNER JOIN level l ON l.idLevel = s.idLevel 
-            INNER JOIN specialty sy ON s.idSpecialty = sy.idSpecialty 
-            WHERE st.state = 1";
+            INNER JOIN specialty sy ON s.idSpecialty = sy.idSpecialty";
 
             $res = $this->connection->connection->query($query);
             if ($res->num_rows > 0) {
@@ -175,6 +176,7 @@
                                     <li function='removeCode' class='pink btnRmvCode'><a class='waves-effect white-text'>Remover Código<i class='material-icons left'>remove_circle</i></a></li>
                                     <li class='indigo btnMandated'><a disabled class='waves-effect white-text'z>Ver responsable<i class='material-icons left'>folder_shared</i></a></li>
                                     <li function='edit' class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                    <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>
                                 </ul>
                             </div>
                         </div>";
@@ -186,7 +188,7 @@
                 // return -1;
             }
 
-            $query = "SELECT * FROM teacher WHERE state = 1";
+            $query = "SELECT * FROM teacher";
 
             $res = $this->connection->connection->query($query);
             if ($res->num_rows > 0) {
@@ -219,6 +221,7 @@
                                     <li class='purple btnSchedule'><a class='waves-effect white-text'>Ver horario<i class='material-icons left'>schedule</i></a></li>
                                     <li class='indigo btnSubject'><a class='waves-effect white-text'z>Materias<i class='material-icons left'>library_books</i></a></li>
                                     <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                    <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>
                                 </ul>
                             </div>
                         </div>";
@@ -230,7 +233,7 @@
                 // return -1;
             }
 
-            $query = "SELECT * FROM coordinator WHERE state = 1 AND idCoor <> '" . $_SESSION['id'] . "';";
+            $query = "SELECT * FROM coordinator WHERE idCoor <> '" . $_SESSION['id'] . "';";
 
             $res = $this->connection->connection->query($query);
             if ($res->num_rows > 0) {
@@ -261,6 +264,7 @@
                                 <ul id='dropdown$i' class='dropdown-content'>
                                 <li class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>
                                 <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>
                                 </ul>
                             </div>
                         </div>";

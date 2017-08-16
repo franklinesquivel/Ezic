@@ -352,6 +352,17 @@
                 g_id = $(this).parent().parent().parent().attr('id');
                 stage[2]['edit'](g_id);
             })
+
+            $('.btnDown').click(function(){
+                console.log(':o');
+                g_id = $(this).parent().parent().parent().attr('id');
+                let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
+                    lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
+
+                $('#confirmModal').find('.code').html(g_id);
+                $('#confirmModal').find('.fullName').html(lastName + ", " + name);
+                $('#confirmModal').modal('open');
+            })
         }else if($('.user-item').length == 0 && $('.user-row').length == 0){
             $('.btnPermission').click(function() {
                 stage[2]['record'][1](g_id);
@@ -667,6 +678,19 @@
         }
     })
 
+    $(document).on('click', ".btnDelete", function(){
+        loader.in()
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {userDown: 1, id: g_id},
+            success: r => {
+                Materialize.toast(r ? "Se ha dado da baja éxitosamente!" : "Ha ocurrido un error!", 2000);
+                $('#confirmModal').modal('close');
+                loader.out();
+            }
+        })
+    })
+
     $(document).ready(() => {
         loader = new Loader();
         stage[1]();
@@ -692,6 +716,8 @@
         });
 
          $('#mandated-modal').modal();
+
+        $('#confirmModal').modal();
         
         $('#cmbCategory').change(function(){
             $('#cmbCodes').html('<option selected disabled>Código</option>');

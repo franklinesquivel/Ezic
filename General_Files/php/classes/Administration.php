@@ -667,5 +667,16 @@
 
 			return $aux;
 		}
+
+		function userDown($id)
+		{
+			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'T' ? 'T' : 'A'));
+			$table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
+			$idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
+
+			$query = "UPDATE $table SET state = 0 WHERE $idLog = '$id'";
+
+			return ($this->connection->connection->query($query) ? 1 : 0);
+		}
 	}
 ?>

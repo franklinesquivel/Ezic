@@ -122,6 +122,21 @@
         </div>
     </div>
 
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h5 class="center">¿Estás seguro que quieres dar de baja a este usuario?</h5>
+            <div class="content">
+                <br>
+                <h5 class="code center grey-text text-darken-1"></h5>
+                <h6 class="fullName center grey-text text-lighten-1"></h6>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="btn-flat btnDelete waves-effect waves-red">Confirmar <i class="material-icons right">delete</i></a>
+            <a class="btn-flat btnCancel waves-effect waves-light modal-action modal-close">Cancelar <i class="material-icons right">cancel</i></a> 
+        </div>
+    </div>
+
     <div class="tap-target blue" data-activates="info">
         <div class="tap-target-content">
             <h5>Title</h5>
@@ -214,6 +229,7 @@
             </ul>
         </li>
     </ul>
+
     <div class="fixed-action-btn vertical">
         <a class="btn-floating btn-large black" id="info">
             <i class="material-icons">menu</i>

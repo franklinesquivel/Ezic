@@ -50,7 +50,9 @@
 
             $frm = "
             <div class='row'>
-                <div class='header_info_cont'>
+                <div class='header_info_cont'>";
+            if ($coordiFlag || $_SESSION['type'] == 'T') {
+                $frm .= "
                     <div class='frmPhoto_cont'>
                         <div class='file-field input-field photo-input hide'>
                             <div class='btn'>
@@ -63,7 +65,9 @@
                         </div>
                         <span class='btnModifyPhoto'><i class='material-icons medium'>edit</i></span>
                         <img src='../../files/profile_photos/" . $row['photo'] . "' class='circle frmPhoto' alt=''>
-                    </div>
+                    </div>";
+            }
+            $frm .= "
                     <div class='info'>
                         <h3><b id='userId'>" . $row[$idLog] . "</b></h3>
                         <h5>" . $row['lastName'] . ", " . $row['name'] . "</h5>
@@ -72,8 +76,9 @@
             </div>
             <div class='row'>
                 <form class='frmData'>
-                    <div class='row'>
-                        <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
+                    <div class='row'>";
+            if ($coordiFlag) {
+                $frm .= "<div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
                             <input class='txtName' id='txtName' type='text' name='txtName' value='" . $row['name'] . "'>
                             <label for='txtName'>Nombres</label>
                         </div>
@@ -81,8 +86,9 @@
                             <input class=txtLastName'' id='txtLastName' type='text' name='txtLastName' value='" . $row['lastName'] . "'>
                             <label for='txtLastName'>Apellidos</label>
                         </div>
-                    </div>
-                    <div class='row'>
+                    </div>";
+            }
+            $frm .= "<div class='row'>
                         <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
                             <input class=txtPass'' id='txtPass' type='text' name='txtPass' value='" . $this->DisarmedEncryption($row['password']) . "'>
                             <label for='txtPass'>Contraseña</label>
