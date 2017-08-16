@@ -310,7 +310,7 @@
 				                    </thead>
 				                    <tbody>";
 
-		                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND nthPeriod = " . $obj['pInfo'][$i][0] . " ORDER BY percentage ASC";
+		                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0] . " ORDER BY percentage ASC";
 
 		                $epRes = $this->connection->connection->query($epQuery);
 

@@ -199,6 +199,25 @@
         <li class="no-padding">
             <ul class="collapsible collapsible-accordion">
                 <li>
+                    <a class="white-text collapsible-header waves-effect">Por estado<i class="white-text material-icons">thumbs_up_down</i></a>
+                    <div class="collapsible-body white">
+                        <ul>
+                            <li>
+                                <input type="radio" class="with-gap" id="filter-state-up" name="filterState" value="1" checked />
+                                <label for="filter-state-up">Activo</label>
+                            </li>
+                            <li>
+                                <input type="radio" class="with-gap" id="filter-state-down" name="filterState" value="0" />
+                                <label for="filter-state-down">De baja</label>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
                     <a class="white-text collapsible-header waves-effect">Buscar sección en específico<i class="white-text material-icons">group</i></a>
                     <div class="collapsible-body white">
                         <ul>
@@ -221,6 +240,28 @@
                             <li>
                                 <select name="cmbSection" id="cmbSection" class='section-search-i' disabled>
                                     <option selected disabled>Sección</option>
+                                </select><br>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="white-text collapsible-header waves-effect">Buscar por estado conductual<i class="white-text material-icons">insert_emoticons</i></a>
+                    <div class="collapsible-body white">
+                        <ul>
+                            <li>
+                                <center>
+                                    <input type="checkbox" id="search_behaviour" class="filled-in" />
+                                    <label for="search_behaviour">Habilitar búsqueda</label>
+                                </center>
+                            </li>
+                            <li>
+                                <select name="cmbBehaviourState" id="cmbBehaviourState" class='behaviour-search' disabled>
+                                    <option selected disabled>Estado Conductual</option>
                                 </select><br>
                             </li>
                         </ul>

@@ -168,16 +168,19 @@
                             <div class='options'>
                                 <a class='dropdown-button btn-flat waves-effect' data-activates='dropdown$i'><i class='material-icons large'>settings</i></a>
                                 <ul id='dropdown$i' class='dropdown-content'>
-                                    <li function='show' class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>
-                                    <li class='purple btnSchedule'><a class='waves-effect white-text'>Ver horario<i class='material-icons left'>schedule</i></a></li>
-                                    <li function='grades' class='orange btnGrades'><a class='waves-effect white-text'z>Notas<i class='material-icons left'>grade</i></a></li>
-                                    <li function='record' class='red btnRecord'><a class='waves-effect white-text'>Conducta<i class='material-icons left'>favorite</i></a></li>
-                                    <li function='appliedCode' class='blue-grey btnAppliedCode'><a class='waves-effect white-text'>Aplicar Código<i class='material-icons left'>warning</i></a></li>
-                                    <li function='removeCode' class='pink btnRmvCode'><a class='waves-effect white-text'>Remover Código<i class='material-icons left'>remove_circle</i></a></li>
-                                    <li class='indigo btnMandated'><a disabled class='waves-effect white-text'z>Ver responsable<i class='material-icons left'>folder_shared</i></a></li>
-                                    <li function='edit' class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
-                                    <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>
-                                </ul>
+                                    <li function='show' class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>";
+                    if ($user['state'] == 1) {
+                        $user['element'] .= "
+                                        <li class='purple btnSchedule'><a class='waves-effect white-text'>Ver horario<i class='material-icons left'>schedule</i></a></li>
+                                        <li function='grades' class='orange btnGrades'><a class='waves-effect white-text'z>Notas<i class='material-icons left'>grade</i></a></li>
+                                        <li function='record' class='red btnRecord'><a class='waves-effect white-text'>Conducta<i class='material-icons left'>favorite</i></a></li>
+                                        <li function='appliedCode' class='blue-grey btnAppliedCode'><a class='waves-effect white-text'>Aplicar Código<i class='material-icons left'>warning</i></a></li>
+                                        <li function='removeCode' class='pink btnRmvCode'><a class='waves-effect white-text'>Remover Código<i class='material-icons left'>remove_circle</i></a></li>
+                                        <li class='indigo btnMandated'><a disabled class='waves-effect white-text'z>Ver responsable<i class='material-icons left'>folder_shared</i></a></li>
+                                        <li function='edit' class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                        <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                    }
+                    $user['element'] .= "</ul>
                             </div>
                         </div>";
 
@@ -217,12 +220,14 @@
                             <div class='options'>
                                 <a class='dropdown-button btn-flat waves-effect' data-activates='dropdown$i'><i class='material-icons large'>settings</i></a>
                                 <ul id='dropdown$i' class='dropdown-content'>
-                                    <li class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>
-                                    <li class='purple btnSchedule'><a class='waves-effect white-text'>Ver horario<i class='material-icons left'>schedule</i></a></li>
-                                    <li class='indigo btnSubject'><a class='waves-effect white-text'z>Materias<i class='material-icons left'>library_books</i></a></li>
-                                    <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
-                                    <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>
-                                </ul>
+                                    <li class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>";
+                    if ($user['state'] == 1) {
+                        $user['element'] .= "<li class='purple btnSchedule'><a class='waves-effect white-text'>Ver horario<i class='material-icons left'>schedule</i></a></li>
+                                        <li class='indigo btnSubject'><a class='waves-effect white-text'z>Materias<i class='material-icons left'>library_books</i></a></li>
+                                        <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                        <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                    }
+                    $user['element'] .= "</ul>
                             </div>
                         </div>";
 
@@ -262,10 +267,12 @@
                             <div class='options'>
                                 <a class='dropdown-button btn-flat waves-effect' data-activates='dropdown$i'><i class='material-icons large'>settings</i></a>
                                 <ul id='dropdown$i' class='dropdown-content'>
-                                <li class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>
-                                <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
-                                <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>
-                                </ul>
+                                <li class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>";
+                        if ($user['state'] == 1) {
+                            $user['element'] .= "<li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                    <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                        }
+                                $user['element'] .= "</ul>
                             </div>
                         </div>";
                     array_push($users_array, $user);

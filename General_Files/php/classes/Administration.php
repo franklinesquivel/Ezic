@@ -670,13 +670,26 @@
 
 		function userDown($id)
 		{
-			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'T' ? 'T' : 'A'));
+			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'D' ? 'T' : 'A'));
 			$table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
 			$idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
 
 			$query = "UPDATE $table SET state = 0 WHERE $idLog = '$id'";
-
 			return ($this->connection->connection->query($query) ? 1 : 0);
+		}
+
+		function getAcademicStates()
+		{
+			$aux = "";
+			$query = "SELECT * FROM state_academic";
+			$res = $this->connection->connection->query($query);
+			if ($res->num_rows == 0) return -1;
+
+			while ($row = $res->fetch_object()) {
+				$aux .= "<option value='$row->idState'>$row->description</option>";
+			}
+
+			return $aux;
 		}
 	}
 ?>
