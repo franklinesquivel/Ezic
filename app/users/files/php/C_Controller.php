@@ -702,4 +702,8 @@
 	if (isset($_REQUEST['userDown'])) {
 		echo $admin->userDown($_REQUEST['id']);
 	}
+
+	if (isset($_REQUEST['getAcademicState'])) {
+		echo $admin->getAcademicStates();
+	}
 ?>

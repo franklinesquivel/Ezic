@@ -1,5 +1,5 @@
 (() => {
-    var users, loader, type = 'all', attr = 'id', f;
+    var users, loader, type = 'all', attr = 'id', f, state = 1;
     var back_i = 1, back_2_i = 0, g_id, stage_aux = "", gR;
     var schedules_id = new Array(), x = 0, justification_id = new Array();
 
@@ -19,6 +19,7 @@
                 data: {getUsers: 1},
                 success: function(r){
                     users = JSON.parse(r);
+                    // console.log(users);
                     sort_users();
                     for (let i = 0 ; i < users.length; i++) {
                         show_user(users[i]);
@@ -293,7 +294,7 @@
                             $('#removeCode-modal table').fadeIn('slow');
                         }else{
                             if ($('#removeCode-modal .modal-content').find('.alert_').length == 0) {
-                                $('#removeCode-modal .modal-content').append(`<div class='alert_'>El studiante no posee aplicación de códigos...</div>`);
+                                $('#removeCode-modal .modal-content').append(`<div class='alert_'>El estudiante no posee aplicación de códigos...</div>`);
                             }
                             $('#removeCode-modal .btnRemoveCodes').attr('disabled', 1);
                             $('#removeCode-modal table').fadeOut('slow');
@@ -382,19 +383,31 @@
         users.sort((a, b) => {return ((a[attr] < b[attr]) ? -1 : ((a[attr] > b[attr]) ? 1 : 0));})
     }
 
-    const search_user = (t, a, value) => {
+    const search_user = (t, a, s, value, behaviour = null) => {
+        console.log(`${behaviour} => ${t} => ${a} => ${s}`);
         $('.user-cont').html('<li class="user-row"></li>');
         sort_users();
         for (let i = 0; i < users.length; i++) {
             if (users[i][a].toLowerCase().indexOf(value.toLowerCase()) != -1) {
                 if (t != 'all') {
                     if (users[i]['type'] == t) {
-                        show_user(users[i]);
+                        if (users[i].state == state) {
+                            if (behaviour !== null) {
+                                    if (users[i].stateAcademic == behaviour ) {
+                                        show_user(users[i]);
+                                    }
+                            }else{
+                                show_user(users[i]);
+                            }
+                            // console.log(`${i}: ${users[i].state} => ${state}}`);
+                        }
                     }
                 }else{
-                    show_user(users[i]);
+                    if (users[i].state == state) {
+                        show_user(users[i]);
+                    }
                 }
-                bold_coincidence(users[i], value);
+                // bold_coincidence(users[i], value);
             }
         }
         $.getScript('../../files/js/init.js');
@@ -427,19 +440,21 @@
     }
 
     const show_user = (user) => {
-        if ($('.user-row').length == 0) {
-            let user_row = document.createElement('li');    
-            user_row.classList = 'user-row';
-            user_row.innerHTML = (user.element);
-            $('.user-cont').append(user_row);
-        }else{
-            if ($('.user-row' + (($('.user-row').length == 1) ? '' : ':last-child')).children().length > 1) {
+        if (user.state == state) {
+            if ($('.user-row').length == 0) {
                 let user_row = document.createElement('li');    
                 user_row.classList = 'user-row';
                 user_row.innerHTML = (user.element);
                 $('.user-cont').append(user_row);
             }else{
-                $('.user-row' + (($('.user-row').length == 1) ? '' : ':last-child')).append(user.element);
+                if ($('.user-row' + (($('.user-row').length == 1) ? '' : ':last-child')).children().length > 1) {
+                    let user_row = document.createElement('li');    
+                    user_row.classList = 'user-row';
+                    user_row.innerHTML = (user.element);
+                    $('.user-cont').append(user_row);
+                }else{
+                    $('.user-row' + (($('.user-row').length == 1) ? '' : ':last-child')).append(user.element);
+                }
             }
         }
     }
@@ -483,6 +498,7 @@
         $("#cmbLevel").empty();
         $("#cmbSpecialty").empty();
         $("#cmbSection").empty();
+        $('#cmbBehaviourState').empty();
 
         $.ajax({
             url: '../../files/php/C_Controller.php',
@@ -495,19 +511,33 @@
             }
         })
 
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {getAcademicState: 1},
+            success: r => {
+                if (r != -1) {
+                    $('#cmbBehaviourState').append(r);
+                    $('select').material_select();
+                }
+            }
+        })
+
         $("#cmbLevel").html("<option selected disabled>Nivel</option>");
         $("#cmbSpecialty").html("<option selected disabled>Especialidad</option>");
         $("#cmbSection").html("<option selected disabled>Sección</option>");
+        $('#cmbBehaviourState').html("<option selected disabled>Estado Conductual</option>");
 
         $('input[type="checkbox"]#search_section').prop('checked', false);
+        $('input[type="checkbox"]#search_behaviour').prop('checked', false);
         $("#search").removeAttr('disabled');
 
         $('input[type=radio').each((i) => $('input[type=radio').eq(i).removeAttr('disabled'));
         $('select.section-search-i').each( (i) => {
             $('select.section-search-i').eq(i).attr('disabled', 1);
         });
+        $('#cmbBehaviourState').attr('disabled', 1);
 
-        $('form.search').submit((e) => {
+        $('form.search').submit( e => {
             return false;
         })
 
@@ -515,7 +545,7 @@
             attr = $("input[name=filter_attr]:checked").val();
             sort_users();
             updateInput(type, attr);
-            search_user(type, attr, $('#search').val());
+            search_user(type, attr, state, $('#search').val());
         });
 
         $('input[name=filter_type]').change(function() {
@@ -531,8 +561,15 @@
             })
             sort_users();
             updateInput(type, attr);
-            search_user(type, attr, $('#search').val());
+            search_user(type, attr, state, $('#search').val());
         });
+
+        $("input[name=filterState]").change(function() {
+            state = $(this).val();
+            sort_users();
+            updateInput(type, attr);
+            search_user(type, attr, state, $('#search').val());
+        })
 
         $('input[type="checkbox"]#search_section').change(() => {
             if($('input[type="checkbox"]#search_section').prop('checked')){
@@ -547,19 +584,30 @@
                     $('select.section-search-i').eq(i).attr('disabled', 1);
                 });
                 $("#search").removeAttr('disabled');
-                search_user(type, attr, $('#search').val());
+                search_user(type, attr, state, $('#search').val());
+                $('select').material_select();
+            }
+        })
 
+        $('input[type="checkbox"]#search_behaviour').change(function(){
+            if ($(this).prop('checked')) {
+                $('input[type=radio').each((i) => $('input[type=radio').eq(i).attr('disabled', 1));
+                $('#cmbBehaviourState').removeAttr('disabled');
+                $('select').material_select();
+                search_user('S', attr, state, $('#search').val());
+            }else{
+                $('input[type=radio').each((i) => $('input[type=radio').eq(i).removeAttr('disabled'));
+                $('#cmbBehaviourState').attr('disabled', 1); 
+                search_user(type, attr, state, $('#search').val());
                 $('select').material_select();
             }
         })
 
         $('#cmbLevel').change(() => {
-            // loader.in();
             $.ajax({
                 url: '../../files/php/C_Controller.php',
                 data: {getSpecialties: 1, lvl: $("#cmbLevel").val()},
                 success: function(r){
-                    // loader.out();
                     if (r != -1) {
                         $("#cmbSpecialty").empty();
                         $("#cmbSection").empty();
@@ -582,12 +630,10 @@
         })
 
         $('#cmbSpecialty').change(() => {
-            // loader.in();
             $.ajax({
                 url: '../../files/php/C_Controller.php',
                 data: {returSections: 1, specialty: $("#cmbSpecialty").val()},
                 success: function(r){
-                    // loader.out();
                     if (r != -1) {
                         $("#cmbSection").html("<option disabled selected>Sección</option>");
                         $('#cmbSection').append(r);
@@ -604,8 +650,13 @@
             search_section($("#cmbLevel").val(), $("#cmbSpecialty").val(), $("#cmbSection").val());
         })
 
+        $('#cmbBehaviourState').change(function(){
+            console.log($(this).val());
+            search_user('S', attr, state, $('#search').val(), $(this).val());
+        })
+
         $('#search').keyup(function() {
-            search_user(type, attr, $(this).val());
+            search_user(type, attr, state, $(this).val());
             if ($('.user-item').length == 0) {
                 $('.user-cont .user-row').append("<div class='alert_ red-text text-darken-4'>No se encontraron coincidencias</div>");
             }
@@ -762,8 +813,6 @@
                 }
             })
         })
-
-        // alert(':p');
 
         $('.options_btn').sideNav({
             menuWidth: 350, // Default is 300
