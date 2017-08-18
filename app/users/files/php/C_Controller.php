@@ -103,7 +103,7 @@
 		echo $modify->load_Form($id);
 	}
 
-	if (isset($_FILES['file'])) {
+	if (isset($_FILES['file']) && isset($_POST['id'])) {
 		echo $modify->upload_Tmp_Img($_POST['id'], $_FILES['file']);
 	}
 
@@ -705,5 +705,9 @@
 
 	if (isset($_REQUEST['getAcademicState'])) {
 		echo $admin->getAcademicStates();
+	}
+
+	if (isset($_POST['uploadSectionPhotos'])) {
+		echo json_encode($section->uploadPhotos($_FILES['file']));
 	}
 ?>

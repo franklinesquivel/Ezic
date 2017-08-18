@@ -174,5 +174,109 @@
 
 			return $aux;
 		}
+
+		function uploadPhotos($file)
+		{
+			// return $file['tmp_name'];
+			if (isset($file["tmp_name"])) {
+				$fileRoute = "../../files/tmp/sectionPhotos.zip";
+				if(move_uploaded_file($file['tmp_name'], $fileRoute)){
+					$info = [];
+					$zip = new ZipArchive;
+					$res = $zip->open($fileRoute);
+
+					if ($res === TRUE) {
+						$info['cant'] = $zip->numFiles;
+						$info['matches'] = 0;
+						$info['img'] = 0;
+						$info['students'] = [];
+						$zip->extractTo("../../files/tmp/sectionPhotos");
+						$zip->close();
+						$newPhotos = [];
+						$oldPhotos = [];
+						$preUp = "";
+
+						if ($info['cant'] > 0) {
+							foreach (glob("../../files/tmp/sectionPhotos/[a-zA-Z][a-zA-Z][0-9][0-9][0-9][0-9].{jpg,png,jpeg}", GLOB_BRACE) as $img){
+								$aux = [];
+								$img = explode('/', $img)[count(explode('/', $img)) - 1];
+								$aux['name'] = explode('.', $img)[0];
+								$aux['type'] = explode('.', $img)[1];
+								$aux['name'] = strtoupper($aux['name']);
+								array_push($newPhotos, $aux);
+								$info['img']++;
+							}
+
+							foreach (glob("../../files/profile_photos/[a-zA-Z][a-zA-Z][0-9][0-9][0-9][0-9].{jpg,png,jpeg}", GLOB_BRACE) as $img) {
+								$aux = [];
+								$img = explode('/', $img)[count(explode('/', $img)) - 1];
+								$aux['name'] = explode('.', $img)[0];
+								$aux['type'] = explode('.', $img)[1];
+								array_push($oldPhotos, $aux);
+							}
+
+							if (count($oldPhotos) > 0) {
+								for ($i=0; $i < count($oldPhotos); $i++) {
+									for ($j=0; $j < count($newPhotos); $j++) { 
+										if ($oldPhotos[$i]['name'] == $newPhotos[$j]['name']) {
+											$info['matches']++;
+											$oldName = $oldPhotos[$i]['name'] . "." . $oldPhotos[$i]['type'];
+											$u = unlink("../../files/profile_photos/$oldName");
+
+											if (!$u)return -5;
+										}
+
+									}
+								}
+							}
+
+							for ($j=0; $j < count($newPhotos); $j++) {
+								$query = "UPDATE student SET photo = '" . $newPhotos[$j]['name'] . "." . $newPhotos[$j]['type'] . "' WHERE idStudent = '" . $newPhotos[$j]['name'] . "';";
+
+								$qRes = $this->connection->connection->query($query);
+								if (!$qRes) return -4;
+
+								$query = "SELECT name, lastName, idStudent, photo FROM student WHERE idStudent = '" . $newPhotos[$j]['name'] . "';";
+
+								$qRes = $this->connection->connection->query($query);
+								if (!$qRes) return -4;
+
+								while ($row = $qRes->fetch_assoc()) {
+									$aux = [];
+									foreach ($row as $key => $value) {
+										$aux[$key] = $value;
+									}
+									if ($row['idStudent'] == $newPhotos[$j]['name']) {
+										array_push($info['students'], $aux);
+										$newName = $newPhotos[$j]['name'] . "." . $newPhotos[$j]['type'];
+										if (file_exists("../../files/tmp/sectionPhotos/$newName")) {
+											$p = "../../files/tmp/sectionPhotos/$newName";
+											$d = "../../files/profile_photos/$newName";
+											rename($p, $d);
+										}
+									}
+								}
+							}
+
+							foreach(glob("../../files/tmp/sectionPhotos/*", GLOB_BRACE) as $dirFile){
+								if (is_file($dirFile)) {
+									unlink($dirFile);
+								}
+							}
+							unlink("../../files/tmp/sectionPhotos.zip");
+							return $info;
+						}else{
+							return -3;	
+						}
+					}else{
+						return -2;
+					}
+				}else{
+					return -1;
+				}
+			}else{
+				return 0;
+			}
+		}
 	}
 ?>

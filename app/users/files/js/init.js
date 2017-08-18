@@ -23,6 +23,10 @@ $(document).ready(function(){
         top: $('#index-banner').height()
     });
 
+    $('.info_btn').click(function(){
+        $('.tap-target').tapTarget('open');
+    });
+
     $('.datepicker').pickadate({
         monthsFull: [ 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre' ],
         monthsShort: [ 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic' ],
@@ -63,7 +67,6 @@ $(document).ready(function(){
         route = route.split('/');
         route.forEach(function(x){
             if( x == unLogDir[i] ){
-                // console.log(x + " --- " + unLogDir[i] + "  -->  " + i);
                 i++;
             }
         })
@@ -76,12 +79,7 @@ $(document).ready(function(){
         }
 
         newRoute += 'General_Files/php/User_Close_Session.php';
-        newHome += 'app/home/'
-
-        // console.log(newHome);
-
-        console.log(newRoute);
-        console.log(newHome);
+        newHome += 'app/home/';
 
         $.ajax({
             type: 'POST',
@@ -95,9 +93,6 @@ $(document).ready(function(){
     $('.btnUnlog').click(function(){
         unLog();
     })
-
-    // alert(':p');
-
 });
 
 

@@ -184,8 +184,8 @@
 		function createRar($name)
 		{
 			$zip = new ZipArchive();
-			$filename = "../../../app/users/files/tmp/$name.rar";
-			$tmp_file = tempnam("../../../app/users/files/tmp/$name.rar", "");
+			$filename = "../../../app/users/files/tmp/$name.zip";
+			$tmp_file = tempnam("../../../app/users/files/tmp/$name.zip", "");
 
 			$zip->open($tmp_file, ZipArchive::CREATE);
 

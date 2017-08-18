@@ -16,7 +16,8 @@
 				$this->options[count($this->options)] = ["Secciones", "tab", [
 					["Añadir", "library_add", ""],
 					["Eliminar", "delete", ""],
-					["Ver", "visibility", "view_sections"]
+					["Ver", "visibility", "view_sections"],
+					["Subir fotografías", "add_to_photos", "photo_sections"]
 				]];
 				$this->options[count($this->options)] = ["Especialidades", "stars", [
 					["Añadir", "library_add", ""],
