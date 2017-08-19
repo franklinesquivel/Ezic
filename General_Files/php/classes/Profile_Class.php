@@ -346,7 +346,9 @@
 		}
 
 		function tableSubject_Justification($period){
-			session_start();
+			if(!isset($_SESSION)){
+				session_start();
+			}	
 			$query = "SELECT subject.acronym, subject.nameSubject, GROUP_CONCAT(DISTINCT section.SectionIdentifier  ORDER BY section.SectionIdentifier ASC  SEPARATOR ', ') AS section, GROUP_CONCAT(DISTINCT section.idSection  ORDER BY section.idSection ASC  SEPARATOR ', ') AS IdSection,  level.level AS level, COUNT(DISTINCT evaluation_profile.idProfile) AS num_profile, subject.idSubject FROM `subject` INNER JOIN register_subject ON subject.idSubject = register_subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN evaluation_profile ON evaluation_profile.idSubject = subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE evaluation_profile.idPeriod = '".$period."' AND subject.idTeacher = '".$_SESSION['id']."' AND evaluation_profile.description = '' GROUP BY subject.idSubject ORDER BY level.level";
 
 			$result = $this->connection->connection->query($query);

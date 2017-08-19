@@ -435,6 +435,28 @@ a.showTeacher{
     height: 50vh;
 }
 
+#modal_permission .modal-content{padding: 0px;}
+#modal_permission .modal-content .title{
+    color: white;
+    padding: 10px;
+}
+
+#modal_permission .modal-content .info-gnrl{padding: 24px;}
+#modal_permission .modal-content .info-gnrl .list-profiles ul li{list-style: square;}
+
+#modal_permission .modal-content .info-gnrl .list-profiles ul{
+    width: 80%;
+    margin:auto;
+}
+
+#modal_permission .modal-content .info-gnrl .list-students .container-chips{
+    width: 90%;
+    margin: auto;
+}
+
+#modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.code{font-weight: bold;}
+#modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.section{font-style: italic;}
+
 .reportTitle{
     font-size: 25px;
     font-weight: bold;
@@ -495,6 +517,28 @@ a.showTeacher{
 #reportCont{
     display: none;
 }
+
+#modal_permission .modal-content{padding: 0px;}
+#modal_permission .modal-content .title{
+    color: white;
+    padding: 10px;
+}
+
+#modal_permission .modal-content .info-gnrl{padding: 24px;}
+#modal_permission .modal-content .info-gnrl .list-profiles ul li{list-style: square;}
+
+#modal_permission .modal-content .info-gnrl .list-profiles ul{
+    width: 80%;
+    margin:auto;
+}
+
+#modal_permission .modal-content .info-gnrl .list-students .container-chips{
+    width: 90%;
+    margin: auto;
+}
+
+#modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.code{font-weight: bold;}
+#modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.section{font-style: italic;}
 
 @media only screen and (max-width: 768px){
     ul#options_slide .title{
@@ -681,6 +725,19 @@ a.showTeacher{
         height: 40vh;
         width: 100vw;
     }
+    ul.permission-container li.collection-item .header{display: block;}
+    ul.permission-container li.collection-item .header div{padding: 5px;}
+    ul.permission-container li.collection-item .header .option{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .permission-container li.collection-item .info-permission .gnrl-info, .permission-container li.collection-item  .info-permission .subject{
+        display: block;
+        padding: 0px;
+    }
+    .permission-container li.collection-item .info-permission .gnrl-info div, .permission-container li.collection-item  .info-permission .subject div{padding: 5px;}
 
     #getRowsData .input-field.rdo{
         margin-bottom: 3%;

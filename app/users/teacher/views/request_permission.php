@@ -1,5 +1,5 @@
 <?php 
-	require_once("../../../../General_Files/php/classes/Page_Constructor.php");
+    require_once("../../../../General_Files/php/classes/Page_Constructor.php");
     $const = new Constructor();
     $const->verify_Log('T');
     $userRow = $const->getData('T');
@@ -78,21 +78,40 @@
         </div>
     </div>
 
+    <!-- Inicio SlideNav -->
+    <ul id="slide-filter" class="side-nav green darken-1">
+        <li>
+            <h5 class='center'>Seleccione la sección</h5>
+            <div class="input-field col s8 offset-s2 section-select">
+                <select id="selectFilter">
+                    <option value="" disabled selected>Elegir Sección</option>
+                    <!-- 
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option> -->
+                </select>
+            </div>
+        </li>
+    </ul>
+    <!-- Fin SlideNav -->
+
+    <!-- Boton Flotante -->
     <div class="fixed-action-btn vertical btn_options">
         <a class="btn-floating btn-large green darken-2" id="info">
             <i class="large material-icons">menu</i>
         </a>
         <ul>
             <li title="Regresar"><a disabled class="btn-floating grey btnBack"><i class="material-icons">arrow_back</i></a></li>
+            <li title="Filtros"><a class="btn-floating blue btnFilters" data-activates="slide-filter"><i class="material-icons">filter_list</i></a></li>
             <li title="Recomendaciones"><a class="btn-floating amber info_btn"><i class="material-icons">info_outline</i></a></li>
         </ul>  
     </div>
-
     <div class="tap-target green darken-2" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>El profesor puede ingresar la descripción de los perfiles de evaluación según su materia.</p>
+            <p>Acá puedes pedir según una materia, la solicitud de permiso para modificar notas.</p>
         </div>
     </div> 
+    <!--Fin Boton Flotante  -->
 </body>
 </html>

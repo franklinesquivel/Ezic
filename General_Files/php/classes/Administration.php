@@ -668,11 +668,16 @@
 			return $aux;
 		}
 
-		function userDown($id)
+		function userDown($id, $justification)
 		{
-			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'D' ? 'T' : 'A'));
+			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'D' ? 'T' : 'S'));
 			$table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
 			$idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
+			ini_set("date.timezone", 'America/El_Salvador');
+            $date = date("Y/m/d");
+
+			$queryJustify = "INSERT INTO justify_down VALUES (NULL, '$id', '$type', '$justification', '$date');";
+			return $queryJustify;
 
 			$query = "UPDATE $table SET state = 0 WHERE $idLog = '$id'";
 			return ($this->connection->connection->query($query) ? 1 : 0);

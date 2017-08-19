@@ -700,7 +700,7 @@
 	}
 
 	if (isset($_REQUEST['userDown'])) {
-		echo $admin->userDown($_REQUEST['id']);
+		echo $admin->userDown($_REQUEST['id'], $_REQUEST['just']);
 	}
 
 	if (isset($_REQUEST['getAcademicState'])) {

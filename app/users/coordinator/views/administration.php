@@ -130,6 +130,12 @@
                 <h5 class="code center grey-text text-darken-1"></h5>
                 <h6 class="fullName center grey-text text-lighten-1"></h6>
             </div>
+            <div class="row">
+                <div class="input-field col s10 offset-s1 l6 m6 offset-m3 offset-l3">
+                    <textarea id="txtDownJustification" class="materialize-textarea" data-length="500"></textarea>
+                    <label for="txtDownJustification">Justificante</label>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <a class="btn-flat btnDelete waves-effect waves-red">Confirmar <i class="material-icons right">delete</i></a>

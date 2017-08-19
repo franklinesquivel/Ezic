@@ -54,15 +54,17 @@
 					["Ver", "visibility", "v_code"],
 				]];
 
+				$this->options[count($this->options)] = ['Aceptar Permisos', "lock_open", "accept_permission"];
+				
 				$this->options[count($this->options)] = ['Administración', "folder", "administration"];
 				$this->options[count($this->options)] = ['Estadísticas', "insert_chart", "stadistics"];
-				$this->options[count($this->options)] = ['Correos', "mail", "#!"];
 			}elseif($type == 'T'){
 				$this->options[count($this->options)] = ["Ver horario", "schedule", "schedule"];
 				$this->options[count($this->options)] = ["Asistencia", "date_range", "assistance"];
 				$this->options[count($this->options)] = ["Agregar notas", "grade", "addGrade"];
 				$this->options[count($this->options)] = ["Descripción de Perfiles", "format_align_justify", "addJustification"];
 				$this->options[count($this->options)] = ["Solicitar Permiso", "lock_open", "request_permission"];
+				$this->options[count($this->options)] = ["Modificar Notas", "mode_edit", "modify_grade"];
 			}else{
 				$this->options[count($this->options)] = ['Ver notas', "grades", "grades"];
 				$this->options[count($this->options)] = ['Récord conductual', "favorite", "record"];

@@ -1,19 +1,21 @@
+var loader;
 
-
-$(document).ready(function(){
     function loader(obj){
         this.obj = obj;
         this.in = function(){
             this.obj.fadeIn('slow');
             this.obj.css('display', 'flex');
         }
-
+    
         this.out = function(){
             this.obj.fadeOut('slow');
         }
     }
 
-    var loader = new loader($('.loader_cont'));
+$(document).ready(function(){
+    loader = new loader($('.loader_cont'));
+    loader.in();
+    $("#logo-container img").width($("#logo-container img").height());
 
     $('.homeSlider').slider({
         height: 500
@@ -167,4 +169,6 @@ $(document).ready(function(){
             })
         }
     });
+
+    $("body").fadeIn('slow', loader.out());
 })

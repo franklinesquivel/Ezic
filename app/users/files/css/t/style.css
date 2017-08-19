@@ -28,15 +28,15 @@
 /*Ezic 1.8*/
 [type="radio"]:checked + label:after,
 [type="radio"].with-gap:checked + label:after{
-	background: #4CAF50;
+    background: #4CAF50;
 }
 
 table.assistance tr.permission, tr.expulsed td{
-	color: white;
+    color: white;
 }
 
 .tap-target-content p, .tap-target-content h5{
-	color: white;
+    color: white;
 }
 
 .alert_{
@@ -51,42 +51,51 @@ table.assistance tr.permission, tr.expulsed td{
     border: none;
 }
 
-.collection-item.collection-subject{
+.collection-item.collection-subject, .collection-item.collection-permission{
     display: flex;
     border: none;
 }
 
-.collection-item.collection-subject .name-subject{
+.collection-item.collection-subject .name-subject, .collection-item.collection-permission .name-subject{
     width: 25%;
     text-align: center;
     border-right: 3px solid green;
 }
 
-.collection-item.collection-subject .info-subject{
+.collection-item.collection-subject .info-subject,  .collection-item.collection-permission .info-subject{
     width: 75%;
 }
 
-.collection-item.collection-subject .info-subject .r-divider{
+.collection-item.collection-subject .info-subject .r-divider,  .collection-item.collection-permission .info-subject .r-divider{
     display: flex; 
     justify-content: center;
     align-items: center;
     padding: 5px;
-
 }
 
-.collection-item.collection-subject .info-subject .r-divider div{
+/* .collection-item.collection-permission .info-subject .r-divider:first-child{
+    display: block;
+} */
+
+.collection-item.collection-subject .info-subject .r-divider div, .collection-item.collection-permission .info-subject .r-divider div{
     width: 50%;
     display: flex; 
     justify-content: center;
     align-items: center;
 }
 
-.collection-item.collection-subject .info-subject .r-divider div span.title{
+/* .collection-item.collection-permission .info-subject .r-divider:first-child div{
+    width: 90%;
+    margin-left: 10%;
+    display: block;
+} */
+
+.collection-item.collection-subject .info-subject .r-divider div span.title, .collection-item.collection-permission .info-subject .r-divider div span.title{
     font-weight: bold;
     font-size: 16px;
 }
 
-.collection-item.collection-subject .info-subject .r-divider div span.result{
+.collection-item.collection-subject .info-subject .r-divider div span.result, .collection-item.collection-permission .info-subject .r-divider div span.result{
     font-size: 16px;
     margin-left: 5px;
 }
@@ -311,6 +320,13 @@ input[type="checkbox"].checkbox-list + label{transform: scale(1.6);}
 
 .list-add .message-error{display: none;}
 .list-add .message-error h5{color: #B71C1C;}
+ul#slide-filter{padding: 10px;}
+ul#slide-filter h5{color: white;}
+ul#slide-filter .section-select .select-dropdown{
+    color: white;
+    border-bottom: 1px solid white;
+    font-size: 14px;
+}
 
 @media only screen and (max-width: 768px){
     .alert_{
@@ -321,13 +337,13 @@ input[type="checkbox"].checkbox-list + label{transform: scale(1.6);}
         text-align: center;
     }
 
-    .collection-item.collection-subject .info-subject .r-divider{
+    .collection-item.collection-subject .info-subject .r-divider, .collection-item.collection-permission .info-subject .r-divider{
         display: inline-block;
         padding: 0px;
         width: 100%;
     }
 
-    .collection-item.collection-subject .info-subject .r-divider div{
+    .collection-item.collection-subject .info-subject .r-divider div, .collection-item.collection-permission .info-subject .r-divider div{
         width: 90%;
         margin-left: 5%;
         margin-bottom: 5px;
@@ -375,3 +391,8 @@ input[type="checkbox"].checkbox-list + label{transform: scale(1.6);}
         margin: 0px auto 20px auto;
     }
 }
+
+/* ul#slide-filters{
+    width: 100%;
+    background: green;
+} */

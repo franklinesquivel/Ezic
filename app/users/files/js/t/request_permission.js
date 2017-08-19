@@ -5,6 +5,19 @@
 	$(document).ready(function() {
 		$('.modal').modal();
 		load_page();
+		$('.info_btn').click(()=>{
+			$('.tap-target').tapTarget('open');
+		});
+		$(".btnBack").click(()=>{
+			load_page();
+		});
+		$('.btnFilters').sideNav({
+			menuWidth: 350, // Default is 300
+			edge: 'right', // Choose the horizontal origin
+			closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+			onOpen: function(el) {  }, // A function to be called when sideNav is opened
+			onClose: function(el) {  }, // A function to be called when sideNav is closed
+		});
 	});
 
 	function load_page(){ /* Carga inical */
@@ -22,6 +35,11 @@
 			$("main").fadeIn("slow");
 			id_subject = 0;
 			student.length = 0;
+			y = 0;
+			k = 0;
+			z = 0;
+			$(".btnBack").attr("disabled", true);
+			$(".btnFilters").attr("disabled", true);
 			loader.out();
 		});
 	}
@@ -47,27 +65,49 @@
 		removeIndex($(this).attr("id"));
 	});
 
-	$(document).on("change", "#selectSubject", function(){ /* Caraga la lista de usuarios */
-		let loader = new Loader();
+	$(document).on("change", "#selectSubject", function(){ /* Carga la lista de usuarios */
 		if($(this).val() != null){
-			loader.in();
-			$.ajax({
-				type: 'POST',
-				url:'../../files/php/T_Controller.php',
-				data:{
-					getStudents_Permission: 1,
-					subject: $(this).val()
-				}
-			}).done(function(r){
-				//$("main .container.list").fadeIn("slow", function(){
-					$("main .container.list").empty();
-					$("main .container.list").append(r);
-				///});	
-				loader.out();
-			});
 			id_subject =  $(this).val();
+			let loader = new Loader();
+			loader.in();
+			showUsers(0);/* Ajax */
+			loadSectionInSelect();/* Se cargan las secciones en el select de filtro */
+			$(".btnFilters").attr("disabled", false);
+			loader.out();
 		}
 	});
+
+	function loadSectionInSelect(){
+		$.ajax({
+			type: 'POST',
+			url:'../../files/php/T_Controller.php',
+			data:{
+				getSection: 1,
+				subject: id_subject
+			}
+		}).done(function(r){
+			$("#selectFilter").append("<option value=''disabled selected>Elegir Sección</option>");	
+			$("#selectFilter").append(r);
+			$("select#selectFilter").material_select();
+		});
+	}
+
+	function showUsers(section){/* Función que trae todos los alumnos */	
+		student.length = 0;
+		y = 0;
+		$.ajax({
+			type: 'POST',
+			url:'../../files/php/T_Controller.php',
+			data:{
+				getStudents_Permission: 1,
+				subject: id_subject,
+				section: section
+			}
+		}).done(function(r){
+			$("main .container.list").empty();
+			$("main .container.list").append(r);
+		});
+	}
 
 	$(document).on('click', '#SaveStudents', function(){ /* Guarda los estudinates para ir al formulario */
 		if(student.length > 0){ /* Posee Datos  */
@@ -78,6 +118,8 @@
 					getFormEmail: 1
 				}
 			}).done(function(r){
+				$(".btnBack").attr("disabled", false);
+				$(".btnFilters").attr("disabled", true);
 				$('main .container.list').empty();
 				$('main .container.select').html(r);
 				$('select').material_select();
@@ -98,7 +140,6 @@
 					subject: id_subject
 				}
 			}).done(function(r){
-				//alert(r);
 				let object = JSON.parse(r);
 				if(object.length > 0){
 					$("#selectProfiles").empty();
@@ -135,10 +176,10 @@
                 }
 			},
 			submitHandler: function(form) {
-				if(errorSelect($("select"))){
-					Materialize.toast("Todo bien", 3000);
+				if(errorSelect($("form.Send Email select"))){
+					let loader = new Loader();
+					loader.in();
 					let object = JSON.stringify(student);
-					console.log(object);
 					$.ajax({
 						type: 'POST',
 						url: '../../files/php/T_Controller.php',
@@ -152,6 +193,13 @@
 						}
 					}).done(function(r){
 						alert(r);
+						if(r == 0){
+							loader.out();
+							Materialize.toast("ERROR, algunos de los datos ya estan en un permiso aún no procesado", 3000);
+						}else{
+							load_page();
+							Materialize.toast("Solicitud exitosa!", 3000);
+						}	
 					});
 				}else{
 					Materialize.toast("Faltan campos por seleccionar", 3000, "red");
@@ -212,4 +260,10 @@
 			createContainer = false;
 		}
 	}
+
+	$(document).on("change", "#selectFilter", function(){
+		if($(this).val() != null){
+			showUsers($(this).val());/* Ajax */
+		}
+	});
 })()

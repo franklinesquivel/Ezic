@@ -19,6 +19,7 @@
 			require_once($this->aux);
 			$this->connection = new Connection();
 			$this->connection->Connect();
+			//session_start();
 		}
 
 		function deleteAsProfile($idProfile){
@@ -29,7 +30,10 @@
 		function v_addGrade(){/* Vista para que el profesor ingrese notas */
 			$period =  $this->getPeriod();
 			$public = false;
-			session_start();
+			if(!isset($_SESSION)){
+				session_start();
+			}
+			
 			if ($period) {	
 				$query = "SELECT subject.acronym, subject.nameSubject, GROUP_CONCAT(DISTINCT section.SectionIdentifier  ORDER BY section.SectionIdentifier ASC  SEPARATOR ', ') AS section, GROUP_CONCAT(DISTINCT section.idSection  ORDER BY section.idSection ASC  SEPARATOR ', ') AS IdSection,  level.level AS level, COUNT(DISTINCT evaluation_profile.idProfile) AS num_profile, subject.idSubject FROM `subject` INNER JOIN register_subject ON subject.idSubject = register_subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN evaluation_profile ON evaluation_profile.idSubject = subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE evaluation_profile.idPeriod = '".$period[0][0]."' AND subject.idTeacher = '".$_SESSION['id']."' GROUP BY subject.idSubject";	
 				$result = $this->connection->connection->query($query);
@@ -272,6 +276,9 @@
 
 		function getGrades($id)
 		{
+			if(!isset($_SESSION)){
+				session_start();
+			}
 			$styleHelper = ($_SESSION['type'] == 'S' ? 'blue' : ($_SESSION['type'] == 'T' ? 'green' : 'black'));
 			$obj['pInfo'] = $this->getPeriods();
 			for ($i=0; $i < count($obj['pInfo']); $i++) { 
@@ -463,6 +470,199 @@
 			}
 
 			return $aux;
+		}
+
+		function v_modifyGrade(){/* Vista Inicial cuando el profesor quiere modificar notas */
+			if(!isset($_SESSION)){
+				session_start();
+			}
+			$query = "SELECT pg.idPermission_Grade, pg.startDate, pg.description, pg.startDate, level.level, COUNT(DISTINCT rp.idStudent) AS numStudent, COUNT(DISTINCT pp.idProfile) AS numProfiles, subject.nameSubject, subject.acronym, teacher.name, teacher.lastName, teacher.idTeacher FROM `pg_students` rp INNER JOIN permission_grade pg ON pg.idPermission_Grade = rp.idPermission INNER JOIN pg_profiles pp ON pp.idPermission = pg.idPermission_Grade INNER JOIN evaluation_profile evp ON evp.idProfile = pp.idProfile INNER JOIN subject ON subject.idSubject = evp.idSubject INNER JOIN teacher ON teacher.idTeacher = subject.idTeacher INNER JOIN register_subject rg ON rg.idSubject = subject.idSubject INNER JOIN section ON section.idSection = rg.idSection INNER JOIN level ON level.idLevel = section.idLevel WHERE pg.approved = 1 AND pp.modified = 0 AND subject.idTeacher = '".$_SESSION['id']."' GROUP BY pg.idPermission_Grade";
+			$result = $this->connection->connection->query($query);
+			if ($result->num_rows > 0) {
+				$form = "<div class='row'> 
+					<ul class='collection subject with-header col l10 m10 s12 offset-l1 offset-m1'>
+					<li class='collection-header container-subject'><h4 class='center-align'>Prestamos con notas por modificar</h4></li>";
+				$x = 0;
+				while ($fila = $result->fetch_assoc()) {
+					if ($fila['nameSubject'] != NULL) {
+						$form .= "
+					    <li class='collection-item collection-permission'>
+						    <div class='name-subject' title='".$fila['nameSubject']."'><h4>".$fila['acronym']."</h4></div>
+						    <div class='info-subject'>
+						        <div class='r-divider'>
+									<div>
+										<span class='title'>Fecha de solicitud: </span><span class='result'> ".$fila['startDate']."</span>
+									</div>
+						        	<div class='level'>
+						        		<span class='title'>Nivel: </span><span class='result'> ".$fila['level']."°</span>
+							        </div>
+						        </div>
+						        <div class='r-divider'>
+						        	<div class='n-perfiles'>
+						        		<span class='title'>Perfiles por ingresar: </span><span class='result n-perfiles'>".$fila['numProfiles']."</span>
+						        	</div>
+						        	<div class='select-sections'>
+										<span class='title'>Estudiantes: </span><span class='result n-perfiles'>".$fila['numStudent']."</span>
+						        	</div>
+						        </div>
+								<div class='r-divider'>
+						        	<div id='".$fila['idPermission_Grade']."' class='btnModalOpen btn waves-effect waves-light green'>
+										Ver Información
+										<i class='material-icons right'>send</i>
+									</div>
+						        </div>
+						    </div>
+					    </li>
+						";
+						$x++;
+					}
+				}
+				$form .= "</ul></div>";
+			}else{
+				$form = "<div class='alert_ red-text text-darken-4'>No se ha encontrado prestamos pendientes por modificar</div>";
+			}
+
+			return ($form);
+		}
+
+		function getGradesModification($idPermission){
+			$query = "SELECT pg.idRP, evp.name, evp.percentage, evp.description, evp.idProfile, pg.modified, period.nthPeriod FROM `pg_profiles` pg INNER JOIN evaluation_profile evp ON evp.idProfile = pg.idProfile INNER JOIN subject ON subject.idSubject = evp.idSubject INNER JOIN period ON period.idPeriod = evp.idPeriod WHERE idPermission =  $idPermission";
+			$result = $this->connection->connection->query($query);
+			$form = "<h4 class='center-align'>Perfiles de Evaluación</h4>";
+			while($fila = $result->fetch_assoc()){
+				
+				$form .= "<div class='row'><ul class='collection container-profiles'>";
+				$valid = ($fila['modified'] == 1 ) ? false : true;
+				$disabled = ($valid) ? "" : "disabled='disabled'";
+				$title = ($valid) ? 'Ingresar Nota' : 'Ya ha ingresado esta nota';
+				$form .= "<li class='collection-item'> 
+					<h5>". $fila['name'] ." - ".$fila['percentage']."%</h5>
+					<div class='description'>".$fila['description']."</div>
+
+					<center><button id='".$fila['idProfile']."' class='waves-effect green btn select_profile' ".$disabled .">".$title."<i class='material-icons right'>send</i></button></center>
+					</li>";
+				$valid = true;
+			}
+			$form .= "</ul></div>";
+			return $form;
+		}
+
+		function Students_Modification($idPermission, $idProfile){
+			$query = "SELECT pg.idPermission_Grade, student.idStudent, student.name, student.lastName, lvl.level, section.sectionIdentifier FROM permission_grade pg INNER JOIN pg_profiles pp ON pp.idPermission = pg.idPermission_Grade INNER JOIN pg_students ps ON ps.idPermission = pg.idPermission_Grade INNER JOIN student ON student.idStudent = ps.idStudent INNER JOIN section ON section.idSection = student.idSection INNER JOIN level lvl ON lvl.idLevel = section.idLevel WHERE pg.idPermission_Grade = $idPermission AND pp.idProfile =  $idProfile";
+			$result = $this->connection->connection->query($query);
+			if ($result->num_rows > 0) {
+				$form = "<div class='row '><table class='centered responsive-table assistance col l10 m8 s12 offset-l1 offset-m2'> 
+						<thead>
+							<tr>
+			                    <th>Carnet</th>
+			                    <th>Nombre</th>
+								<th>Sección</th>
+			                    <th>Nota</th>
+		                    </tr>
+	                	</thead>
+	                	</tbody>";
+	            $x = 0;
+				while ($fila = $result->fetch_assoc()) {
+					$x++;
+					$form .= "<tr>
+						<td>".$fila['idStudent']."</td>
+						<td>".$fila['lastName'].", ".$fila['name']."</td>
+						<td>".$fila['level']."° '".$fila['sectionIdentifier']."'</td>
+						<td>
+							<div class='input-field'>
+								<input id='".$fila['idStudent']."' type='number' step='0.01'>
+          						<label for='".$fila['idStudent']."'>Nota</label>
+							</div>
+						</td>
+					</tr>";
+				}
+				$form .= "<tbody></table></div><div class='row'>
+					<button id='btnSaveGrades' class='col l4 m4 s4 offset-l4 offset-m4 offset-s4 btn waves-effect waves-light green darken-2 btnSave'>Guardar Notas
+			    	    <i class='material-icons right'>save</i>
+			    	</button>
+				</div>";
+			}else{
+				$form = "<div class='alert_ red-text text-darken-4'>No hay alumnos registrados en dicha sección</div>";
+			}
+			return $form;
+		}
+
+		function UpdateGrade($idProfile, $idPermission, $idStudent, $grade){
+			$value = 0;
+			$grade_previus = $this->getInfoGrade($idProfile, $idStudent);
+			$query = "UPDATE grade SET grade = $grade WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
+			if($this->connection->connection->query($query)){
+				$previus_average = $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent);
+				if($this->UpdateAverages($grade_previus[0][2], $grade_previus[0][3], $grade_previus[0][0], $idStudent, ($grade_previus[0][1] * $grade))){
+					$current_average = $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent);
+					if($this->UpdateACC($idStudent, $grade_previus[0][2], $previus_average, $current_average)){
+						if($this->changeStatePermission($idProfile, $idPermission)){
+							$value = 1;
+						}
+					}
+				}
+			}
+
+			return $value;
+		}
+
+		function getInfoGrade($idProfile, $idStudent){ /* Se obtiene el resultado anterios - previo a modificar*/
+			$query = "SELECT ((evp.percentage / 100) * grade.grade) AS multiplication, evp.percentage, subject.idSubject, period.idPeriod FROM grade INNER JOIN evaluation_profile evp ON evp.idProfile = grade.idProfile INNER JOIN subject ON subject.idSubject = evp.idSubject INNER JOIN period ON period.idPeriod = evp.idPeriod WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+			$grade_previus[0][0] = $fila['multiplication'];
+			$grade_previus[0][1] = ($fila['percentage'] / 100);
+			$grade_previus[0][2] = $fila['idSubject'];
+			$grade_previus[0][3] = $fila['idPeriod'];
+			return ($grade_previus);
+		}
+		
+		function UpdateAverages($idSubject, $idPeriod, $subtract, $idStudent, $newGrade){
+			$query = "UPDATE averages SET average = ((average - $subtract) + $newGrade) WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."' ";
+			$result = $this->connection->connection->query($query);
+
+			$query = "SELECT averages.average FROM averages WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."'";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+			$approved = ($fila['average']  >= 7) ? 1 : 0;
+
+			if($approved == 1){
+				$query = "UPDATE averages SET approved = $approved WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."' ";
+				if($this->connection->connection->query($query)){return true;}
+			}else{
+				return true;
+			}
+		}
+
+		function getInfoAverage($idSubject, $idPeriod, $idStudent){
+			$query = "SELECT (averages.average * (period.percentage / 100)) AS multiplication, period.percentage FROM averages INNER JOIN period ON period.idPeriod = averages.idPeriod WHERE averages.idPeriod = $idPeriod AND averages.idSubject = $idSubject AND averages.idStudent = '".$idStudent."'  ";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+			
+			return $fila['multiplication'];
+		}
+
+		function UpdateACC($idStudent, $idSubject, $substract, $newAcc){
+			$query = "UPDATE accumulated_note SET acc = ((acc - $substract) + ($newAcc)) WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
+			if($this->connection->connection->query($query)){
+				$query = "SELECT acc FROM accumulated_note WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
+				$result = $this->connection->connection->query($query);
+				$fila = $result->fetch_assoc();
+				$approved = ($fila['acc'] >= 7 ) ? 1 : 0;
+				if($approved == 1){
+					$query = "UPDATE accumulated_note SET approved = $approved WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
+					if($this->connection->connection->query($query)){return true;}
+				}else{
+					return true;
+				}
+			}
+		}
+
+		function changeStatePermission($idProfile, $idPermission){
+			$query = "UPDATE pg_profiles SET modified = '1' WHERE idProfile = $idProfile AND idPermission = $idPermission";
+			if($this->connection->connection->query($query)){
+				return true;
+			}
 		}
 	}
 ?>

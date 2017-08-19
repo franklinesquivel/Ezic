@@ -200,9 +200,8 @@
 							foreach (glob("../../files/tmp/sectionPhotos/[a-zA-Z][a-zA-Z][0-9][0-9][0-9][0-9].{jpg,png,jpeg}", GLOB_BRACE) as $img){
 								$aux = [];
 								$img = explode('/', $img)[count(explode('/', $img)) - 1];
-								$aux['name'] = explode('.', $img)[0];
+								$aux['name'] = strtoupper(explode('.', $img)[0]);
 								$aux['type'] = explode('.', $img)[1];
-								$aux['name'] = strtoupper($aux['name']);
 								array_push($newPhotos, $aux);
 								$info['img']++;
 							}
@@ -214,6 +213,8 @@
 								$aux['type'] = explode('.', $img)[1];
 								array_push($oldPhotos, $aux);
 							}
+
+							// return $newPhotos;
 
 							if (count($oldPhotos) > 0) {
 								for ($i=0; $i < count($oldPhotos); $i++) {
@@ -277,6 +278,19 @@
 			}else{
 				return 0;
 			}
+		}
+
+		function getAllForSubject($subject){
+			$query = "SELECT section.idSection, level.level, section.sectionIdentifier FROM section INNER JOIN level ON level.idLevel = section.idLevel  INNER JOIN register_subject ON register_subject.idSection = section.idSection WHERE register_subject.idSubject = $subject";
+			$result = $this->connection->connection->query($query);
+			$option = "<option value='0'>Todos</option>";
+
+			if($result->num_rows > 0){
+				while($fila = $result->fetch_assoc()){
+					$option .= "<option value='". $fila['idSection'] ."'>". $fila['level'] ."° '". $fila['sectionIdentifier'] ."'</option>";
+				}
+			}
+			return ($option);
 		}
 	}
 ?>

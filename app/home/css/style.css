@@ -7,6 +7,10 @@ span.space-helper{
     height: 100px;
 }
 
+body{
+    display: none;
+}
+
 .waves-effect.waves-blue .waves-ripple {
       background-color: rgba(25, 118, 210, 0.64);
 }
@@ -75,29 +79,17 @@ span.space-helper{
 }
 
 @media only screen and (max-width: 768px){
-    #logo-container i{
-        width: 100%;
-    }
+
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-height: 640px) and (orientation : landscape){
-    #logo-container i{
-        width: 40%;
-    }
 
-    .fx{
-        /*width: 100%;*/
-    }
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-height: 350px) and (orientation : landscape) and (-webkit-device-pixel-ratio: 3){
-    #logo-container i{
-        width: 40%;
-    }
+
 }
 
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
-    #logo-container i{
-        width: 40%;
-    }
+
 }
