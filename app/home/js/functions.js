@@ -172,3 +172,7 @@ $(document).ready(function(){
 
     $("body").fadeIn('slow', loader.out());
 })
+
+$(window).resize(function(){
+    $("#logo-container img").width($("#logo-container img").height());
+})

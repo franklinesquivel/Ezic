@@ -168,17 +168,20 @@
                             <div class='options'>
                                 <a class='dropdown-button btn-flat waves-effect' data-activates='dropdown$i'><i class='material-icons large'>settings</i></a>
                                 <ul id='dropdown$i' class='dropdown-content'>
-                                    <li function='show' class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>";
+                                    <li class='blue btnShow'><a class='waves-effect white-text'>Ver perfil<i class='material-icons left'>remove_red_eye</i></a></li>";
                     if ($user['state'] == 1) {
                         $user['element'] .= "
                                         <li class='purple btnSchedule'><a class='waves-effect white-text'>Ver horario<i class='material-icons left'>schedule</i></a></li>
-                                        <li function='grades' class='orange btnGrades'><a class='waves-effect white-text'z>Notas<i class='material-icons left'>grade</i></a></li>
-                                        <li function='record' class='red btnRecord'><a class='waves-effect white-text'>Conducta<i class='material-icons left'>favorite</i></a></li>
-                                        <li function='appliedCode' class='blue-grey btnAppliedCode'><a class='waves-effect white-text'>Aplicar Código<i class='material-icons left'>warning</i></a></li>
-                                        <li function='removeCode' class='pink btnRmvCode'><a class='waves-effect white-text'>Remover Código<i class='material-icons left'>remove_circle</i></a></li>
+                                        <li class='orange btnGrades'><a class='waves-effect white-text'z>Notas<i class='material-icons left'>grade</i></a></li>
+                                        <li class='red btnRecord'><a class='waves-effect white-text'>Conducta<i class='material-icons left'>favorite</i></a></li>
+                                        <li class='blue-grey btnAppliedCode'><a class='waves-effect white-text'>Aplicar Código<i class='material-icons left'>warning</i></a></li>
+                                        <li class='pink btnRmvCode'><a class='waves-effect white-text'>Remover Código<i class='material-icons left'>remove_circle</i></a></li>
                                         <li class='indigo btnMandated'><a disabled class='waves-effect white-text'z>Ver responsable<i class='material-icons left'>folder_shared</i></a></li>
-                                        <li function='edit' class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
-                                        <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                                        <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
+                                        <li class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                    }else{
+                        $user['element'] .= "
+                                <li class='green btnUp'><a class='waves-effect white-text'>Dar de alta<i class='material-icons left'>thumb_up</i></a></li>";
                     }
                     $user['element'] .= "</ul>
                             </div>
@@ -226,6 +229,9 @@
                                         <li class='indigo btnSubject'><a class='waves-effect white-text'z>Materias<i class='material-icons left'>library_books</i></a></li>
                                         <li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
                                         <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                    }else{
+                        $user['element'] .= "
+                                <li class='green btnUp'><a class='waves-effect white-text'>Dar de alta<i class='material-icons left'>thumb_up</i></a></li>";
                     }
                     $user['element'] .= "</ul>
                             </div>
@@ -271,6 +277,9 @@
                         if ($user['state'] == 1) {
                             $user['element'] .= "<li class='teal btnEdit'><a class='waves-effect white-text'>Editar<i class='material-icons left'>edit</i></a></li>
                                     <li function='edit' class='red btnDown'><a class='waves-effect white-text'>Dar de baja<i class='material-icons left'>thumb_down</i></a></li>";
+                        }else{
+                        $user['element'] .= "
+                                <li class='green btnUp'><a class='waves-effect white-text'>Dar de alta<i class='material-icons left'>thumb_up</i></a></li>";
                         }
                                 $user['element'] .= "</ul>
                             </div>
@@ -284,6 +293,144 @@
 
             return $users_array;
             // var_dump($users_array);
+        }
+
+        function registerForm($type)
+        {
+            $frm = "
+                <div class='row'>
+                    <div class='header_info_cont'>
+                        <div class='frmPhoto_cont'>
+                            <div class='file-field input-field photo-input hide'>
+                                <div class='btn'>
+                                    <span>File</span>
+                                    <input class='photoFile' id='photo-file-input' type='file'>
+                                </div>
+                                <div class='file-path-wrapper'>
+                                    <input class='file-path' type='text'>
+                                </div>
+                            </div>
+                            <span class='btnModifyPhoto'><i class='material-icons medium'>edit</i></span>
+                            <img src='../../files/profile_photos/photo.png' class='circle frmPhoto'>
+                        </div>
+                    </div>
+                </div>
+                <div class='row'>
+                    <form class='frmData'>
+                        <div class='row'>
+                            <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
+                                <input class='txtName' id='txtName' type='text' name='txtName'>
+                                <label for='txtName'>Nombres</label>
+                            </div>
+                            <div class='input-field col l5 m5 s10 offset-s1'>
+                                <input class=txtLastName id='txtLastName' type='text' name='txtLastName'>
+                                <label for='txtLastName'>Apellidos</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                                <input class='txtDui' id='txtDui' type='text' name='txtDui'>
+                                <label for='txtDui'>DUI</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                                <input class='txtPhone' id='txtPhone' type='text' name='txtPhone'>
+                                <label for='txtPhone'>Teléfono</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                                <input class='txtEmail' id='txtEmail' type='email' name='txtEmail'>
+                                <label for='txtEmail'>Correo Electrónico</label>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                                <textarea id='txtRes' name='txtRes' class='materialize-textarea'></textarea>
+                                <label for='txtRes'>Residencia</label>
+                            </div>
+                            <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                                <input class='txtDate datepicker' id='txtDate' type='date' name='txtDate'>
+                                <label class='active' for='txtDate'>Fecha de Nacimiento</label>
+                            </div>
+                            <div class='input-field col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
+                                    <input class=txtProfession id='txtProfession' type='text' name='txtProfession'>
+                                    <label for='txtProfession'>Profesión</label>
+                            </div>
+                        </div>
+                        <div class='input-field col l2 m2 s4 offset-l5 offset-m5 offset-s4'>
+                                <input class='txtSex_F with-gap' id='txtSex_F' type='radio' name='txtSex' value='F'>
+                                <label for='txtSex_F'>Femenino</label>
+                        </div>
+                        <div class='input-field col l2 m2 s4 offset-l5 offset-m5 offset-s4'>
+                                <input class='txtSex_M with-gap' id='txtSex_M' type='radio' name='txtSex' value='M'>
+                                <label for='txtSex_M'>Masculino</label>
+                        </div>
+                    </form>
+                    <div class='col s12 row btn_cont'>
+                        <center>
+                            <div class='btn waves-effect waves-light black btnSave_User'>Registrar " . ($type == 'C' ? 'coordinador' : 'docente') . "
+                                <i class='material-icons right'>save</i>
+                            </div>
+                        </center>
+                    </div>
+                </div>";
+
+            return $frm;
+        }
+
+        function getId($type)
+        {
+            $aux = [];
+            $table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
+            $idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
+
+            $query = "SELECT $idLog FROM $table;";
+            $res = $this->connection->connection->query($query);
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    array_push($aux, $row[$idLog]);
+                }
+            }else{
+                return 0;
+            }
+
+            return json_encode($aux);
+        }
+
+        function registerUser($data)
+        {
+            $type = $data['type'];
+            $table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
+            $idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
+
+            $query = "INSERT INTO $table VALUES(";
+
+            foreach ($data as $key => $value) {
+                if ($key != 'photo' && $key != 'type')
+                    $query .= "'" . ($key == 'password' ? $this->ArmedEncryption($value) : $value) . "', ";
+            }
+
+
+            if ($data['photo'] !== 0) {
+                $oldName = "tmp_img." . $data['photo'];
+                $newName = $data['id'] . "." . $data['photo'];
+                if(copy("../../files/profile_photos/tmp/$oldName", "../../files/profile_photos/$newName")){
+                    unlink("../../files/profile_photos/tmp/$oldName");
+                    $query .= "'" . $newName . "'";
+                }else{
+                    $query .= "'photo.png'";
+                }
+            }else{
+                $query .= "'photo.png'";
+            }
+
+            $query .= ");";
+            
+            $res = $this->connection->connection->query($query);
+
+            return ($res ? $data['id'] : 0);
         }
     }
 ?>

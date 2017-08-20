@@ -177,7 +177,6 @@
 
 		function uploadPhotos($file)
 		{
-			// return $file['tmp_name'];
 			if (isset($file["tmp_name"])) {
 				$fileRoute = "../../files/tmp/sectionPhotos.zip";
 				if(move_uploaded_file($file['tmp_name'], $fileRoute)){
@@ -291,6 +290,113 @@
 				}
 			}
 			return ($option);
+		}
+
+		function getSectionStudents($id)
+		{
+			$aux = "";
+			$z = 1;
+			$query = "SELECT * FROM student WHERE idSection = $id AND verified = 0 AND state = 1;";
+			$res = $this->connection->connection->query($query);
+			if ($res->num_rows > 0) {
+				while ($row = $res->fetch_assoc()) {
+					$aux .= "
+	<div class='col s12'>
+		<div class='mandated-header " . ($z == 1 ? "active" : "") . "'>
+			<span class=''>" . $row['lastName'] . ", " . $row['name'] . "</span>
+		</div>
+		<div class='mandated-body'>
+			<form class='frmMandated _" . $z . "' autocomplete='off'>
+			<input type='hidden' name='idStudent' value='" . $row['idStudent'] . "'>
+				<div class='row'>
+					<div class='input-field col l3 m3 s12'>
+						<input type='text' name='txtName' id='txtName_" . $z . "'>
+						<label for='txtName_" . $z . "'>Nombres</label>
+					</div>
+					<div class='input-field col l3 m3 s12'>
+						<input type='text' name='txtLastName' id='txtLastName_" . $z . "'>
+						<label for='txtLastName_" . $z . "'>Apellidos</label>
+					</div>
+					<div class='input-field col l3 m3 s12'>
+						<input type='text' name='txtDui' id='txtDui_" . $z . "'>
+						<label for='txtDui_" . $z . "'>DUI</label>
+					</div>
+					<div class='input-field col l3 m3 s12'>
+						<input type='text' name='txtEmail' id='txtEmail_" . $z . "'>
+						<label for='txtEmail_" . $z . "'>Email</label>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='input-field col l3 m3 s12'>
+						<input type='text' name='txtPhone' id='txtPhone_" . $z . "'>
+						<label for='txtPhone_" . $z . "'>Teléfono</label>
+					</div>
+					<div class='input-field col l3 m3 s12'>
+						<span>Sexo</span>
+						<p style=''>
+							<input value='F' class='with-gap' type='radio' name='txtSex' id='txtSex_F" . $z . "'>
+							<label for='txtSex_F" . $z . "'>Femenino</label>
+							<input value='M' class='with-gap' type='radio' name='txtSex' id='txtSex_M" . $z . "'>
+							<label for='txtSex_M" . $z . "'>Masculino</label>
+						</p>
+					</div>
+					<div class='input-field col l3 m3 s12'>
+						<input type='text' name='txtRelation' id='txtRelation_" . $z . "'>
+						<label for='txtRelation_" . $z . "'>Relación</label>
+					</div>
+					<div class='input-field col l3 m3 s12'>
+						<input type='date' class='datepicker' name='txtBirthdate' id='txtBirthdate_" . $z . "'>
+						<label for='txtBirthdate_" . $z . "'>Fecha de nacimiento</label>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+					";
+					$z++;
+				}
+				return $aux;
+			}else{
+				return -1;
+			}
+		}
+
+		function addMandated($data, $idSn)
+		{
+			$mandatedQuery = "";
+			$verifiedQuery = "";
+			for ($i=0; $i < count($data); $i++) {
+				$mandatedQuery = "INSERT INTO mandated VALUES (NULL, \"" . $data[$i]['name'] . "\", \"" . $data[$i]['lastName'] . "\", \"" . $data[$i]['relation'] . "\", \"" . $data[$i]['dui'] . "\", \"" . $data[$i]['email'] . "\", \"" . $data[$i]['phone'] . "\", \"" . $data[$i]['sex'] . "\", \"" . $data[$i]['birthdate'] . "\", \"" . $data[$i]['idStudent'] . "\");";
+				$verifiedQuery = "UPDATE student SET verified = 1 WHERE idStudent = \"" . $data[$i]['idStudent'] . "\"; ";
+
+				if ($stmt = $this->connection->connection->prepare($mandatedQuery)) {
+				    $stmt->execute();
+				    $stmt->store_result();
+				    $stmt->free_result();
+				    $stmt->close();
+				}else{
+					echo $this->connection->connection->error;
+					return 0;
+				}
+
+				if ($stmt = $this->connection->connection->query($verifiedQuery)) {
+				    
+				}else{
+					echo $this->connection->connection->error;
+					return 0;
+				}
+			}
+			
+			$sectionQuery = "UPDATE section sn SET sn.sState = (SELECT MIN(verified) FROM student s WHERE s.idSection = $idSn) WHERE sn.idSection = $idSn;";
+
+			if ($stmt = $this->connection->connection->query($sectionQuery)) {
+				
+			}else{
+				echo $this->connection->connection->error;
+				return 0;
+			}
+
+			return 1;
 		}
 	}
 ?>

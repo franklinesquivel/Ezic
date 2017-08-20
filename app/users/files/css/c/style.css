@@ -223,7 +223,7 @@ ul#options_slide .title{
     padding: 10px;
 }
 
-ul.user-cont{|
+ul.user-cont{
     width: 100%;
 }
 
@@ -539,6 +539,26 @@ a.showTeacher{
 
 #modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.code{font-weight: bold;}
 #modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.section{font-style: italic;}
+
+.mandated-header:first-child{
+    margin-top: 3%;
+}
+
+.mandated-header{
+    width: 100%;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bolder;
+    text-align: center;
+    padding: 10px;
+}
+
+.mandated-body{
+    border: 2px solid #000;
+    margin-bottom: 3%;
+    padding: 20px;
+}
 
 @media only screen and (max-width: 768px){
     ul#options_slide .title{

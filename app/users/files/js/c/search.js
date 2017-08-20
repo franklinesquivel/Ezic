@@ -47,11 +47,11 @@
                         success: function(r){
                             $('main').html(r);
                             $('main').append("<br><br><div class='row'><div class='col l4 m4 s10 offset-l1 offset-m1 offset-s1 green btn waves-effect btnPermission'>Permiso de ausencia <i class='material-icons right'>date_range</i></div><div class='hide-on-med-and-up col s12'><i style='opacity: 0'>.</i></div><div class='col l4 m4 s10 offset-l2 offset-m2 offset-s1 orange btn waves-effect btnJustify'>Registrar justificante <i class='material-icons right'>done_all</i></div></div>")
-                            $('thead tr th').each(function() {
+                            $('.recordTables thead tr th').each(function() {
                                 $(this).css('border', '1px solid ' + $(this).parent().css('background-color'));
                             });
 
-                            $('tbody tr').each(function() {
+                            $('.recordTables tbody tr').each(function() {
                                 $(this).css({
                                     'border-left': '1px solid ' + $(this).parent().parent().children().children().css('background-color'),
                                     'border-right': '1px solid ' + $(this).parent().parent().children().children().css('background-color'),
@@ -349,7 +349,6 @@
             });
 
             $('.btnEdit').click(function(){
-                let func = $(this).attr('function');
                 g_id = $(this).parent().parent().parent().attr('id');
                 stage[2]['edit'](g_id);
             })
@@ -359,9 +358,19 @@
                 let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
                     lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
 
-                $('#confirmModal').find('.code').html(g_id);
-                $('#confirmModal').find('.fullName').html(lastName + ", " + name);
-                $('#confirmModal').modal('open');
+                $('#downModal').find('.code').html(g_id);
+                $('#downModal').find('.fullName').html(lastName + ", " + name);
+                $('#downModal').modal('open');
+            })
+
+            $('.btnUp').click(function(){
+                g_id = $(this).parent().parent().parent().attr('id');
+                let name = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.name').html(),
+                    lastName = $(this).parent().parent().parent().children('.info').children('.data').children('.full-name').children('.lastName').html();
+
+                $('#upModal').find('.code').html(g_id);
+                $('#upModal').find('.fullName').html(lastName + ", " + name);
+                $('#upModal').modal('open');
             })
         }else if($('.user-item').length == 0 && $('.user-row').length == 0){
             $('.btnPermission').click(function() {
@@ -383,7 +392,6 @@
     }
 
     const search_user = (t, a, s, value, behaviour = null) => {
-        console.log(`${behaviour} => ${t} => ${a} => ${s}`);
         $('.user-cont').html('<li class="user-row"></li>');
         sort_users();
         for (let i = 0; i < users.length; i++) {
@@ -728,8 +736,6 @@
         }
     })
 
-    // alert(':p');
-
     $(document).on('click', ".btnDelete", function(){
         if ($("#txtDownJustification").val().trim().length > 0) {
             loader.in()
@@ -737,15 +743,33 @@
                 url: '../../files/php/C_Controller.php',
                 data: {userDown: 1, id: g_id, just: $("#txtDownJustification").val()},
                 success: r => {
-                    console.log(r);
-                    // Materialize.toast(r ? "Se ha dado da baja éxitosamente!" : "Ha ocurrido un error!", 2000);
-                    // $('#confirmModal').modal('close');
-                    // loader.out();
+                    Materialize.toast(r ? "Se ha dado de baja éxitosamente!" : "Ha ocurrido un error!", 2000);
+                    $('#downModal').modal('close');
+                    loader.out();
+                    stage[1]();
                 }
             })
         }else{
-            Materialize.toast("Ingrese un valor valido!");
+            Materialize.toast("Ingrese un valor valido!", 2000);
         }
+    })
+
+    $(document).on('click', ".btnUpUser", function(){
+        loader.in();
+        $.ajax({
+            url: '../../files/php/C_Controller.php',
+            data: {userUp: 1, id: g_id},
+            success: r => {
+                Materialize.toast(r ? "Se ha dado de alta éxitosamente!" : "Ha ocurrido un error!", 2000);
+                $('#upModal').modal('close');
+                loader.out();
+                stage[1]();
+            }
+        })
+    })
+
+    $(document).on('click', '.btnCloseFilter', function(){
+        $('#options_slide').sideNav('hide');
     })
 
     $(document).ready(() => {
@@ -772,9 +796,14 @@
             }
         });
 
-         $('#mandated-modal').modal();
-
-        $('#confirmModal').modal();
+        $('#mandated-modal').modal();
+        $('#upModal').modal();
+        $('#downModal').modal({
+            ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+                $("#txtDownJustification").val(""); Materialize.updateTextFields();
+            },
+            complete: function() { $("#txtDownJustification").val(""); Materialize.updateTextFields();}
+        });
         
         $('#cmbCategory').change(function(){
             $('#cmbCodes').html('<option selected disabled>Código</option>');

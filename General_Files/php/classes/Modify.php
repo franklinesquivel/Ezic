@@ -165,8 +165,7 @@
                         <i class='material-icons right'>save</i>
                     </button>
                 </div>
-            </div>
-            ";
+            </div>";
 
             return $frm;
         }

@@ -710,4 +710,49 @@
 	if (isset($_POST['uploadSectionPhotos'])) {
 		echo json_encode($section->uploadPhotos($_FILES['file']));
 	}
+
+	if (isset($_REQUEST['userUp'])) {
+		echo $admin->userUp($_REQUEST['id']);
+	}
+
+	if (isset($_REQUEST['getSectionStudents'])) {
+		echo $section->getSectionStudents($_REQUEST['idSn']);
+	}
+
+	if (isset($_POST['addMandated'])) {
+		echo $section->addMandated(json_decode($_POST['data'], 1), $_POST['idSn']);
+	}
+
+	if (isset($_POST['registerForm'])) {
+		echo $admin->registerForm($_POST['type']);
+	}
+
+	if (isset($_POST['getId'])) {
+		echo $admin->getId($_POST['type']);
+	}
+
+	if (isset($_POST['registerUser'])) {
+		$f = $admin->registerUser(json_decode($_POST['data'], 1));
+		if ($f !== 0) {
+			echo $admin->showUser($admin->get_user_data($f));
+		}else{
+			echo 0;
+		}
+	}
+
+	if (isset($_POST['specialtyArray'])) {
+		echo $admin->specialtyArray();
+	}
+
+	if (isset($_POST['registerSpecialty'])) {
+		echo $admin->registerSpecialty($_POST['name']);
+	}
+
+	if (isset($_POST['getSpecialtiesForDelete'])) {
+		echo $admin->specialtyForDelete();
+	}
+
+	if (isset($_POST['deleteSpecialty'])) {
+		echo $admin->deleteSpecialty(json_decode($_POST['data'], 1));
+	}
 ?>

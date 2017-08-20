@@ -57,6 +57,7 @@
 			$record = []; //Registros de la tabla de Record del estudiante
 			$user_info = []; //Información del estudiante que se mostrará el record
 			$applier = []; //Información de los Docentes/Coordinadores que han aplicado código al estudiante
+			$non_attendance = []; //Información de las inasistencias
 			$record_element = "";
 
 			$user_info = $this->get_user_data($id); //Se obtiene la información del estudiante
@@ -118,6 +119,23 @@
 	            	}
 	            }
 
+	            //OBTENER INFORMACIÓN DE LAS INASISTENCIAS
+	            $non_attendanceQuery = "SELECT ae.date, rs.day, (SELECT COUNT(*) FROM justification j WHERE j.idAssistance = ae.idAssistance) AS state, s.nameSubject FROM assistance ae INNER JOIN schedule_register rs ON rs.idS_Register = ae.idSchedule INNEr JOIN subject s ON s.idSubject = rs.idSubject WHERE ae.idStudent = '$id' AND ae.attended = 0;";
+
+	            $non_attendanceRes = $this->connection->connection->query($non_attendanceQuery);
+	            $naF = ($non_attendanceRes->num_rows > 0 ? 1 : 0);
+
+
+	            if ($naF) {
+	            	while ($naRow = $non_attendanceRes->fetch_assoc()) {
+	            		$aux = [];
+	            		foreach ($naRow as $key => $value) {
+	            			$aux[$key] = $value;
+	            		}
+	            		array_push($non_attendance, $aux);
+	            	}
+	            }
+
 	            //LLENAR ELEMENTO DEL RECORD
 	            $record_element .= "
 	            <div class='record'>
@@ -134,15 +152,37 @@
 						</div>
 					</div>
 					<div class='codes'>
-						<h3 class='center'>Control de Inasistencias</h3>
-	            		<h3 class='center'>Control de Códigos</h3>
-					";
+							<h3 class='center'>Control de Inasistencias</h3>
+							<table class='centered bordered recordTables'>
+								<thead>
+									<tr class='black'>
+										<th>N°</th>
+										<th>Fecha</th>
+										<th>Materia</th>
+										<th>Estado</th>
+									</tr>
+								</thead>
+								<tbody>";
+				if($naF){
+					for ($i=0; $i < count($non_attendance); $i++) { 
+						$record_element .= "
+									<tr>
+										<td>" . ($i + 1) . "</td>
+										<td>" . $non_attendance[$i]['date'] . "</td>
+										<td>" . $non_attendance[$i]['nameSubject'] . "</td>
+										<td class='" . ($non_attendance[$i]['state'] ? "green" : "red") . " lighten-4'>" . ($non_attendance[$i]['state'] ? "Justificada" : "Sin justificar") . "</td>
+									</tr>";
+					}
+				}else{
+					$record_element .= "<tr><td colspan='4'>No posee inasistencias!</td></tr>";
+				}
+				$record_element .= "</tbody></table><br><br>";
+				$record_element .= "<h3 class='center'>Control de Códigos</h3>";
 
 		        for ($i=0; $i < count($code_c); $i++) { //Recorrer categorías
-		        	$record_element .= "
-		        		<br><br>
+		        	$record_element .= ($i == 0 ? "" : "<br><br>") ."
 						<h5 class='table-title center "  . $code_c[$i]['color'] .  "'>"  . $code_c[$i]['category'] .  "</h5>
-						<table class='centered bordered'>
+						<table class='centered bordered recordTables'>
 							<thead>
 								<tr class='" . $code_c[$i]['color'] . "'>
 									<th>N°</th>
@@ -293,6 +333,7 @@
 			$record = []; //Registros de la tabla de Record del estudiante
 			$user_info = []; //Información del estudiante que se mostrará el record
 			$applier = []; //Información de los Docentes/Coordinadores que han aplicado código al estudiante
+			$non_attendance = [];
 			$record_element = "";
 
 			$user_info = $this->get_user_data($id); //Se obtiene la información del estudiante
@@ -349,6 +390,23 @@
 	            	}
 	            }
 
+	            //OBTENER INFORMACIÓN DE LAS INASISTENCIAS
+	            $non_attendanceQuery = "SELECT ae.date, rs.day, (SELECT COUNT(*) FROM justification j WHERE j.idAssistance = ae.idAssistance) AS state, s.nameSubject FROM assistance ae INNER JOIN schedule_register rs ON rs.idS_Register = ae.idSchedule INNEr JOIN subject s ON s.idSubject = rs.idSubject WHERE ae.idStudent = '$id' AND ae.attended = 0;";
+
+	            $non_attendanceRes = $this->connection->connection->query($non_attendanceQuery);
+	            $naF = ($non_attendanceRes->num_rows > 0 ? 1 : 0);
+
+
+	            if ($naF) {
+	            	while ($naRow = $non_attendanceRes->fetch_assoc()) {
+	            		$aux = [];
+	            		foreach ($naRow as $key => $value) {
+	            			$aux[$key] = $value;
+	            		}
+	            		array_push($non_attendance, $aux);
+	            	}
+	            }
+
 	            //LLENAR ELEMENTO DEL RECORD
 	            $record_element .= "
 	            <div class='record'>
@@ -368,8 +426,31 @@
 		            </table>
 					<div class='codes'>
 						<h2 style='text-align: center;'>Control de Inasistencias</h2>
-	            		<h2 style='text-align: center;'>Control de Códigos</h2>
-					";
+						<table class='centered'>
+							<thead>
+								<tr class='black'>
+									<th>N°</th>
+									<th>Fecha</th>
+									<th>Materia</th>
+									<th>Estado</th>
+								</tr>
+							</thead>
+							<tbody>";
+				if($naF){
+					for ($i=0; $i < count($non_attendance); $i++) { 
+						$record_element .= "
+									<tr>
+										<td>" . ($i + 1) . "</td>
+										<td>" . $non_attendance[$i]['date'] . "</td>
+										<td>" . $non_attendance[$i]['nameSubject'] . "</td>
+										<td class='" . ($non_attendance[$i]['state'] ? "green" : "red") . " lighten-4'>" . ($non_attendance[$i]['state'] ? "Justificada" : "Sin justificar") . "</td>
+									</tr>";
+					}
+				}else{
+					$record_element .= "<tr><td colspan='4'>No posee inasistencias!</td></tr>";
+				}
+				$record_element .= "</tbody></table><br><br>
+				<h2 style='text-align: center;'>Control de Códigos</h2>";
 
 		        for ($i=0; $i < count($code_c); $i++) { //Recorrer categorías
 		        	$record_element .= "
@@ -647,20 +728,24 @@
 			while ($row = $res->fetch_object()) {
 				$aux .= "
 					<div class='data-block col l12 m12 s12'>
-	                    <div class='data-title col l6 m6 s12'>Nombre: </div>
-	                    <div class='data-content col l6 m6 s12'>$row->name $row->lastName</div>
+	                    <div style='text-align: left;' class='data-title col l4 m4 s12'>Nombre: </div>
+	                    <div class='data-content col l8 m8 s12'>$row->name $row->lastName</div>
 	                </div>
 	                <div class='data-block col l12 m12 s12'>
-	                    <div class='data-title col l6 m6 s12'>DUI: </div>
-	                    <div class='data-content col l6 m6 s12'>$row->dui</div>
+	                    <div style='text-align: left;' class='data-title col l4 m4 s12'>Relación: </div>
+	                    <div class='data-content col l8 m8 s12'>$row->relation</div>
 	                </div>
 	                <div class='data-block col l12 m12 s12'>
-	                    <div class='data-title col l6 m6 s12'>Email: </div>
-	                    <div class='data-content col l6 m6 s12'>$row->email</div>
+	                    <div style='text-align: left;' class='data-title col l4 m4 s12'>DUI: </div>
+	                    <div class='data-content col l8 m8 s12'>$row->dui</div>
 	                </div>
 	                <div class='data-block col l12 m12 s12'>
-	                    <div class='data-title col l6 m6 s12'>Teléfono: </div>
-	                    <div class='data-content col l6 m6 s12'>$row->phone</div>
+	                    <div style='text-align: left;' class='data-title col l4 m4 s12'>Email: </div>
+	                    <div class='data-content col l8 m8 s12'>$row->email</div>
+	                </div>
+	                <div class='data-block col l12 m12 s12'>
+	                    <div style='text-align: left;' class='data-title col l4 m4 s12'>Teléfono: </div>
+	                    <div class='data-content col l8 m8 s12'>$row->phone</div>
 	                </div>
 				";
 			}
@@ -676,11 +761,8 @@
 			ini_set("date.timezone", 'America/El_Salvador');
             $date = date("Y/m/d");
 
-			$queryJustify = "INSERT INTO justify_down VALUES (NULL, '$id', '$type', '$justification', '$date');";
-			return $queryJustify;
-
-			$query = "UPDATE $table SET state = 0 WHERE $idLog = '$id'";
-			return ($this->connection->connection->query($query) ? 1 : 0);
+			$query = "INSERT INTO justify_down VALUES (NULL, '$id', '$type', '$justification', '$date'); UPDATE $table SET state = 0 WHERE $idLog = '$id';";
+			return ($this->connection->connection->multi_query($query) ? 1 : 0);
 		}
 
 		function getAcademicStates()
@@ -695,6 +777,73 @@
 			}
 
 			return $aux;
+		}
+
+		function userUp($id)
+		{
+			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'D' ? 'T' : 'S'));
+			$table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
+			$idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
+
+			$query = "DELETE FROM justify_down WHERE idUser = '$id'; UPDATE $table SET state = 1 WHERE $idLog = '$id';";
+			return ($this->connection->connection->multi_query($query) ? 1 : 0);
+		}
+
+		function specialtyArray()
+		{
+			$obj = [];
+			$query = "SELECT sName FROM specialty;";
+			$res = $this->connection->connection->query($query);
+
+			if ($res->num_rows > 0) {
+				while ($row = $res->fetch_assoc()) {
+					array_push($obj, $row['sName']);
+				}
+
+				return json_encode($obj);
+			}else{
+				return -1;
+			}
+		}
+
+		function registerSpecialty($name)
+		{
+			$query = "INSERT INTO specialty VALUES(NULL, '$name');";
+			return ($this->connection->connection->query($query) ? 1 : 0);
+		}
+
+		function specialtyForDelete()
+		{
+			$obj = [];
+			$query = "SELECT * FROM specialty sy WHERE NOT EXISTS (SELECT * FROM section s WHERE s.idSpecialty = sy.idSpecialty);";
+			$res = $this->connection->connection->query($query);
+			if ($res->num_rows > 0) {
+				while ($row = $res->fetch_assoc()) {
+					$aux = [];
+					foreach ($row as $key => $value) {
+						$aux[$key] = $value;
+					}
+					array_push($obj, $aux);
+				}
+
+				return json_encode($obj);
+			}else{
+				return -1;
+			}
+		}
+
+		function deleteSpecialty($data)
+		{	
+			$query = "";
+			for ($i=0; $i < count($data); $i++) { 
+				$query .= "DELETE FROM specialty WHERE idSpecialty = " . $data[$i] . "; ";
+			}
+
+			if (count($data) == 1) {
+				return ($this->connection->connection->query($query) ? 1 : 0);
+			}else{
+				return ($this->connection->connection->multi_query($query) ? 1 : 0);
+			}
 		}
 	}
 ?>

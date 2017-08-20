@@ -37,7 +37,12 @@
     <div class="navbar-fixed">
         <nav class="white" role="navigation">
             <div class="nav-wrapper container">
-                <a id="logo-container" href="#" class="brand-logo blue-text text-darken-2"> <i class=""><img src="../../General_Files/img/ezic.png"></i> Ezic</a>
+                <a id="logo-container" href="http://ezic.education" class="brand-logo blue-text text-darken-2">
+                    <i>
+                        <img src="../../General_Files/img/ezic.png">
+                    </i>
+                    Ezic
+                </a>
                 <a href="#" data-activates="nav-mobile" class="button-collapse btnHome"><i class="material-icons blue-text text-darken-2">menu</i></a>
 
                 <ul class="right hide-on-med-and-down">

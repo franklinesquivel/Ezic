@@ -10,19 +10,20 @@
 			if ($type == 'C') {
 				$this->options[count($this->options)] = ["Registrar", "group_add", [
 					["Estudiantes", "child_care", "register_student"],
-					["Docentes", "face", "#!"],
-					["Coordinadores", "person", "#!"]
+					["Docentes", "face", "add_teacher"],
+					["Coordinadores", "person", "add_coordinator"]
 				]];
 				$this->options[count($this->options)] = ["Secciones", "tab", [
 					["Añadir", "library_add", ""],
 					["Eliminar", "delete", ""],
 					["Ver", "visibility", "view_sections"],
-					["Subir fotografías", "add_to_photos", "photo_sections"]
+					["Subir fotografías", "add_to_photos", "photo_sections"],
+					["Asignar responsables", "contacts", "add_mandated"]
 				]];
 				$this->options[count($this->options)] = ["Especialidades", "stars", [
-					["Añadir", "library_add", ""],
-					["Eliminar", "delete", ""],
-					["Ver", "visibility", ""]
+					["Añadir", "library_add", "add_specialty"],
+					["Eliminar", "delete", "delete_specialty"],
+					["Ver", "visibility", "v_specialty"]
 				]];
 				$this->options[count($this->options)] = ["Horarios", "schedule", [
 					["Asignar horario", "assignment", "add_schedule"],

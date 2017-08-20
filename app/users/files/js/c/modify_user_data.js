@@ -3,39 +3,38 @@
 
     Materialize.updateTextFields();
 
-    console.log(':p');
-
     var id = $("#userId").html(), photoFlag = false, photoSuccess = true, idLog, table, type;
     $('.frmPhoto_cont .btnModifyPhoto').click(function(){
         $('.photoFile').trigger('click');
     })
 
     $("#cmbLvl_Mod").change("value", function(){
-            if((validateSelect($("#cmbLvl").val()))==true){
+        if((validateSelect($("#cmbLvl").val()))==true){
 
-                $.ajax({
-                    method: 'POST',
-                    url: '../../files/php/C_Controller.php',
-                    data: {
-                        getSections: 'Si',
-                        level: $("#cmbLvl").val(),
+            $.ajax({
+                method: 'POST',
+                url: '../../files/php/C_Controller.php',
+                data: {
+                    getSections: 'Si',
+                    level: $("#cmbLvl").val(),
+                }
+            }).done(function(sectionObject){
+                let object = JSON.parse(sectionObject);
+                $("#cmbSection_Mod").empty();
+                $("#cmbSection_Mod").append("<option value='' disabled selected>Elegir Sección</option>");
+                if (object.length > 0) {
+                    
+                    for (var i in object) {
+                        $("#cmbSection").append("<option value="+object[i].id+">"+object[i].nombre+", "+object[i].seccion+"</option>");
                     }
-                }).done(function(sectionObject){
-                    let object = JSON.parse(sectionObject);
-                    $("#cmbSection_Mod").empty();
-                    $("#cmbSection_Mod").append("<option value='' disabled selected>Elegir Sección</option>");
-                    if (object.length > 0) {
-                        
-                        for (var i in object) {
-                            $("#cmbSection").append("<option value="+object[i].id+">"+object[i].nombre+", "+object[i].seccion+"</option>");
-                        }
-                    }
-                    $("#cmbSection").material_select();
-                });
-            }
-        });
+                }
+                $("#cmbSection").material_select();
+            });
+        }
+    });
 
     $('.photoFile').change(function(){
+        loader.in();
         var pattern = /(.*?)\.(png|jpeg|jpg)$/;
         if (pattern.test($(this).val())) {
             var image_file = document.getElementById('photo-file-input');
@@ -64,6 +63,7 @@
             $(this).val('');
             Materialize.toast('Archivo inválido!', 2000);
         }
+        loader.out();
     })
 
     $.validator.addMethod('email', function(value, element) {

@@ -65,16 +65,16 @@ body{
 }
 
 #logo-container{
-    display: flex;
-    align-items: center;
+    /*display: flex;*/
+    /*align-items: center;*/
 }
 
 #logo-container i{
-    width: 25%;
+    /*width: 25%;*/
 }
 
 #logo-container img{
-    width: 100%;
+    /*width: 100%;*/
     height: 100%;
 }
 

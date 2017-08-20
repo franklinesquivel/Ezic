@@ -156,7 +156,8 @@
                         })
                     })
                 }else{
-                    console.log(r);
+                    loader.out();
+                    Materialize.toast("La sección no posee alumnos asignados!", 2000);
                 }
             }
         })
