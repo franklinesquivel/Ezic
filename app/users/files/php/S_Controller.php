@@ -8,17 +8,23 @@
     $grade = new Grade();
 
     if (isset($_REQUEST['loadSchedule'])) {
-    	session_start();
+        if (!isset($_SESSION)) {
+        	session_start();
+        }
         echo $schedule->loadSchedule('S', $_SESSION['id']);
     }
 
     if (isset($_REQUEST['getRecord'])) {
-    	session_start();
+        if (!isset($_SESSION)) {
+        	session_start();
+        }
     	echo $administration->conductRecord($_SESSION['id']);
     }
 
     if (isset($_REQUEST['getGrades'])) {
-        session_start();
+        if (!isset($_SESSION)) {
+            session_start();
+        }
         echo json_encode($grade->getGrades($_SESSION['id']));
     }
 ?>

@@ -26,13 +26,13 @@
             if (!isset($_SESSION)) {
                 session_start();
             }
-            $type = $id[0];
+            $type = $id;
             $coordiFlag = $_SESSION['type'] == 'C' ? 1 : 0;
 
-            if ($type[0] == 'C') {
+            if ($type[0] == 'C' && is_numeric($type[1])) {
     			$type = 'C'; $idLog = 'idCoor'; $table = 'coordinator';
                 $query = "SELECT * FROM $table WHERE $idLog = '" . $id . "';";
-    		}elseif ($type[0] == 'D') {
+    		}elseif ($type[0] == 'D' && is_numeric($type[1])) {
     			$type = 'T'; $idLog = 'idTeacher'; $table = 'teacher';
                 $query = "SELECT * FROM $table WHERE $idLog = '" . $id . "';";
     		}else{

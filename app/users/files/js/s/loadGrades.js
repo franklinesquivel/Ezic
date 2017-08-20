@@ -1,6 +1,6 @@
-(() => {
+// (() => {
+	var gR;
 	$(document).ready(function(){
-		var gR;
 		var loader = new Loader();
 		loader.in();
 		$('main').fadeOut('slow');
@@ -19,6 +19,11 @@
 							$('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
 						}
 					}
+
+					if (r.acc !== null) {
+						$('#cmbPeriod').append(`<option acc="1">Notas Acumuladas</option>`);
+					}
+
 					$('#cmbPeriod option[index]:first-child').attr('selected', 1);
 					$('.gradesCont').append(r.subject[$('#cmbPeriod option:selected').attr('index')]);
 					$('.cmbCont').fadeIn('slow');
@@ -34,12 +39,21 @@
 		})
 
 		$('#cmbPeriod').change(function(){
-			$('.gradesCont').html(gR.subject[$('#cmbPeriod option:selected').attr('index')]);
+			if ($('#cmbPeriod option:selected').attr('acc') === undefined) {
+				$('.gradesCont').html(gR.subject[$('#cmbPeriod option:selected').attr('index')]);
+			}else{
+				$('.gradesCont').html(gR.acc);
+			}
 		})
 
 		$('.btnPrint').click(() => {
-            $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+			if ($('#cmbPeriod option:selected').attr('acc') === undefined) {
+	            $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+            }else{
+            	$('#printGrades input[name=period]').val("acc");
+            }
+
             $('#printGrades').submit();
         })
 	})
-})()
+// })()

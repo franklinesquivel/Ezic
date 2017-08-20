@@ -291,6 +291,15 @@
 
 			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
 
+			$accQuery = "SELECT DISTINCT a.idPeriod
+			FROM accumulated_note acc
+			INNER JOIN averages a ON a.idStudent = acc.idStudent
+			WHERE acc.idStudent = '$id'
+			GROUP BY a.idPeriod
+			ORDER BY a.idPeriod ASC;";
+
+			$accRes = $this->connection->connection->query($accQuery);
+
 			$subjectRes = $this->connection->connection->query($subjectQuery);
 
 			if ($subjectRes->num_rows == 0) {
@@ -327,10 +336,10 @@
 		                }else{
 		                	$z = 0;
 			                while ($epRow = $epRes->fetch_assoc()) {
-			                	$gQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'];
+			                	$gQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'] . " AND idStudent = '$id';";
 			                	$gRes = $this->connection->connection->query($gQuery);
 
-			                	$avQuery = "SELECT * FROM averages WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0];
+			                	$avQuery = "SELECT * FROM averages WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $obj['pInfo'][$i][0] . " AND idStudent = '$id';";
 			                	$avRes = $this->connection->connection->query($avQuery);
 
 			                	if ($avRes->num_rows == 0) {
@@ -365,6 +374,73 @@
 					}
 				}
 			}
+
+			if ($accRes->num_rows > 0) {
+				$m = 0;
+				$obj['acc'] = "<div class='grade-wrapper'>
+					<table class='centered responsive-table " . $_SESSION['type'] . "'>
+						<thead class='$styleHelper darken-2 white-text'>
+							<th>N°</th>
+							<th>Materia</th>";
+				$pQuery = "SELECT * FROM period p;";
+
+				$pRes = $this->connection->connection->query($pQuery);
+				while ($pRow = $pRes->fetch_assoc()) {
+					$obj['acc'] .= "
+						<th>P" . $pRow['nthPeriod'] . "</th>
+						<th>" . $pRow['percentage'] . "%</th>";
+				}
+
+				$obj['acc'] .= "<th>ACC</th><th>Estado</th></thead><tbody>";
+
+				$accDataQuery = "SELECT DISTINCT
+				acc.acc, acc.approved, s.nameSubject, s.idSubject
+				FROM accumulated_note acc
+				INNER JOIN subject s ON s.idSubject = acc.idSubject
+				WHERE acc.idStudent = '$id'
+				ORDER BY s.nameSubject ASC";
+				$obj['accBody'] = "";
+				$accDataRes = $this->connection->connection->query($accDataQuery);
+
+				while ($accDataRow = $accDataRes->fetch_assoc()) {
+					$obj['acc'] .= "
+						<tr>
+							<td>" . ++$m . "</td>
+							<td>" . $accDataRow['nameSubject'] . "</td>";
+					$pRes = $this->connection->connection->query($pQuery);
+					while ($pRow = $pRes->fetch_assoc()) {
+						$accGradesQuery = "SELECT 
+						av.average, ROUND(av.average * (p.percentage / 100), 2) as r
+						FROM averages av
+						INNER JOIN period p ON p.idPeriod = av.idPeriod
+						WHERE av.idStudent = '$id' AND p.idPeriod = " . $pRow['idPeriod'] . " AND av.idSubject = " . $accDataRow['idSubject'] . " ORDER BY p.nthPeriod";
+
+						$accGradesRes = $this->connection->connection->query($accGradesQuery);
+						if ($accGradesRes->num_rows > 0) {
+							while ($accGradesRow = $accGradesRes->fetch_assoc()) {
+								$obj['acc'] .= "
+									<td>" . $accGradesRow['average'] . "</td>
+									<td>" . $accGradesRow['r'] . "</td>
+								";
+							}
+						}else{
+							$obj['acc'] .= "
+									<td>-</td>
+									<td>-</td>";
+						}
+					}
+					$obj['acc'] .= "
+							<td>" . $accDataRow['acc'] . "</td>
+							<td class='" . ($accDataRow['approved'] ? "green" : "red") . " lighten-4'>" . ($accDataRow['approved'] ? "Aprobada" : "Reprobada") . "</td>
+						</tr>
+					";
+				}
+
+				$obj['acc'] .= "</tbody></table></div>";
+			}else{
+				$obj['acc'] = null;
+			}
+
 			return $obj;
 		}
 
