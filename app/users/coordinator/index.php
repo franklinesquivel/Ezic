@@ -54,26 +54,89 @@
             <div class="row">
                 <div class="section col l10 m9 s12">
                     <div id="test1" class="section scrollspy">
-                        <h2 class="header black-text">Hola</h2>
+                        <h2 class="header black-text">Introducción</h2>
                         <p class="caption">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                           La división de coordinación sera la encargada de manejar el sistema  de administracion de información,entre la cual esta; datos personales, datos académicos, calificaiones, asignaturas, perfiles de evaluación y muchas mas funciones.
                         </p>
                     </div>
 
                     <div id="test2" class="section scrollspy">
-                        <h2 class="header black-text">Hola</h2>
+                        <h2 class="header black-text">Registro</h2>
                         <p class="caption">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                           En esta sección el coordinador podrá añadir diversos tipos de usuarios al sistema entre los cuales se encuentran; estudiantes, docentes, coordinadores y padres de familia. Cada uno contara con un tipo de formulario específico que el coordinador tendra que llenar correctamente para que pueda realizar el registro sastifactoriamente sin que ninguna alerta aparezca y de este equivorcase en un campo podrar corregir su error en la sección de 'Administración'.
                         </p>
                     </div>
 
-                    <div id="test3" class="section scrollspy">
-                        <h2 class="header black-text">Hola</h2>
+                     <div id="test3" class="section scrollspy">
+                        <h2 class="header black-text">Secciones</h2>
                         <p class="caption">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                           El coordinador podrá agregar una nueva sección, eliminarla (solo si esta no tiene alumnos inscritos en ella) y podrá ver un listado de todas las secciones registradas y de los alumnos que estan inscritos en ella.
                         </p>
                     </div>
+
+                     <div id="test4" class="section scrollspy">
+                        <h2 class="header black-text">Especialidades</h2>
+                        <p class="caption">
+                           El coordinador podrá agregar una nueva especialidad, eliminarla (solo si no hay ningún alumno ni sección que esten registrados con ella), también podrá ver un listado con las diversas especialidades registradas.
+                        </p>
+                    </div>
+
+                     <div id="test5" class="section scrollspy">
+                        <h2 class="header black-text">Horarios</h2>
+                        <p class="caption">
+                           En la sección de horarios -> Asignar Horario, podrá asignarle un horario a cada docente especificando cada hora y día de la semana en el que se repartira una 'X' materia. Si se desea modificar el horario de un docente se mostrara la misma vista que la registro y solo tendra que seleccionar las nuevas materias a impartir, dia o si fuera el caso ninguna. Si el coordinador lo desea se puede eliminar el horario de cualquier profesor (solo hay un hoario por profesor). 
+                        </p>
+                    </div>
+
+                     <div id="test6" class="section scrollspy">
+                        <h2 class="header black-text">Períodos</h2>
+                        <p class="caption">
+                           El coordinador podrá agregar períodos seleccionando antes la fecha de inicio y fin de período como del valor que este tendrá pero estos no se podran registrar si la fecha interfiere con la de otros períodos ya registrados o si el valor de este supera la suma del 100%. 
+                           El coordiandor podrá ver un tabla con todos los períodos y los datos de estos. 
+                        </p>
+                    </div>
+
+                     <div id="test7" class="section scrollspy">
+                        <h2 class="header black-text">Perfiles de Evaluación</h2>
+                        <p class="caption">
+                           El coordinador podrá asignar las evaluaciones de cada materia, el proceso de descripción de cada evaluación la ingresa el profesor. 
+                           El coordinador podrá eliminar los perfiles de evaluación según el profesor, materia y período seleccionados.
+                           El coordinador podrá modificar los perfiles de evaluación según profesor, materia y periodo seleccionado.
+                        </p>
+                    </div>
+
+                     <div id="test8" class="section scrollspy">
+                        <h2 class="header black-text">Asignaturas</h2>
+                        <p class="caption">
+                           El coordinador podrá agregar una nueva materia llenando los campos de esta como su nombre, acrónimo, el profesor que la va impartir, descripción,nivel y sección. Tambien se podrá asignar la  una una materia a una sección segun el profesor. Al docente se le puede relevar de una materia 'x' para que otro la pueda impartir si es necesario.
+                           El coordinador podrá eliminar materias, solo tendra que seleccionar que materias y guardar los cambios.
+                        </p>
+                    </div>
+
+                     <div id="test9" class="section scrollspy">
+                        <h2 class="header black-text">Códigos</h2>
+                        <p class="caption">
+                          El coordinador podrá registrar códigos a aplicar eligiendo la categoría, tipo y la descripción de este.
+                        </p>
+                    </div>
+
+                     <div id="test10" class="section scrollspy">
+                        <h2 class="header black-text">Administración</h2>
+                        <p class="caption">
+                           EL coordinador tendra una vista de todos los usuarios registrados donde podra buscar por el codigo a cada persona, en la parte inferior derecha de esta podra activar los filtro para facilitar está busqueda como los atributos; nombre, apellido y codigo. Tambien puede buscarlos en sus diferentes tipos; estudainte, maestro, coordinador o todos los usuarios. también puede realizar una busqueda por la sección en específico para facilitar aún más la busqueda.
+                           En cada tipo de usuario el coordinador podrá llevar acabo actividades diferentes, en los estudiantes podra ver; notas, perfil, horario, conducta, responsable y obtener un PDF con la información de cada una de estas, otras acciones que se podran realizar sobre los estudiantes en dicha sección son editar su perfil y aplicar codigos.
+                           En el caso de los usuarios de tipo coordinadores solo podra ver el perfil, obetener un PDF de este y modificar dicho perfil.Para los maestros el coordinador solo podra ver su perfil, horario y obtener un PDF de estos, también podra tener acceso a las materias que este imparte y modificar el perfil del mismo 
+                        </p>
+                    </div>
+
+                     <div id="test11" class="section scrollspy">
+                        <h2 class="header black-text">Estadísticas</h2>
+                        <p class="caption">
+                           El coordinador podra visualizar las estadísticas de las direfentes ramas del sistema.
+                        </p>
+                    </div>
+
+                   
                 </div>
 
                 <div class="col hide-on-small-only m3 l2">
@@ -81,8 +144,16 @@
                         <div style="height: 1px;">
                             <ul class="section table-of-contents c">
                                 <li class="active"><a href="#test1">Introducción</a></li>
-                                <li><a href="#test2">Monitoreo</a></li>
-                                <li><a href="#test3">Registros</a></li>
+                                <li><a href="#test2">Registro</a></li>
+                                <li><a href="#test3">Secciones</a></li>
+                                <li><a href="#test4">Especialidades</a></li>
+                                <li><a href="#test5">Horarios</a></li>
+                                <li><a href="#test6">Períodos</a></li>
+                                <li><a href="#test7">Perfiles de Evaluación</a></li>
+                                <li><a href="#test8">Asignaturas</a></li>
+                                <li><a href="#test9">Códigos</a></li>
+                                <li><a href="#test10">Administración</a></li>
+                                <li><a href="#test11">Estadísticas</a></li>
                             </ul>
                         </div>
                     </div>
@@ -97,18 +168,10 @@
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h5 class="white-text">Footer Content</h5>
-                    <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                    <h5 class="white-text">Ezic ©</h5>
+                    <p class="grey-text text-lighten-4">Ezic 2.5</p>
                 </div>
-                <div class="col l4 offset-l2 s12">
-                    <h5 class="white-text">Links</h5>
-                    <ul>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                    </ul>
-                </div>
+                
             </div>
         </div>
         <div class="footer-copyright">
