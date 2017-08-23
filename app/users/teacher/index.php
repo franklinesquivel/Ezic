@@ -59,26 +59,79 @@
             <div class="row">
                 <div class="section col l10 m9 s12">
                     <div id="test1" class="section scrollspy">
-                        <h2 class="header black-text">Hola</h2>
-                        <p class="caption">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        <h2 class="header black-text">Introducción <i class="material-icons grey-text text-lighten-1
+" title="información">info_outline</i></h2>
+                        <p class="caption elementText">
+                             La división de docentes sera la encargada de manejar los datos académicos de los estudiantes como lo son sus notas, perfiles de evaluacion y la asistencia.
                         </p>
                     </div>
+
 
                     <div id="test2" class="section scrollspy">
-                        <h2 class="header black-text">Hola</h2>
-                        <p class="caption">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        <h2 class="header black-text">Horario 
+                            <i class="material-icons grey-text text-lighten-1
+" title="Descargable">file_download</i>
+                        </h2>
+                        
+                        <p class="caption elementText">
+                           Este simple apartado consta del horario de la semana para el profesor indicando que materia va impartir en cada grado y en que día de la semana.
+                        </p>
+                       
+                    </div>
+
+                     <div id="test3" class="section scrollspy">
+                        <h2 class="header black-text">Asistencia <i class="material-icons grey-text text-lighten-1
+" title="Labor">build</i></h2>
+                        <p class="caption elementText">
+                           Se muestra la sección correspondiente al horario para que se pase lista. Así mismo el apartado tiene en cuenta los permisos previos y el estado conductual de los alumnos. También sera capaz de agregar una llegada tardía para aplicar un código sobre el estudiante y para facilitar la toma de asistencia podra marcar a todos de una sola vez como  que han asistido.
                         </p>
                     </div>
 
-                    <div id="test3" class="section scrollspy">
-                        <h2 class="header black-text">Hola</h2>
-                        <p class="caption">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                     <div id="test4" class="section scrollspy">
+                        <h2 class="header black-text">Agregar Notas <i class="material-icons grey-text text-lighten-1
+" title="Labor">build</i></h2>
+                        <p class="caption elementText">
+                           Se mostrar la sección de agregar notas cuando sea su tiempo especifico el docenten no podra agregar notas sino es en el tiempo reglamentario.
                         </p>
                     </div>
+
+                     <div id="test5" class="section scrollspy">
+                        <h2 class="header black-text">Descripcción de perfiles <i class="material-icons grey-text text-lighten-1
+" title="Vista">view_module</i></h2>
+                        <p class="caption elementText">
+                           El profesor puede ingresar la descripción de los perfiles de evaluación según su materia 
+                        </p>
+                            <img class="materialboxed responsive-img centerImg" width="450" src="../files/img/1.jpg"><br>
+                            <img class="materialboxed responsive-img centerImg" width="450" src="../files/img/2.jpg">
+                            <p>y puede modificar la descripción de está.</p>
+                             <img class="materialboxed responsive-img centerImg" width="450" src="../files/img/3.jpg">
+                    </div>
+
+                     <div id="test6" class="section scrollspy">
+                        <h2 class="header black-text">Solicitar Permiso <i class="material-icons grey-text text-lighten-1
+" title="Labor">build</i></h2>
+                        <p class="caption elementText">
+                           El profesor puede seleccionar los alumnos segun la materia que les imparte 
+                        </p>
+                        <img class="materialboxed responsive-img centerImg" width="450" src="../files/img/5.jpg">
+                        <br>
+                        <p class="caption elementText">
+                          ya sean estos de diferentes secciones.
+                        </p>
+                        <img class="materialboxed responsive-img centerImg" width="450" src="../files/img/6.jpg">
+                    </div>
+
+                     <div id="test7" class="section scrollspy">
+                        <h2 class="header black-text">Configuración <i class="material-icons grey-text text-lighten-1
+" title="Labor">build</i></h2>
+                        <p class="caption elementText`">
+                           El profesor tiene la autorización de poder cambiar su password y corre electrónico.
+                        </p>
+                        <img class="materialboxed responsive-img centerImg" width="450" src="../files/img/4.jpg">
+                    </div>
+
+              
+
                 </div>
 
                 <div class="col hide-on-small-only m3 l2">
@@ -86,8 +139,13 @@
                         <div style="height: 1px;">
                             <ul class="section table-of-contents t">
                                 <li class="active"><a href="#test1">Introducción</a></li>
-                                <li><a href="#test2">Monitoreo</a></li>
-                                <li><a href="#test3">Registros</a></li>
+                                <li><a href="#test2">Horario</a></li>
+                                <li><a href="#test3">Asistencia</a></li>
+                                <li><a href="#test4">Agregar Notas</a></li>
+                                <li><a href="#test5">Descripcción de perfiles</a></li>
+                                <li><a href="#test6">Solicitar Permiso</a></li>
+                                <li><a href="#test7">Configuración</a></li>
+
                             </ul>
                         </div>
                     </div>

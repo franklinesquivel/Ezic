@@ -138,6 +138,11 @@
                       <input type="radio" class="with-gap" id="rdoRecords" name="file" value="printSectionRecord"/>
                       <label for="rdoRecords">Record's Conductuales</label>
                     </div>
+
+                    <div class="col m12 l12 s12 input-field rdo" >
+                      <input type="radio" class="with-gap" id="rdoUser" name="file" value="printSectionRecord"/>
+                      <label for="rdoUser">Planilla de usuario</label>
+                    </div>
                 </form>
             </div>
             <center style='margin-top: 10%;'>

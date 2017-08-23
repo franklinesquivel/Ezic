@@ -22,9 +22,9 @@
 
 		function get_user_data($id){
 			$user = [];
-			if ($id[0] == 'C') {
+			if ($id[0] == 'C' && is_numeric($id[1])) {
 				$idLog = 'idCoor'; $table = 'coordinator'; $type = 'C'; $xtra = "";
-			}elseif ($id[0] == 'D') {
+			}elseif ($id[0] == 'D' && is_numeric($id[1])) {
 				$idLog = 'idTeacher'; $table = 'teacher'; $type = 'T'; $xtra = "";
 			}else{
 				$idLog = 'idStudent'; $table = 'student'; $type = 'S';
@@ -618,7 +618,10 @@
 		function getSpecialties($lvl)
 		{
 			$aux = "";
-			$query = "SELECT * FROM specialty WHERE idSpecialty = (SELECT idSpecialty FROM section sn WHERE sn.idSection = $lvl)";
+			$query = "SELECT sy.idSpecialty, sy.sName FROM specialty sy
+			INNER JOIN section sn ON sy.idSpecialty = sn.idSpecialty
+			WHERE sn.idLevel = $lvl
+			GROUP BY sy.sName";
 			$res = $this->connection->connection->query($query);
 
 			if ($res->num_rows > 0) {
@@ -636,7 +639,9 @@
 		function getSections($specialty)
 		{
 			$aux = "";
-			$query = "SELECT * FROM section WHERE idSpecialty = (SELECT s.idSpecialty FROM specialty s WHERE s.idSpecialty = $specialty);";
+			$query = "SELECT sn.idSection, sn.sectionIdentifier FROM specialty sy
+			INNER JOIN section sn ON sy.idSpecialty = sn.idSpecialty
+			WHERE sn.idSpecialty = $specialty";
 			$res = $this->connection->connection->query($query);
 
 			if ($res->num_rows > 0) {
@@ -755,7 +760,7 @@
 
 		function userDown($id, $justification)
 		{
-			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'D' ? 'T' : 'S'));
+			$type = ($id[0] == 'C' && is_numeric($id[1]) ? 'C' : ($id[0] == 'D' && is_numeric($id[1]) ? 'T' : 'S'));
 			$table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
 			$idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
 			ini_set("date.timezone", 'America/El_Salvador');
@@ -781,7 +786,7 @@
 
 		function userUp($id)
 		{
-			$type = ($id[0] == 'C' ? 'C' : ($id[0] == 'D' ? 'T' : 'S'));
+			$type = ($id[0] == 'C' && is_numeric($id[1]) ? 'C' : ($id[0] == 'D' && is_numeric($id[1]) ? 'T' : 'S'));
 			$table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
 			$idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
 

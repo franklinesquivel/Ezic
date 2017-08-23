@@ -72,13 +72,47 @@
 				$aux .= "
 					<a class='collection-item waves-effect waves-black ' idSn='" . $row['idSection'] . "'>
 	                    <span class='title black-text'> " . ($row['level'] == 1 ? '1er' : ($row['level'] == 2 ? '2do' : '3er')) . " Año, &nbsp</span>
-	                    <span class='title black-text'><i>" . $row['sName'] . "</i>: &nbsp </span>
+	                    <span class='title black-text'><i>" . $row['sName'] . ":</i> &nbsp </span>
 	                    <span class='title black-text'><b>Sección <i>\"". $row['sectionIdentifier'] ."\"</i></b></span>
 	                </a>
 				";
 			}
 
 			return $aux;
+		}
+
+		function filterSectionsForRegister($lvl, $spcty, $sctn)
+		{	
+			$obj = [];
+			$aux = "";
+			$query = "SELECT sy.sName AS name, sn.sectionIdentifier AS identifier, (SELECT COUNT(*) FROM student s WHERE s.idSection = sn.idSection) AS studentCant, ll.level, sn.idSection FROM section sn INNER JOIN level ll ON sn.idLevel = ll.idLevel INNER JOIN specialty sy ON sn.idSpecialty = sy.idSpecialty " . ($lvl != '' ? "WHERE ll.idLevel = $lvl " . ($spcty != '' ? "AND sy.idSpecialty = $spcty " . ($sctn != '' ? "AND sn.idSection = $sctn" : '') : '') : ';');
+
+			$maxQuery = "SELECT max_student AS max FROM gnrl_info;";
+			$maxStudents = $this->connection->connection->query($maxQuery)->fetch_assoc()['max'];
+
+			$res = $this->connection->connection->query($query);
+
+			if($res->num_rows == 0) return -1;
+
+			$obj['sctns'] = [];
+			while ($row = $res->fetch_assoc()) {
+				$auxObj = [];
+				foreach ($row as $key => $value) {
+					$auxObj[$key] = $value;
+				}
+
+				$aux .= "
+					<a class='collection-item waves-effect waves-black sctnItem' idSn='" . $row['idSection'] . "'>
+	                    <span class='title black-text'> " . ($row['level'] == 1 ? '1er' : ($row['level'] == 2 ? '2do' : '3er')) . " Año, &nbsp</span><br class='hide-on-med-and-up'>
+	                    <span class='title black-text'><i>" . $row['name'] . ":</i> &nbsp </span><br class='hide-on-med-and-up'>
+	                    <span class='title black-text'><b>Sección <i>\"". $row['identifier'] ."\"</i></b></span><br class='hide-on-med-and-up'>
+	                    <span title='Cantidad de Estudiantes' class='right badge black white-text'>" . $row['studentCant'] . "/$maxStudents</span>
+	                </a>";
+	            array_push($obj['sctns'], $auxObj);
+			}
+			$obj['max'] = $maxStudents;
+			$obj['el'] = $aux;
+			return json_encode($obj);
 		}
 
 		function showSection($id)

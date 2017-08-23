@@ -16,6 +16,14 @@
     color: rgba(0, 0, 0, 0.6);
 }
 
+.elementText{
+    text-align: justify;
+}
+
+.centerImg{
+    margin:auto;
+}
+
 table.centered tbody.scheduleCont td{
     border: 1px solid #d0d0d0;
     /*background: red;*/

@@ -1,4 +1,4 @@
-// (() => {
+(() => {
 	var gR;
 	$(document).ready(function(){
 		var loader = new Loader();
@@ -56,4 +56,4 @@
             $('#printGrades').submit();
         })
 	})
-// })()
+})()

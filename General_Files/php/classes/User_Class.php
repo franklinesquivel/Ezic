@@ -399,38 +399,54 @@
             return json_encode($aux);
         }
 
-        function registerUser($data)
+        function registerUser($data, $type, $idSection = 0)
         {
-            $type = $data['type'];
             $table = ($type == 'C' ? 'coordinator' : ($type == 'T' ? 'teacher' : 'student'));
             $idLog = ($type == 'C' ? 'idCoor' : ($type == 'T' ? 'idTeacher' : 'idStudent'));
-
             $query = "INSERT INTO $table VALUES(";
 
-            foreach ($data as $key => $value) {
-                if ($key != 'photo' && $key != 'type')
-                    $query .= "'" . ($key == 'password' ? $this->ArmedEncryption($value) : $value) . "', ";
-            }
+            if ($type != 'S') {
+                foreach ($data as $key => $value) {
+                    if ($key != 'photo' && $key != 'type')
+                        $query .= "'" . ($key == 'password' ? $this->ArmedEncryption($value) : $value) . "', ";
+                }
 
 
-            if ($data['photo'] !== 0) {
-                $oldName = "tmp_img." . $data['photo'];
-                $newName = $data['id'] . "." . $data['photo'];
-                if(copy("../../files/profile_photos/tmp/$oldName", "../../files/profile_photos/$newName")){
-                    unlink("../../files/profile_photos/tmp/$oldName");
-                    $query .= "'" . $newName . "'";
+                if ($data['photo'] !== 0) {
+                    $oldName = "tmp_img." . $data['photo'];
+                    $newName = $data['id'] . "." . $data['photo'];
+                    if(copy("../../files/profile_photos/tmp/$oldName", "../../files/profile_photos/$newName")){
+                        unlink("../../files/profile_photos/tmp/$oldName");
+                        $query .= "'" . $newName . "'";
+                    }else{
+                        $query .= "'photo.png'";
+                    }
                 }else{
                     $query .= "'photo.png'";
                 }
+
+                $query .= ');';
+
+                $res = $this->connection->connection->query($query);
+
+                return ($res ? $data['id'] : 0);
             }else{
-                $query .= "'photo.png'";
+                $query = "";
+                for ($i=0; $i < count($data); $i++) { 
+                    $query .= "INSERT INTO $table VALUES(";
+                    foreach ($data[$i] as $key => $value) {
+                        if ($key != 'type')
+                            $query .= "'" . ($key == 'password' ? $this->ArmedEncryption($value) : $value) . "', ";
+                    }
+                    $query .= " $idSection, 1, 'R', 'photo.png', 0); ";
+                }
+
+                if (count($data) > 1) {
+                   return ($this->connection->connection->multi_query($query) ? 1 : 0);
+                }else{
+                    return ($this->connection->connection->query($query) ? 1 : 0);
+                }
             }
-
-            $query .= ");";
-            
-            $res = $this->connection->connection->query($query);
-
-            return ($res ? $data['id'] : 0);
         }
     }
 ?>

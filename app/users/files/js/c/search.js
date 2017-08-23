@@ -251,7 +251,11 @@
 
                         $('.btnPrint').click(() => {
                             $('#printGrades input[name=id]').val(id);
-                            $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+                            if ($('#cmbPeriod option:selected').attr('acc') === undefined) {
+                                $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
+                            }else{
+                                $('#printGrades input[name=period]').val("acc");
+                            }
                             $('#printGrades').submit();
                         })
                     }

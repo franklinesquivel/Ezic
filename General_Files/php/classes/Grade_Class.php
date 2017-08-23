@@ -436,7 +436,19 @@
 					";
 				}
 
-				$obj['acc'] .= "</tbody></table></div>";
+				$studentAccQuery = "SELECT acc, approved FROM student_acc WHERE idStudent = '$id';";
+
+				$studentAccRes = $this->connection->connection->query($studentAccQuery);
+				$studentAccFlag = ($studentAccRes->num_rows > 0 ? 1 : 0);
+				$studentAccRow = ($studentAccFlag ? $studentAccRes->fetch_assoc() : 0);
+
+				$obj['acc'] .= "
+					</tbody>
+				</table>" . ($studentAccFlag ? "<div class='grade-footer $styleHelper darken-2'>
+					<div class='indicator'>Promedio</div>
+					<div class='grade white-text " . ($studentAccRow['approved'] ? 'green' : 'red') . " darken-1' title='" . ($studentAccRow['approved'] ? 'Aprobada' : 'Reprobada') . "'>" . $studentAccRow['acc'] . "</div>
+                </div>" : "") .
+			"</div>";
 			}else{
 				$obj['acc'] = null;
 			}
@@ -471,8 +483,6 @@
 				<h3>Fecha de inicio: <span>" . $periodRow['startDate'] . "</span></h3>
 				<h3>Fecha de fin: <span>" . $periodRow['endDate'] . "</span></h3>
 			</div>";
-
-
 
 			$c = 0;
 			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
@@ -546,6 +556,118 @@
 			}
 
 			return $aux;
+		}
+
+		function printAcc($id)
+		{
+			$aux = "";
+
+			$user_info = [];
+			$user_info = $this->admin->get_user_data($id);
+			$aux = "
+				<table class='infoTable'>
+					<tr>
+						<td class='photoCell'>
+							<img class='profile' src='../../../app/users/files/profile_photos/" . $user_info['photo'] . "'>
+						</td>
+						<td class='data'>
+							<p><span style='font-weight: bold;'>Nombre: </span>" . $user_info['name'] . " ". $user_info['lastName'] . "</p>
+							<p><span style='font-weight: bold;'>Código: </span>" . $user_info['id'] . "</p>
+							<p><span style='font-weight: bold;'>Grado: </span>" . $user_info['level'] . "°</p>
+							<p><span style='font-weight: bold;'>Sección: </span>\"" . $user_info['sectionIdentifier'] . "\"</p>
+							<p><span style='font-weight: bold;'>Especialidad: </span>" . $user_info['sName'] . "</p>
+						</td>
+					</tr>
+	            </table>
+	            <div class='periodCont'>
+				<h2 style='text-align: center;'>Acumulado de Notas</h2>
+			</div>";
+
+			$accQuery = "SELECT DISTINCT a.idPeriod
+			FROM accumulated_note acc
+			INNER JOIN averages a ON a.idStudent = acc.idStudent
+			WHERE acc.idStudent = '$id'
+			GROUP BY a.idPeriod
+			ORDER BY a.idPeriod ASC;";
+
+			$accRes = $this->connection->connection->query($accQuery);
+
+			if ($accRes->num_rows > 0) {
+				$m = 0;
+				$aux .= "<div class='grade-wrapper'>
+					<table class=''>
+						<tr class='blue darken-2 white-text'>
+							<th style='color: #fff;'>N°</th>
+							<th style='color: #fff;'>Materia</th>";
+				$pQuery = "SELECT * FROM period p;";
+				$pRes = $this->connection->connection->query($pQuery);
+				$tdHelper = (($pRes->num_rows) * 2) + 3;
+				while ($pRow = $pRes->fetch_assoc()) {
+					$aux .= "
+						<th style='color: #fff;'>P" . $pRow['nthPeriod'] . "</th>
+						<th style='color: #fff;'>" . $pRow['percentage'] . "%</th>";
+				}
+
+				$aux .= "<th style='color: #fff;'>ACC</th style='color: #fff;'><th style='color: #fff;'>Estado</th></tr>";
+
+				$accDataQuery = "SELECT DISTINCT
+				acc.acc, acc.approved, s.nameSubject, s.idSubject
+				FROM accumulated_note acc
+				INNER JOIN subject s ON s.idSubject = acc.idSubject
+				WHERE acc.idStudent = '$id'
+				ORDER BY s.nameSubject ASC";
+				$accDataRes = $this->connection->connection->query($accDataQuery);
+
+				while ($accDataRow = $accDataRes->fetch_assoc()) {
+					$aux .= "
+						<tr>
+							<td>" . ++$m . "</td>
+							<td>" . $accDataRow['nameSubject'] . "</td>";
+					$pRes = $this->connection->connection->query($pQuery);
+					while ($pRow = $pRes->fetch_assoc()) {
+						$accGradesQuery = "SELECT 
+						av.average, ROUND(av.average * (p.percentage / 100), 2) as r
+						FROM averages av
+						INNER JOIN period p ON p.idPeriod = av.idPeriod
+						WHERE av.idStudent = '$id' AND p.idPeriod = " . $pRow['idPeriod'] . " AND av.idSubject = " . $accDataRow['idSubject'] . " ORDER BY p.nthPeriod";
+
+						$accGradesRes = $this->connection->connection->query($accGradesQuery);
+						if ($accGradesRes->num_rows > 0) {
+							while ($accGradesRow = $accGradesRes->fetch_assoc()) {
+								$aux .= "
+									<td>" . $accGradesRow['average'] . "</td>
+									<td>" . $accGradesRow['r'] . "</td>
+								";
+							}
+						}else{
+							$aux .= "
+									<td>-</td>
+									<td>-</td>";
+						}
+					}
+					$aux .= "
+							<td>" . $accDataRow['acc'] . "</td>
+							<td style='background: " . ($accDataRow['approved'] ? "rgba(39, 174, 96, .5)" : "rgba(231, 76, 60, .5)") . ";'>" . ($accDataRow['approved'] ? "Aprobada" : "Reprobada") . "</td>
+						</tr>
+					";
+				}
+
+				$studentAccQuery = "SELECT acc, approved FROM student_acc WHERE idStudent = '$id';";
+
+				$studentAccRes = $this->connection->connection->query($studentAccQuery);
+				$studentAccFlag = ($studentAccRes->num_rows > 0 ? 1 : 0);
+				$studentAccRow = ($studentAccFlag ? $studentAccRes->fetch_assoc() : 0);
+
+				$aux .=  ($studentAccFlag ? "
+					<tr>
+						<td colspan='$tdHelper' class='indicator blue'>Promedio</td>
+						<td class='grade white-text " . ($studentAccRow['approved'] ? 'green' : 'red') . " darken-1'>" . $studentAccRow['acc'] . "</td>
+		            </tr>" : "") . "</table></div>";
+			}else{
+				$aux .= "<br><br><h2 style='color: #e74c3c; text-align: center;'>El estudiante no posee notas para mostrar.</h2>";
+			}
+
+            return $aux;
 		}
 
 		function v_modifyGrade(){/* Vista Inicial cuando el profesor quiere modificar notas */

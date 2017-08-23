@@ -91,7 +91,7 @@
             $this->mpdf->WriteHTML($aux, 2);
 		}
 
-		function getUser($id)
+		function getUser($id, $f = 1, $dir = 0)
 		{
 			$this->stylesheet = file_get_contents('../../mpdf/resources/user.css');
 			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
@@ -102,14 +102,18 @@
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Usuarios.');
 			$this->mpdf->setAuthor('Ezic ©');
-			$this->openPDF("Perfil de usuario", ($id));
+			$this->openPDF("Perfil de usuario", $id, $f, $dir);
 		}
 
 		function getGrades($id, $period, $f = 1, $dir = 0)
 		{
 			$this->stylesheet = file_get_contents('../../mpdf/resources/grades.css');
 			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
-			$this->_print = $this->grade->printGrades($id, $period);
+			if ($period == "acc") {
+				$this->_print = $this->grade->printAcc($id);
+			}else{
+				$this->_print = $this->grade->printGrades($id, $period);
+			}
 			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Notas.');
@@ -163,6 +167,24 @@
 
 			while ($row = $res->fetch_assoc()) {
 				$this->getRecord($row['idStudent'], 0, $dirName);
+			}
+
+			$this->createRar($dirName);
+		}
+
+		function multiUsers($id)
+		{
+			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id;";
+			$res = $this->connection->connection->query($query);
+			$resAux = $this->connection->connection->query($query);
+
+			$rowAux = $resAux->fetch_assoc();
+			$dirName = "Estudiantes_" . $rowAux['level'] . $rowAux['sectionIdentifier'];
+
+			mkdir("../../../app/users/files/tmp/$dirName", 0700);
+
+			while ($row = $res->fetch_assoc()) {
+				$this->getUser($row['idStudent'], 0, $dirName);
 			}
 
 			$this->createRar($dirName);
@@ -237,5 +259,9 @@
 
 	if (isset($_POST['printSectionRecords'])) {
 		$print->multiRecords($_POST['id']);
+	}
+
+	if (isset($_POST['printSectionUsers'])) {
+		$print->multiUsers($_POST['id']);
 	}
 ?>

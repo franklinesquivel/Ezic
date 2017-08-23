@@ -1,0 +1,61 @@
+.table-of-contents.s a.active{
+    border-left-color: #1976D2;
+}
+
+.table-of-contents.s a:hover {
+    border-left-color: #4495e6;
+}
+
+.input-field input[type=text]:focus + label, .input-field input[type=number]:focus + label{
+    color: #1976D2;
+}
+
+.input-field input[type=text]:focus, .input-field input[type=number]:focus {
+    border-bottom: 1px solid #1976D2;
+    box-shadow: 0 1px 0 0 #1976D2;
+}
+
+.input-field input[type="date"]:focus + label, .input-field input[type=number]:focus + label{
+    color: #1976D2;
+}
+
+.banda{
+    width: 100%;
+    height: auto;
+    text-align: center;
+    font-weight: bold;
+    background: #e74c3c;
+    color: #B71C1C;
+    font-style: italic;
+    font-size: 15px;
+    padding: 3px;
+    position: relative;
+    top: 0;
+    left: 0;
+    /*z-index: 999;*/
+}
+
+/*elementText : es para justificar los parrafos de los indices*/
+.elementText{
+    text-align: justify;
+}
+/*centerImg*/
+.centerImg{
+    margin:auto;
+}
+
+input.select-dropdown + ul.dropdown-content li > span{
+    color: #1976D2;
+}
+
+input.select-dropdown + ul.dropdown-content li[class*="disabled"] > span{
+    color: rgba(0, 0, 0, 0.3);
+}
+
+input.select-dropdown.error{
+    border-bottom: 1.5px solid #c0392b;
+}
+
+body{
+    /*background: red;*/
+}

@@ -10,9 +10,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#343434">
-    <meta name="msapplication-navbutton-color" content="#343434">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#343434">
+    <meta name="theme-color" content="#167e1a">
+    <meta name="msapplication-navbutton-color" content="#167e1a">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#167e1a">
     <title>Ezic: Coodinador.</title>
 
     <link rel="shortcut icon" type="image/png" href="../../../../General_Files/img/ezic.png"/>
@@ -49,7 +49,7 @@
     <main></main>
 
     <div class="fixed-action-btn vertical btn_options">
-        <a class="btn-floating btn-large black" id="info">
+        <a class="btn-floating btn-large green darken-2" id="info">
             <i class="large material-icons">menu</i>
         </a>
         <ul>
@@ -59,7 +59,7 @@
         </ul>  
     </div>
 
-    <div class="tap-target black" data-activates="info">
+    <div class="tap-target green darken-2" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
             <p>Fill.</p>

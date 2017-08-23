@@ -30,6 +30,8 @@
                     for (var i = 0; i < r.length; i++) {
                         $("#cmbPeriod").append(`<option value="${r[i].idPeriod}">Período N° ${r[i].nthPeriod}</option>`);
                     }
+
+                    $('#cmbPeriod').append(`<option value="acc">Notas Acumuladas</option>`);
                 }
             }
         })
@@ -41,6 +43,8 @@
                     $('#cmbLevel').append(r);
                     $('select').material_select();
                     search_section();
+                }else{
+                    $(".sectionCollection").html(`<div class="alert_">No se encontraron secciones con los requisitos especificados!</div>`);
                 }
                 $('main').fadeIn('slow', loader.out());
             }
@@ -60,9 +64,8 @@
                         $('select').material_select();
                         search_section($("#cmbLevel").val());
                     }else{
-                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 1000); 
                         $("#cmbSpecialty").empty();
-                        $("#cmbSection").empty();
+                        $("#cmbSection").html();
                         $("#cmbSpecialty").html("<option disabled selected>Especialidad</option>");
                         $("#cmbSection").html("<option disabled selected>Sección</option>");
                         $('select').material_select();
@@ -82,8 +85,6 @@
                         $('#cmbSection').append(r);
                         $('select').material_select();
                         search_section($("#cmbLevel").val(), $("#cmbSpecialty").val());
-                    }else{
-                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 3000); 
                     }
                 }
             })
@@ -120,6 +121,8 @@
                     }
                 }else if($("input[name=file]:checked").attr('id') == "rdoRecords"){
                     $('#printSection [id=action]').attr("name", "printSectionRecords");
+                }else if($("input[name=file]:checked").attr('id') == "rdoUser"){
+                    $('#printSection [id=action]').attr("name", "printSectionUsers");
                 }else if($("input[name=file]:checked").attr('id') == "rdoList"){
                     $('#printSection [id=action]').attr("name", "printSection");
                     $("#printSection [name=rows").val($("#txtRows").val());
@@ -201,6 +204,11 @@
         messages = {};
     })
 
+    $(document).on('change', "#rdoUser", function(){
+        rules = {};
+        messages = {};
+    })
+
     $(document).on('click', '.btnBack', function(){
         loader.in();
         $(this).attr('disabled', 1);
@@ -225,7 +233,11 @@
     		url: '../../files/php/C_Controller.php',
     		data: {filterSections: 1, lvl, spcty, sctn},
     		success: r => {
-    			$(".sectionCollection").html(r);
+                if (r != -1) {
+        			$(".sectionCollection").html(r);
+                }else{
+                    $(".sectionCollection").html(`<div class="alert_">No se encontraron secciones con los requisitos especificados!</div>`);
+                }
                 loader.out();
     		}
     	})

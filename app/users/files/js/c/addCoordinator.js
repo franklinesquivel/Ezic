@@ -163,10 +163,10 @@
 	        	$.ajax({
 	        		type: 'POST',
 	        		url: '../../files/php/C_Controller.php',
-	        		data: {registerUser: 1, data: JSON.stringify(data)},
+	        		data: {registerUser: 1, data: JSON.stringify(data), type: 'C'},
 	        		success: r => {
 	        			if (r != -1) {
-	        				Materialize.toast("El docente se ha registrado exitosamente!", 2000);
+	        				Materialize.toast("El coordinador se ha registrado exitosamente!", 2000);
 	        				$('main').fadeOut('slow', function(){
 	        					$('main').html(r);
 	        					$("input[name=id]").val(data.id);

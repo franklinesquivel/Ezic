@@ -29,7 +29,9 @@
     <link rel="stylesheet" href="../../files/css/c/style.css">
 
     <script src="../../files/js/init.js" charset="utf-8"></script>
+    <script src="../../files/js/Loader.js" charset="utf-8"></script>
     <script src="../../files/js/c/studentForm_Generator.js" charset="utf-8"></script>
+    <script src="../../files/js/c/registerStudent.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -47,24 +49,43 @@
         <?php echo $const->createElement() ?>
     </header>
 
-    <main class="show">
-        <div class="fixed-action-btn">
-            <a class="btn-floating btn-large grey waves-effect waves-dark">
-                <i class="large material-icons">edit</i>
-            </a>
-            <ul>
-                <li class="btnAddFrm"><a class="btn-floating black waves-effect waves-light"><i class="material-icons">note_add</i></a></li>
-                <li class="btnRmvFrm"><a disabled class="btn-floating red waves-effect waves-light"><i class="material-icons">delete</i></a></li>
-            </ul>
-        </div>
-        <div class="container">
-            <!-- <div class="row">
-                <div class="input-field col l3 m3 s10 offset-s1">
-                    <input type="date" class="datepicker" date="txtDate_0" id="txtDate_0">
-                    <label for="txtDate_0">Fecha de nacimiento</label>
-                </div>
-            </div> -->
-        </div>
+    <main>
+        
     </main>
+
+    <div id="studentCant-modal" class="modal">
+        <div class="modal-content">
+            <div class="container section">
+                <p class="">
+                    <span id="lvlHelper"></span>:
+                    <i>"<span id="identifierHelper"></span>"</i><br>
+                    <span id="sctnCant"></span><br>
+                    <span id="sctnLimit"></span>
+                </p>
+                <div class="row">
+                    <form id="studentCant-frm" autocomplete="off">
+                        <div class="input-field col s12 m6 l6 offset-l3 offset-m3">
+                            <input type="number" name="txtCant" id="txtCant">
+                            <label for="txtCant">Cantidad de estudiantes a registrar</label>
+                        </div>
+                        <center>
+                            <div class="btn black waves-effect waves-light btnSaveCant"><i class="material-icons left">arrow_forward</i> Siguiente</div>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large black waves-effect waves-light">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li><a title="Refrescar" class="btn-floating green waves-effect waves-light btnRefresh"><i class="material-icons">refresh</i></a></li>
+            <li><a title="Añadir formulario" disabled class="btn-floating black waves-effect waves-light btnAddFrm"><i class="material-icons">note_add</i></a></li>
+            <li><a title="Remover formulario" disabled class="btn-floating red waves-effect waves-light btnRmvFrm"><i class="material-icons">delete</i></a></li>
+        </ul>
+    </div>
 </body>
 </html>

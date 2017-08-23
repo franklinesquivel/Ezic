@@ -687,6 +687,10 @@
 		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}
 
+	if (isset($_POST['filterSectionsForRegister'])) {
+		echo $section->filterSectionsForRegister($_POST['lvl'], $_POST['spcty'], $_POST['sctn']);
+	}
+
 	if (isset($_REQUEST['showSection'])) {
 		echo $section->showSection($_REQUEST['idSn']);
 	}
@@ -732,9 +736,19 @@
 	}
 
 	if (isset($_POST['registerUser'])) {
-		$f = $admin->registerUser(json_decode($_POST['data'], 1));
+
+		if (isset($_POST['idSection'])) {
+			$f = $admin->registerUser(json_decode($_POST['data'], 1), $_POST['type'], $_POST['idSection']);
+		}else{
+			$f = $admin->registerUser(json_decode($_POST['data'], 1), $_POST['type']);
+		}
+
 		if ($f !== 0) {
-			echo $admin->showUser($admin->get_user_data($f));
+			if ($_POST['type'] == 'S') {
+				echo $f;
+			}else{
+				echo $admin->showUser($admin->get_user_data($f));
+			}
 		}else{
 			echo 0;
 		}

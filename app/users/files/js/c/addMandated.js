@@ -32,7 +32,6 @@
                         $('select').material_select();
                         search_section($("#cmbLevel").val());
                     }else{
-                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 1000); 
                         $("#cmbSpecialty").empty();
                         $("#cmbSection").empty();
                         $("#cmbSpecialty").html("<option disabled selected>Especialidad</option>");
@@ -54,8 +53,6 @@
                         $('#cmbSection').append(r);
                         $('select').material_select();
                         search_section($("#cmbLevel").val(), $("#cmbSpecialty").val());
-                    }else{
-                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 3000); 
                     }
                 }
             })
@@ -211,7 +208,7 @@
             $(".frmMandated").eq(i).submit();
 
             if (f == $(".frmMandated").length) {
-            	// loader.in();
+            	loader.in();
 		     	$.ajax({
 		     		url: '../../files/php/C_Controller.php',
 		     		type: "POST",
@@ -250,7 +247,11 @@
     		url: '../../files/php/C_Controller.php',
     		data: {filterSections: 1, lvl, spcty, sctn},
     		success: r => {
-    			$(".sectionCollection").html(r);
+                if (r != -1) {
+        			$(".sectionCollection").html(r);
+                }else{
+                    $(".sectionCollection").html(`<div class="alert_">No se encontraron secciones con los requisitos especificados!</div>`);
+                }
                 loader.out();
     		}
     	})
