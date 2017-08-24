@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-08-2017 a las 06:55:44
--- Versión del servidor: 10.1.25-MariaDB
--- Versión de PHP: 7.0.21
+-- Tiempo de generación: 24-08-2017 a las 02:25:28
+-- Versión del servidor: 10.1.21-MariaDB
+-- Versión de PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -130,7 +128,8 @@ CREATE TABLE `code` (
 --
 
 INSERT INTO `code` (`idCode`, `description`, `type`, `category`) VALUES
-(1, 'Porta armas de fuego', 'MG', 'C');
+(1, 'Porta armas de fuego', 'MG', 'C'),
+(2, 'Es mal amigo', 'G', 'C');
 
 -- --------------------------------------------------------
 
@@ -245,15 +244,17 @@ CREATE TABLE `gnrl_code` (
   `id_GnrlCode` int(11) NOT NULL,
   `code_reference` varchar(1) COLLATE utf8_spanish2_ci NOT NULL,
   `cant_code` int(11) NOT NULL,
-  `code_result` varchar(1) COLLATE utf8_spanish2_ci NOT NULL
+  `code_result` int(15) NOT NULL,
+  `type_result` varchar(20) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `gnrl_code`
 --
 
-INSERT INTO `gnrl_code` (`id_GnrlCode`, `code_reference`, `cant_code`, `code_result`) VALUES
-(1, 'L', 6, 'G');
+INSERT INTO `gnrl_code` (`id_GnrlCode`, `code_reference`, `cant_code`, `code_result`, `type_result`) VALUES
+(1, 'L', 6, 2, 'G'),
+(2, 'G', 2, 1, 'MG');
 
 -- --------------------------------------------------------
 
@@ -621,17 +622,24 @@ CREATE TABLE `section` (
   `idLevel` int(15) NOT NULL,
   `idSpecialty` int(15) NOT NULL,
   `sectionIdentifier` varchar(1) COLLATE utf8_spanish2_ci NOT NULL,
-  `sState` tinyint(1) NOT NULL
+  `sState` tinyint(1) NOT NULL,
+  `idTeacher` varchar(15) COLLATE utf8_spanish2_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 --
 -- Volcado de datos para la tabla `section`
 --
 
-INSERT INTO `section` (`idSection`, `idLevel`, `idSpecialty`, `sectionIdentifier`, `sState`) VALUES
-(1, 1, 1, 'B', 1),
-(2, 2, 2, 'A', 0),
-(3, 1, 1, 'C', 0);
+INSERT INTO `section` (`idSection`, `idLevel`, `idSpecialty`, `sectionIdentifier`, `sState`, `idTeacher`) VALUES
+(1, 1, 1, 'B', 1, 'D1784'),
+(2, 2, 2, 'A', 0, 'D9598'),
+(3, 1, 1, 'C', 0, 'D8171'),
+(4, 1, 1, 'D', 0, 'D7273'),
+(5, 1, 1, 'E', 0, 'D1466'),
+(6, 1, 8, 'F', 0, 'D1754'),
+(7, 1, 7, 'G', 0, 'D3152'),
+(8, 1, 2, 'H', 0, 'D2179'),
+(9, 1, 2, 'I', 0, 'D5757');
 
 -- --------------------------------------------------------
 
@@ -667,6 +675,83 @@ INSERT INTO `section_schedule_1` (`idRegister`, `idScheduleRegister`) VALUES
 --
 
 CREATE TABLE `section_schedule_2` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_3`
+--
+
+CREATE TABLE `section_schedule_3` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_4`
+--
+
+CREATE TABLE `section_schedule_4` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_5`
+--
+
+CREATE TABLE `section_schedule_5` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_6`
+--
+
+CREATE TABLE `section_schedule_6` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_7`
+--
+
+CREATE TABLE `section_schedule_7` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_8`
+--
+
+CREATE TABLE `section_schedule_8` (
+  `idRegister` int(15) NOT NULL,
+  `idScheduleRegister` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `section_schedule_9`
+--
+
+CREATE TABLE `section_schedule_9` (
   `idRegister` int(15) NOT NULL,
   `idScheduleRegister` int(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -947,7 +1032,8 @@ ALTER TABLE `evaluation_profile`
 ALTER TABLE `gnrl_code`
   ADD PRIMARY KEY (`id_GnrlCode`),
   ADD KEY `code_reference` (`code_reference`),
-  ADD KEY `code_result` (`code_result`);
+  ADD KEY `code_result` (`code_result`),
+  ADD KEY `type_result` (`type_result`);
 
 --
 -- Indices de la tabla `gnrl_info`
@@ -1075,7 +1161,8 @@ ALTER TABLE `schedule_teacher_gnrl_info`
 ALTER TABLE `section`
   ADD PRIMARY KEY (`idSection`),
   ADD KEY `idLevel` (`idLevel`),
-  ADD KEY `specialtyName` (`idSpecialty`);
+  ADD KEY `specialtyName` (`idSpecialty`),
+  ADD KEY `idTeacher` (`idTeacher`);
 
 --
 -- Indices de la tabla `section_schedule_1`
@@ -1088,6 +1175,55 @@ ALTER TABLE `section_schedule_1`
 -- Indices de la tabla `section_schedule_2`
 --
 ALTER TABLE `section_schedule_2`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_3`
+--
+ALTER TABLE `section_schedule_3`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_4`
+--
+ALTER TABLE `section_schedule_4`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_5`
+--
+ALTER TABLE `section_schedule_5`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_6`
+--
+ALTER TABLE `section_schedule_6`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_7`
+--
+ALTER TABLE `section_schedule_7`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_8`
+--
+ALTER TABLE `section_schedule_8`
+  ADD PRIMARY KEY (`idRegister`),
+  ADD KEY `idScheduleRegister` (`idScheduleRegister`);
+
+--
+-- Indices de la tabla `section_schedule_9`
+--
+ALTER TABLE `section_schedule_9`
   ADD PRIMARY KEY (`idRegister`),
   ADD KEY `idScheduleRegister` (`idScheduleRegister`);
 
@@ -1174,7 +1310,7 @@ ALTER TABLE `averages`
 -- AUTO_INCREMENT de la tabla `code`
 --
 ALTER TABLE `code`
-  MODIFY `idCode` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idCode` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `evaluation_profile`
 --
@@ -1184,7 +1320,7 @@ ALTER TABLE `evaluation_profile`
 -- AUTO_INCREMENT de la tabla `gnrl_code`
 --
 ALTER TABLE `gnrl_code`
-  MODIFY `id_GnrlCode` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_GnrlCode` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `gnrl_info`
 --
@@ -1269,7 +1405,7 @@ ALTER TABLE `schedule_teacher_gnrl_info`
 -- AUTO_INCREMENT de la tabla `section`
 --
 ALTER TABLE `section`
-  MODIFY `idSection` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idSection` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT de la tabla `section_schedule_1`
 --
@@ -1279,6 +1415,41 @@ ALTER TABLE `section_schedule_1`
 -- AUTO_INCREMENT de la tabla `section_schedule_2`
 --
 ALTER TABLE `section_schedule_2`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_3`
+--
+ALTER TABLE `section_schedule_3`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_4`
+--
+ALTER TABLE `section_schedule_4`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_5`
+--
+ALTER TABLE `section_schedule_5`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_6`
+--
+ALTER TABLE `section_schedule_6`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_7`
+--
+ALTER TABLE `section_schedule_7`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_8`
+--
+ALTER TABLE `section_schedule_8`
+  MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `section_schedule_9`
+--
+ALTER TABLE `section_schedule_9`
   MODIFY `idRegister` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `specialty`
@@ -1357,7 +1528,8 @@ ALTER TABLE `evaluation_profile`
 --
 ALTER TABLE `gnrl_code`
   ADD CONSTRAINT `gnrl_code_ibfk_1` FOREIGN KEY (`code_reference`) REFERENCES `code_type` (`idType`),
-  ADD CONSTRAINT `gnrl_code_ibfk_2` FOREIGN KEY (`code_result`) REFERENCES `code_type` (`idType`);
+  ADD CONSTRAINT `gnrl_code_ibfk_3` FOREIGN KEY (`type_result`) REFERENCES `code_type` (`idType`),
+  ADD CONSTRAINT `gnrl_code_ibfk_4` FOREIGN KEY (`code_result`) REFERENCES `code` (`idCode`);
 
 --
 -- Filtros para la tabla `gnrl_info`
@@ -1447,7 +1619,8 @@ ALTER TABLE `schedule_teacher_gnrl_info`
 --
 ALTER TABLE `section`
   ADD CONSTRAINT `section_ibfk_1` FOREIGN KEY (`idLevel`) REFERENCES `level` (`idLevel`),
-  ADD CONSTRAINT `section_ibfk_2` FOREIGN KEY (`idSpecialty`) REFERENCES `specialty` (`idSpecialty`);
+  ADD CONSTRAINT `section_ibfk_2` FOREIGN KEY (`idSpecialty`) REFERENCES `specialty` (`idSpecialty`),
+  ADD CONSTRAINT `section_ibfk_3` FOREIGN KEY (`idTeacher`) REFERENCES `teacher` (`idTeacher`);
 
 --
 -- Filtros para la tabla `section_schedule_1`
@@ -1460,6 +1633,48 @@ ALTER TABLE `section_schedule_1`
 --
 ALTER TABLE `section_schedule_2`
   ADD CONSTRAINT `section_schedule_2_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_3`
+--
+ALTER TABLE `section_schedule_3`
+  ADD CONSTRAINT `section_schedule_3_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_4`
+--
+ALTER TABLE `section_schedule_4`
+  ADD CONSTRAINT `section_schedule_4_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_5`
+--
+ALTER TABLE `section_schedule_5`
+  ADD CONSTRAINT `section_schedule_5_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_6`
+--
+ALTER TABLE `section_schedule_6`
+  ADD CONSTRAINT `section_schedule_6_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_7`
+--
+ALTER TABLE `section_schedule_7`
+  ADD CONSTRAINT `section_schedule_7_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_8`
+--
+ALTER TABLE `section_schedule_8`
+  ADD CONSTRAINT `section_schedule_8_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
+
+--
+-- Filtros para la tabla `section_schedule_9`
+--
+ALTER TABLE `section_schedule_9`
+  ADD CONSTRAINT `section_schedule_9_ibfk_1` FOREIGN KEY (`idScheduleRegister`) REFERENCES `schedule_register` (`idS_Register`);
 
 --
 -- Filtros para la tabla `student`
@@ -1492,7 +1707,6 @@ ALTER TABLE `suspended`
 --
 ALTER TABLE `teacher_schedule_d1754`
   ADD CONSTRAINT `teacher_schedule_D1754_ibfk_1` FOREIGN KEY (`idScheduleInfo`) REFERENCES `schedule_teacher_gnrl_info` (`idScheduleInfo`);
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
