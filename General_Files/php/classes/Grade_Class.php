@@ -6,6 +6,8 @@
 		private $connection;
 		private $aux;
 		private $admin;
+		private $info_gnrl; //Conexión a la clase de información general de nuestro proyecto
+
 		function __construct(){
 			parent::__construct();
 			require_once 'Administration.php';
@@ -20,6 +22,10 @@
 			$this->connection = new Connection();
 			$this->connection->Connect();
 			//session_start();
+
+			require_once('Info_Gnrl.php');
+			$this->info_gnrl = new Info_Gnrl();
+			$this->info_gnrl->setQuery();
 		}
 
 		function deleteAsProfile($idProfile){
@@ -172,7 +178,7 @@
 		}
 
 		function list_students($section){/* Función encaragada de llevar la ista de alumnos para ingresar la nota */
-			$query = "SELECT idStudent, name, lastName FROM student WHERE idSection = $section";
+			$query = "SELECT idStudent, name, lastName FROM student WHERE idSection = $section AND student.verified = 1";
 			$result = $this->connection->connection->query($query);
 			if ($result->num_rows > 0) {
 				$form = "<div class='row '><table class='centered responsive-table assistance col l10 m8 s12 offset-l1 offset-m2'> 
@@ -213,22 +219,21 @@
 
 		function InsertGrades($student, $grade, $profile, $subject){
 
-			$query = "INSERT INTO grade(grade, idProfile, idStudent) VALUES('$grade', '$profile', '$student')";
+			$query = "INSERT INTO grade(grade, idProfile, idStudent) VALUES(ROUND('$grade',2), '$profile', '$student')";
 			
 			if (($this->connection->connection->query($query)) &&
 				($this->InsertAverages($student, $this->getPeriod(), $subject, $grade, $profile)) && 
-				($this->InsertACC($student, $subject, $this->getPeriod()))) {
+				($this->InsertACC($student, $subject, $this->getPeriod())) && 
+				($this->addACCStudent($student))) {
 				return true;
-			}else{
-				return false;
-			}
+			}else{return false;}
 		}
 
 		function InsertAverages($student, $period, $subject, $grade, $profile){
 			$query = "SELECT * FROM evaluation_profile WHERE idProfile = '$profile'";
 			$result = $this->connection->connection->query($query);
 			$fila = $result->fetch_assoc();
-			$grade = $grade * ($fila['percentage'] / 100);
+			$grade = ($grade * ($fila['percentage'] / 100));
 
 			$query = "SELECT * FROM averages WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]."";
 			$result = $this->connection->connection->query($query);
@@ -236,42 +241,35 @@
 			if ($result->num_rows > 0) {
 				$fila = $result->fetch_assoc();
 				$average = $fila['average'] + $grade;
-
-				$approved = ($average >= 7) ? 1 : 0; /* Aqui se haria con la nota menor ingresada en inf_gnrl */
-
-				$query  = "UPDATE averages SET average = '$average', approved = '$approved' WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]."";
+				$query = "UPDATE averages SET average = '$average' WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]." ";
+				if($this->connection->connection->query($query)){if($this->checkApproved("averages", $student, $fila['average'], $subject, $period[0][0])){return true;}}
 			}else{
 				$average = $grade;
-				$approved = ($average >= 7) ? 1 : 0; /* Aqui se haria con la nota menor ingresada en inf_gnrl */
-
-				$query = "INSERT INTO averages(idSubject, idStudent, idPeriod, average, approved) VALUES('$subject', '$student', '".$period[0][0]."', '$average', '$approved')";
+				$approved = ($average >= $this->info_gnrl->approved_grade) ? 1 : 0;
+				$query = "INSERT INTO averages(idSubject, idStudent, idPeriod, average, approved) VALUES('$subject', '$student', '".$period[0][0]."', ROUND('$average', 2), '$approved')";
+				return ($this->connection->connection->query($query));
 			}
-
-			return ($this->connection->connection->query($query));
 		}
 
 		function InsertACC($student, $subject, $period){
 			$query = "SELECT * FROM averages WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]."";
 			$result = $this->connection->connection->query($query);
 			$fila = $result->fetch_assoc();
-			$acc = $fila['average'] * ($period[0][3] / 100);
+			$acc = ($fila['average'] * ($period[0][3] / 100));
 
 			$query = "SELECT * FROM accumulated_note WHERE idSubject = '$subject' AND idStudent = '$student'";
-
 			$result = $this->connection->connection->query($query);
 
 			if ($result->num_rows > 0) {
-				$fila = $result->fetch_assoc();
-				$acc = ($fila['acc'] + $acc);
-				$approved = ($acc >= 7) ? 1 : 0;
-
-				$query  = "UPDATE accumulated_note SET acc = '$acc' WHERE idSubject = '$subject', approved = '$approved' AND idStudent = '$student'";
+				$query  = "UPDATE accumulated_note SET acc = ROUND('$acc', 2) WHERE idSubject = '$subject' AND idStudent = '$student'";
+				if($this->connection->connection->query($query)){
+					if($this->checkApproved("accumulated_note", $student, $acc, $subject, 0)){return true;}
+				}
 			}else{
-				$approved = ($acc >= 7) ? 1 : 0;
-				$query = "INSERT INTO accumulated_note(idSubject, idStudent, acc, approved) VALUES('$subject', '$student', '$acc', '$approved')";
+				$approved = ($acc >= $this->info_gnrl->approved_grade) ? 1 : 0;
+				$query = "INSERT INTO accumulated_note(idSubject, idStudent, acc, approved) VALUES('$subject', '$student', ROUND('$acc', 2), '$approved')";
+				return ($this->connection->connection->query($query));
 			}
-
-			return ($this->connection->connection->query($query));
 		}
 
 		function getGrades($id)
@@ -678,7 +676,7 @@
 			$result = $this->connection->connection->query($query);
 			if ($result->num_rows > 0) {
 				$form = "<div class='row'> 
-					<ul class='collection subject with-header col l10 m10 s12 offset-l1 offset-m1'>
+					<ul class='collection subject with-header col l10 m12 s12 offset-l1'>
 					<li class='collection-header container-subject'><h4 class='center-align'>Prestamos con notas por modificar</h4></li>";
 				$x = 0;
 				while ($fila = $result->fetch_assoc()) {
@@ -786,22 +784,19 @@
 		}
 
 		function UpdateGrade($idProfile, $idPermission, $idStudent, $grade){
-			$value = 0;
 			$grade_previus = $this->getInfoGrade($idProfile, $idStudent);
 			$query = "UPDATE grade SET grade = $grade WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
+
 			if($this->connection->connection->query($query)){
-				$previus_average = $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent);
 				if($this->UpdateAverages($grade_previus[0][2], $grade_previus[0][3], $grade_previus[0][0], $idStudent, ($grade_previus[0][1] * $grade))){
-					$current_average = $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent);
-					if($this->UpdateACC($idStudent, $grade_previus[0][2], $previus_average, $current_average)){
+					if($this->UpdateACC($idStudent, $grade_previus[0][2], $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent))){
 						if($this->changeStatePermission($idProfile, $idPermission)){
-							$value = 1;
+							if($this->UpdateACCStudent($idStudent)){return true;}
 						}
 					}
 				}
 			}
-
-			return $value;
+			return false;
 		}
 
 		function getInfoGrade($idProfile, $idStudent){ /* Se obtiene el resultado anterios - previo a modificar*/
@@ -816,19 +811,12 @@
 		}
 		
 		function UpdateAverages($idSubject, $idPeriod, $subtract, $idStudent, $newGrade){
-			$query = "UPDATE averages SET average = ((average - $subtract) + $newGrade) WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."' ";
-			$result = $this->connection->connection->query($query);
-
-			$query = "SELECT averages.average FROM averages WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."'";
-			$result = $this->connection->connection->query($query);
-			$fila = $result->fetch_assoc();
-			$approved = ($fila['average']  >= 7) ? 1 : 0;
-
-			if($approved == 1){
-				$query = "UPDATE averages SET approved = $approved WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."' ";
-				if($this->connection->connection->query($query)){return true;}
-			}else{
-				return true;
+			$query = "UPDATE averages SET average = ROUND(((average - $subtract) + $newGrade), 2) WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."' ";
+			if($this->connection->connection->query($query)){
+				$query = "SELECT averages.average FROM averages WHERE idSubject = $idSubject AND idPeriod = $idPeriod AND idStudent = '".$idStudent."'";
+				$result = $this->connection->connection->query($query);
+				$fila = $result->fetch_assoc();
+				if($this->checkApproved("averages", $idStudent, $fila['average'], $idSubject, $idPeriod)){return true;}
 			}
 		}
 
@@ -840,27 +828,100 @@
 			return $fila['multiplication'];
 		}
 
-		function UpdateACC($idStudent, $idSubject, $substract, $newAcc){
-			$query = "UPDATE accumulated_note SET acc = ((acc - $substract) + ($newAcc)) WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
+		function UpdateACC($idStudent, $idSubject, $acc){
+			$query = "UPDATE accumulated_note SET acc = ROUND($acc, 2) WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
+			
 			if($this->connection->connection->query($query)){
 				$query = "SELECT acc FROM accumulated_note WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
 				$result = $this->connection->connection->query($query);
 				$fila = $result->fetch_assoc();
-				$approved = ($fila['acc'] >= 7 ) ? 1 : 0;
-				if($approved == 1){
-					$query = "UPDATE accumulated_note SET approved = $approved WHERE idSubject = $idSubject AND idStudent = '".$idStudent."'";
-					if($this->connection->connection->query($query)){return true;}
-				}else{
-					return true;
-				}
+
+				if($this->checkApproved("accumulated_note", $idStudent, $fila['acc'], $idSubject, 0)){return true;}
 			}
 		}
 
 		function changeStatePermission($idProfile, $idPermission){
-			$query = "UPDATE pg_profiles SET modified = '1' WHERE idProfile = $idProfile AND idPermission = $idPermission";
-			if($this->connection->connection->query($query)){
+			$query = "UPDATE pg_profiles SET modified = 1 WHERE idProfile = $idProfile AND idPermission = $idPermission";
+			if($this->connection->connection->query($query)){return true;}
+		}
+
+		function addACCStudent($student){
+			$subjects = $this->getnumSubject($student); #Número de materias en grades
+
+			$query_1 = "SELECT * FROM student_acc WHERE idStudent = '$student'";
+			$result_1 = $this->connection->connection->query($query_1);
+			
+			if($result_1->num_rows == 0){ #Si no existen aún - Nuevo ACC
+				$query_2 = "SELECT (ROUND(SUM(acc), 2) / $subjects) AS grade FROM `accumulated_note` WHERE idStudent ='".$student."'";
+				$result_2 = $this->connection->connection->query($query_2);
+				$fila_2 = $result_2->fetch_assoc();
+
+				$query_3 = "INSERT INTO student_acc(idStudent, acc, approved) VALUES('$student', ROUND('".$fila_2['grade']."', 2), '0')";
+				return ($this->connection->connection->query($query_3));
+				
+			}else{#Cuando ya existe un ACC según datos ingresando
+				$query_2 = "SELECT (ROUND(SUM(acc), 2) / $subjects) AS grade FROM `accumulated_note` WHERE idStudent ='".$student."'";
+				$result_2 = $this->connection->connection->query($query_2);
+				$fila_2 = $result_2->fetch_assoc();
+				$query_3 = "UPDATE student_acc SET acc = ROUND('".$fila_2['grade']."', 2) WHERE idStudent = '$student'";
+				$result_3 = $this->connection->connection->query($query_3);
+				
+				$query_4 = "SELECT * FROM student_acc WHERE idStudent = '$student'";
+				$result_4 = $this->connection->connection->query($query_4);
+				$fila_4 = $result_4->fetch_assoc();
+
+				if($this->checkApproved("student_acc", $student, $fila_4['acc'], 0, 0)){return true;}
+			}
+		}
+
+		function UpdateACCStudent($student){
+			$subjects = $this->getnumSubject($student);
+
+			$query_1 = "SELECT (ROUND(SUM(acc), 2) / $subjects) AS grade FROM `accumulated_note` WHERE idStudent ='".$student."'"; #Puntaje acumulado
+			$result_1 = $this->connection->connection->query($query_1);
+			$fila_1 = $result_1->fetch_assoc();
+
+			$query_2 = "UPDATE student_acc SET acc = ROUND('".$fila_1['grade']."', 2) WHERE idStudent = '$student'"; #Modifiación
+			$result_2 = $this->connection->connection->query($query_2);
+
+			$query_3 = "SELECT * FROM student_acc WHERE idStudent = '$student'"; #Se obtiene el ACC acumulado
+			$result_3 = $this->connection->connection->query($query_3);
+			$fila_3 = $result_3->fetch_assoc();
+			
+			if($this->checkApproved("student_acc", $student, $fila_3['acc'], 0, 0)){return true;}
+		}
+
+		function getnumSubject($student){
+			$query = "SELECT COUNT(idSubject) AS numSubject FROM accumulated_note WHERE idStudent = '".$student."'";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+			return ($fila['numSubject']);
+		}
+
+		function checkApproved($table, $idStudent, $acc, $subject, $period){	
+			if($table == "averages"){#Table - Averages = "averages", $idStudent, $acc, $subject, $period
+				$approved = ($acc >= $this->info_gnrl->approved_grade) ? 1 : 0;
+				if($approved == 1){
+					$query = "UPDATE $table SET approved = '$approved' WHERE idStudent = '$idStudent' AND idSubject = $subject AND idPeriod = $period";
+					$result = $this->connection->connection->query($query);
+				}
+				return true;
+			}elseif($table == "accumulated_note"){#Table - accumulated_note = "accumulated_note", $student, $acc, $subject
+				$approved = ($acc >= $this->info_gnrl->approved_grade) ? 1 : 0;
+				if($approved == 1){
+					$query = "UPDATE $table SET approved = '$approved' WHERE idStudent = '$idStudent' AND idSubject = $subject";
+					$result = $this->connection->connection->query($query);
+				}
+				return true;
+			}else if($table == "student_acc"){#Table - student_acc = "student_acc", $student, $acc
+				$approved = ($acc >= $this->info_gnrl->approved_grade) ? 1 : 0;
+				if($approved == 1){
+					$query = "UPDATE $table SET approved = '$approved' WHERE idStudent = '$idStudent'";
+					$result = $this->connection->connection->query($query);
+				}
 				return true;
 			}
+			return false;
 		}
 	}
 ?>

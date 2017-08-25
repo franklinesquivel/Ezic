@@ -1,10 +1,14 @@
 <?php 
-
+	
+	require_once 'Administration.php';
 	require_once('Level_Class.php');
 	class Section extends Level{
-		
+		private $alphabet;
+		private $admin;
 		function __construct(){
 			parent::__construct();
+			$this->alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+			$this->admin = new Administration();
 		}
 
 		function getSections($idLevel){
@@ -431,6 +435,160 @@
 			}
 
 			return 1;
+		}
+		
+		function addSection($specialty, $teacher){
+			$query = "SELECT * FROM section";
+			$result = $this->connection->connection->query($query);
+			$teacher_section = array();
+			$i = 0;
+			while($fila = $result->fetch_assoc()){
+				$teacher_section[$i] = $fila['idTeacher'];
+				$i++;
+			}
+
+			$level = parent::getLevels();
+			$form = "<form class='addCode'>
+				<div class='row'>
+					<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<select name='selectLevel' id='selectLevel'>
+						<option value='' disabled selected>Elegir Nivel</option>";
+						foreach ($level as $key => $value) { 
+							$form .= "<option class='' value='".$key."'>".$value."°</option>";
+						}
+						$form .= "</select>
+						<label>Nivel</label>
+					</div> 
+					<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<select name='selectSpecialty' id='selectSpecialty'>
+						<option value='' disabled selected>Elegir Especialidad</option>";
+						for ($i = 0; $i < count($specialty); $i++) { 
+							$form .= "<option class='' value='".$specialty[$i][0]."'>".$specialty[$i][1]."</option>";
+						}
+						$form .= "</select>
+						<label>Especialidad</label>
+					</div>
+					<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<select name='selectTeacher' id='selectTeacher'>
+						<option value='' disabled selected>Elegir Profesor Guía</option>";
+						$valid = true;
+						for ($i=0; $i < count($teacher); $i++) {
+							for($x = 0; $x < count($teacher_section); $x++){
+								if($teacher[$i][0] == $teacher_section[$x]){
+									$form .= "<option value='".$teacher[$i][0]."' class='circle' disabled='disabled' data-icon='../../files/profile_photos/".$teacher[$i][3]."'>  <p class='teacher_code'>".$teacher[$i][0]."</p> - ".$teacher[$i][2].", ".$teacher[$i][1]."</option>";
+									$valid = false;
+									break;
+								}
+							}
+							if($valid){
+								$form .= "<option value='".$teacher[$i][0]."' class='circle' data-icon='../../files/profile_photos/".$teacher[$i][3]."'>  <p class='teacher_code'>".$teacher[$i][0]."</p> - ".$teacher[$i][2].", ".$teacher[$i][1]."</option>";
+							}
+							$valid = true;
+						}
+						$form .= "</select>
+						<label>Guía</label>
+					</div>       
+				</div>
+				<div class='row'>
+					<div class='col l2 m2 s4 offset-l5 offset-m5 offset-s4 btn waves-effect waves-light black darken-2 btnSave'>Guardar
+						<i class='material-icons right'>save</i>
+					</div>
+				</div>
+				<div class='row next-section'>
+					<div class=''>
+						
+					</div>
+				</div>
+			</form>";
+
+			return $form;
+		}
+
+		function getSectionIdentifier($level){
+			$query = "SELECT * FROM section WHERE idLevel = '$level'";
+			$result = $this->connection->connection->query($query);
+			$i = 0;
+			if($result->num_rows > 0){
+				while($fila = $result->fetch_assoc()){
+					$i++;
+				}
+			}
+			$form = "
+				<div class='section-identifier'>
+					Sección a Agregar
+				</div>
+				<h1>".$this->alphabet[$i]."</h1>
+			";
+			return ($form);
+		}
+
+		function NewSection($level, $specialty, $teacher, $identifier){
+			$query = "INSERT INTO section(idLevel, idSpecialty, sectionIdentifier, sState, idTeacher) VALUES($level, $specialty, '$identifier', 0, '$teacher')";
+			if($this->connection->connection->query($query)){
+				#Obtenemos el id de la sección recienmente agregada
+				$query = "SELECT MAX(idSection) AS id FROM section";
+				$result = $this->connection->connection->query($query);
+				$fila = $result->fetch_assoc();
+
+				if($this->createTable($fila['id'])){
+					return 1;
+				}else{
+					return 0;
+				}
+			}else{
+				return 0;
+			}
+		}
+
+		function createTable($id){
+			$tableName = "section_schedule_$id";
+			$query = "CREATE TABLE $tableName (
+    			idRegister INT(15) NOT NULL AUTO_INCREMENT, 
+    			idScheduleRegister INT(15) NOT NULL,
+     			PRIMARY KEY(idRegister),
+    			INDEX(idScheduleRegister),
+    			FOREIGN KEY (idScheduleRegister) REFERENCES schedule_register(idS_Register)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;";
+
+			return($this->connection->connection->query($query));
+		}
+
+		/*-------------------------------------------------------------------------*/
+		/*-------------------------------------------------------------------------*/
+		function getStudensSection($id)
+		{
+			$obj = [];
+			$obj['students'] = [];
+			$obj['snInfo'] = [];
+			$studentsQuery = "SELECT  s.idStudent, s.name, s.lastName, s.email, s.verified, s.photo, sa.color, sa.description FROM student s INNER JOIN state_academic sa ON sa.idState = s.stateAcademic WHERE s.idSection = (SELECT sn.idSection FROM section sn WHERE sn.idTeacher = '$id') AND s.state = 1 ORDER BY s.lastName;";
+			$sectionQuery = "SELECT sn.sectionIdentifier, sn.sState, sy.sName, l.level, sn.idSection FROM section sn INNER JOIN level l ON l.idLevel = sn.idLevel INNER JOIN specialty sy ON sy.idSpecialty = sn.idSpecialty WHERE sn.idTeacher = '$id'";
+
+			$studentsRes = $this->connection->connection->query($studentsQuery);
+			$sectionRes = $this->connection->connection->query($sectionQuery);
+
+			if ($studentsRes->num_rows > 0){
+				while ($studentsRow = $studentsRes->fetch_assoc()) {
+					$aux = [];
+					foreach ($studentsRow as $key => $value) {
+						$aux[$key] = $value;
+					}
+					array_push($obj['students'], $aux);
+				}
+			}else{
+				$obj['students'] = null;
+			}
+
+			if ($sectionRes->num_rows > 0){
+				while ($sectionRow = $sectionRes->fetch_assoc()) {
+					foreach ($sectionRow as $key => $value) {
+						$obj['snInfo'][$key] = $value;
+					}
+				}
+			}else{
+				$obj['snInfo'] = null;
+			}
+
+			return json_encode($obj);
 		}
 	}
 ?>

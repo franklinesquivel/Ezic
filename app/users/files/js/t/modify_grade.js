@@ -57,6 +57,7 @@
 
     $(document).on('click', '.btnSave', function(){
         if(validateInputs()){
+            let object = SaveGrade();
             $.ajax({
                 type: 'POST',
                 url: '../../files/php/T_Controller.php',
@@ -64,10 +65,18 @@
                     updateGrades: 1,
                     idPermission: idPermission,
                     idProfile: idProfile,
-                    json_students: SaveGrade()
+                    json_students: object
                 }
             }).done(function(r){
-                alert(r);
+                console.log(r);
+                console.log(typeof r);
+
+                if(r == 1){
+                    Materialize.toast("Modificación exitosa", 3000);
+                    load_page();
+                }else{
+                    Materialize.toast("Ha ocurrido un error", 3000, "red");
+                }
             });
         }else{
             Materialize.toast("No dejar campos vacíos", 3000, "red");
@@ -76,15 +85,15 @@
 
     const validateInputs = () =>{
 		let z = 0;
-		for (var i = 0; i < $("tbody tr").length; i++) {
+		for (var i = 0; i < $("tbody tr input[type=number]").length; i++) {
 			if ($("tbody input[type=number]").eq(i).val() == "" || 
-				(parseFloat($("tbody input[type=number]").eq(i).val()) > 10 )|| 
-				(parseFloat($("tbody input[type=number]").eq(i).val()) < 0 )) {
+				(parseFloat($("tbody tr input[type=number]").eq(i).val()) > 10 )|| 
+				(parseFloat($("tbody tr input[type=number]").eq(i).val()) < 0 )) {
 				console.log("error");
-				$("tbody input[type=number]").eq(i).addClass("error");
+				$("tbody tr input[type=number]").eq(i).addClass("error");
 				z++;
 			}else{
-				$("tbody input[type=number]").eq(i).removeClass("error");
+				$("tbody tr input[type=number]").eq(i).removeClass("error");
 			}
 		}
 		return (z = (z > 0) ? false : true);
@@ -94,7 +103,7 @@
 		for (var i = 0; i < $("tbody tr input[type=number]").length; i++) {
 			studentGrades[i] = {
 				"idStudent": $("tbody tr input[type=number]").eq(i).attr("id"),
-				"Grade": $("tbody tr input[type=number]").eq(i).val()
+				"Grade": parseFloat($("tbody tr input[type=number]").eq(i).val())
 			};
 		}
 		return JSON.stringify(studentGrades);

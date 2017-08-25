@@ -17,6 +17,7 @@
             $this->connection->Connect();
 
             /* PHPMailer dependecias*/
+            parent::IsSMTP();
             $this->Host = "smtp.gmail.com";
             $this->SMTPAuth = true;
             $this->Username = "ezic2017@gmail.com";
@@ -26,8 +27,6 @@
             $this->SMTPDebug = 1;
             $this->CharSet = "UTF-8";
             $this->email_from = "ezic2017@gmail.com";
-
-            parent::IsSMTP();
             parent::setFrom($this->email_from,  "Ezic");
         }
 
@@ -101,7 +100,10 @@
             return ($coordinator);
         }
         function getTeacher(){ /* Obtener datos del profesor que solicita la petición de modificación de notas */
-            session_start();
+            if(!isset($_SESSION)){
+                session_start();
+            }
+            
             $query = "SELECT * FROM teacher WHERE idTeacher = '". $_SESSION['id'] ."'";
             $result = $this->connection->connection->query($query);
             $teacher = array();
@@ -151,6 +153,16 @@
             }
             $list .= "</ul>";
             return $list;
+        }
+
+        function SendNewPassword($email, $password){
+            $bodyMessage = "<b>Contraseña: </b>".$password;
+
+            parent::addAddress("".$email."", "Sr/Sra");     
+
+            $this->Subject = "Recuperación de Contraseña"; /*Título*/
+            $this->msgHTML($bodyMessage); /* Cuerpo de email */
+            parent::send(); /* Se envía el mensaje */
         }
     }
 ?>

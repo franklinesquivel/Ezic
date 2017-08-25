@@ -33,9 +33,15 @@
 			return (json_encode($students));
 		}
 
-		function  v_permission($subject){ /*Se ejecuta del lado del maestro cuando quiere solicitar permiso*/
-			session_start();
-			$query = "SELECT student.idStudent, subject.idSubject, student.name, student.lastName, specialty.sName as speciality, section.sectionIdentifier, level.level, student.photo FROM `student` INNER JOIN section ON section.idSection = student.idSection INNER JOIN specialty ON specialty.idSpecialty = section.idSpecialty INNER JOIN register_subject ON register_subject.idSection = section.idSection INNER JOIN subject ON subject.idSubject = register_subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = '$subject' AND subject.idTeacher = '". $_SESSION['id'] ."' GROUP BY student.idStudent";
+		function  v_permission($subject, $section){ /*Se ejecuta del lado del maestro cuando quiere solicitar permiso*/
+			if(!isset($_SESSION)){
+				session_start();
+			}
+			if($section == 0){
+				$query = "SELECT student.idStudent, subject.idSubject, student.name, student.lastName, specialty.sName as speciality, section.sectionIdentifier, level.level, student.photo FROM `student` INNER JOIN section ON section.idSection = student.idSection INNER JOIN specialty ON specialty.idSpecialty = section.idSpecialty INNER JOIN register_subject ON register_subject.idSection = section.idSection INNER JOIN subject ON subject.idSubject = register_subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = '$subject' AND subject.idTeacher = '". $_SESSION['id'] ."' GROUP BY student.idStudent";
+			}else{
+				$query = "SELECT student.idStudent, subject.idSubject, student.name, student.lastName, specialty.sName as speciality, section.sectionIdentifier, level.level, student.photo FROM `student` INNER JOIN section ON section.idSection = student.idSection INNER JOIN specialty ON specialty.idSpecialty = section.idSpecialty INNER JOIN register_subject ON register_subject.idSection = section.idSection INNER JOIN subject ON subject.idSubject = register_subject.idSubject INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = '$subject' AND student.idSection = '$section' AND subject.idTeacher = '". $_SESSION['id'] ."' GROUP BY student.idStudent";
+			}
 			$result = $this->connection->connection->query($query);
 			$student = array();
 			$i = 0;
@@ -53,16 +59,16 @@
 						<div class='student-item'>
 							<div class='student-info'>
 								<div class='photo'>
-									<img src='../../files/profile_photos/".utf8_encode($fila['photo'])."'/>
+									<img src='../../files/profile_photos/".$fila['photo']."'/>
 								</div>
 								<div class='info-gnrl'>
-									<div class='id-student'>".utf8_encode($fila['idStudent'])."</div>
-									<div class='name-student'>".utf8_encode($fila['lastName']).", ".utf8_encode($fila['name'])."</div>
-									<div class='section-student'>".utf8_encode($fila['level'])."° '".utf8_encode($fila['sectionIdentifier'])."', ".utf8_encode($fila['speciality'])."</div>
+									<div class='id-student'>".$fila['idStudent']."</div>
+									<div class='name-student'>".$fila['lastName'].", ".$fila['name']."</div>
+									<div class='section-student'>".$fila['level']."° '".$fila['sectionIdentifier']."', ".$fila['speciality']."</div>
 								</div>
 								<div class='option-add'>
-									<input type='checkbox' student_name='".utf8_encode($fila['lastName']).", ".utf8_encode($fila['name'])."' class='btn_checkbox checkbox-list' id='".utf8_encode($fila['idStudent'])."'  />
-									<label for='".utf8_encode($fila['idStudent'])."'></label>
+									<input type='checkbox' student_name='".$fila['lastName'].", ".$fila['name']."' class='btn_checkbox checkbox-list' id='".$fila['idStudent']."'  />
+									<label for='".$fila['idStudent']."'></label>
 								</div>
 							</div>
 						</div>

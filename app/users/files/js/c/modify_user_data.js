@@ -9,28 +9,19 @@
     })
 
     $("#cmbLvl_Mod").change("value", function(){
-        if((validateSelect($("#cmbLvl").val()))==true){
+        loader.in();
+        $.ajax({
+            type: 'POST',
+            url: '../../files/php/C_Controller.php',
+            data: {getSectionForMod: 1, level: $(this).val()},
+            success: r => {
+                $("#cmbSection_Mod").html(`<option disabled selected>Seleccione una sección</option>`);
+                $("#cmbSection_Mod").append(r);
 
-            $.ajax({
-                method: 'POST',
-                url: '../../files/php/C_Controller.php',
-                data: {
-                    getSections: 'Si',
-                    level: $("#cmbLvl").val(),
-                }
-            }).done(function(sectionObject){
-                let object = JSON.parse(sectionObject);
-                $("#cmbSection_Mod").empty();
-                $("#cmbSection_Mod").append("<option value='' disabled selected>Elegir Sección</option>");
-                if (object.length > 0) {
-                    
-                    for (var i in object) {
-                        $("#cmbSection").append("<option value="+object[i].id+">"+object[i].nombre+", "+object[i].seccion+"</option>");
-                    }
-                }
-                $("#cmbSection").material_select();
-            });
-        }
+                $("select").material_select()
+                loader.out();
+            }
+        })
     });
 
     $('.photoFile').change(function(){

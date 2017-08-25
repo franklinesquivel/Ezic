@@ -179,5 +179,71 @@ $(document).ready(function(){
     $(window).scroll(function(){
         $("#logo-container img").width($("#logo-container img").height());
     })
+
+    $("#recover_pass1").click(function(){
+        $('#modal_pass').modal('open');
+    });
+
+    $("#recover_pass2").click(function(){
+        $('#modal_pass').modal('open');
+    });
+
+    $.validator.addMethod('txtCodeEmail', function(value, element) {
+        return this.optional(element) || /^([Cc]|[Dd]|[a-zA-Z]{2})\d{4}$/.test(value);
+    }, 'Ingrese un valor válido.');
+
+    $('form#frm_recover').validate({
+        rules: {
+            txtCodeEmail: {
+                required: true,
+                txtCodeEmail: true
+            }
+        },
+        messages: {
+            txtCodeEmail:{
+                required: 'Ingrese un código.'
+            }
+        },
+        errorElement : 'div',
+        errorPlacement: function(error, element) {
+            var placement = $(element).data('error');
+            if (placement) {
+                $(placement).append(error)
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        submitHandler: function(form) {
+            loader.in();
+            let type;
+
+            if((($("#txtCodeEmail").val()[0]).toUpperCase() == 'C' )){
+                type = 'C';
+            }else if((($("#txtCodeEmail").val()[0]).toUpperCase() == 'D' )){
+                type = 'T';
+            }else{
+                type = 'S';
+            }
+            
+            $.ajax({
+                type: 'POST',
+                url: 'php/login.php',
+                data:{
+                    recover_password: 1,
+                    type_user: type,
+                    code_user: ($("#txtCodeEmail").val()).toUpperCase()
+                }
+            }).done(function(r){
+                if(parseInt(r) == 0){
+                    Materialize.toast("Usuario Ingresado es Incorrecto", 3000, "error");
+                }else{
+                    $("#txtCodeEmail").val('');
+                    $('#modal_pass').modal('close');
+                    Materialize.toast("Se ha enviado un correo al usuario", 3000);
+                }
+            });
+            loader.out();
+        }
+    });
 })
 

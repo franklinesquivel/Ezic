@@ -68,25 +68,25 @@
 			success: r => {
 				if (r != -1) {
 					sArray = JSON.parse(r);
-					$('main').html(`
-						<br>
-						<div class='container section'>
-							<form class='frmSpecialty' autocomplete='off'>
-								<div class='row'>
-									<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
-										<input type='text' name='txtName' id='txtName' class='txtName'>
-										<label for='txtName'>Nombre de la especialidad</label>
-									</div>
-								</div>
-								<center>
-									<div class='btn waves-effect waves-light black btnSave'>
-										Registrar Especialidad
-										<i class='material-icons left'>save</i>
-									</div>
-								</center>
-							</form>
-						</div>`);
 				}
+				$('main').html(`
+					<br>
+					<div class='container section'>
+						<form class='frmSpecialty' autocomplete='off'>
+							<div class='row'>
+								<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+									<input type='text' name='txtName' id='txtName' class='txtName'>
+									<label for='txtName'>Nombre de la especialidad</label>
+								</div>
+							</div>
+							<center>
+								<div class='btn waves-effect waves-light black btnSave'>
+									Registrar Especialidad
+									<i class='material-icons left'>save</i>
+								</div>
+							</center>
+						</form>
+					</div>`);
 				$('main').fadeIn('slow', loader.out());
 			}
 		})

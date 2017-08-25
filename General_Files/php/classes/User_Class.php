@@ -438,7 +438,7 @@
                         if ($key != 'type')
                             $query .= "'" . ($key == 'password' ? $this->ArmedEncryption($value) : $value) . "', ";
                     }
-                    $query .= " $idSection, 1, 'R', 'photo.png', 0); ";
+                    $query .= " $idSection, 1, 'A', 'photo.png', 0); ";
                 }
 
                 if (count($data) > 1) {
@@ -447,6 +447,38 @@
                     return ($this->connection->connection->query($query) ? 1 : 0);
                 }
             }
+        }
+
+        function getPassword($type, $code){
+            if($type == 'S'){//Estudiante
+                $query = "SELECT * FROM student WHERE idStudent = '$code' AND verified = 1 AND state = 1";
+                $result = $this->connection->connection->query($query);
+                if($result->num_rows > 0){//Se arma la contraseña
+                    $fila = $result->fetch_assoc();
+                    return array($this->DisarmedEncryption($fila['password']), $fila['email']);
+                }else{
+                    return 0;
+                }
+            }elseif($type == 'T'){//Docente
+                $query = "SELECT * FROM teacher WHERE idTeacher = '$code' AND state = 1";
+                $result = $this->connection->connection->query($query);
+                if($result->num_rows > 0){//Se arma la contraseña
+                    $fila = $result->fetch_assoc();
+                    return array($this->DisarmedEncryption($fila['password']), $fila['email']);
+                }else{
+                    return 0;
+                }
+            }elseif($type == 'C'){//Coordinador
+                $query = "SELECT * FROM coordinator WHERE idCoor = '$code' AND state = 1";
+                $result = $this->connection->connection->query($query);
+                if($result->num_rows > 0){//Se arma la contraseña
+                    $fila = $result->fetch_assoc();
+                    return array($this->DisarmedEncryption($fila['password']), $fila['email']);
+                }else{
+                    return 0;
+                }
+            }
+            return 0;
         }
     }
 ?>

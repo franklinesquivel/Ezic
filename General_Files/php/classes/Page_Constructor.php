@@ -12,6 +12,9 @@
         private $name;
         private $location;
 
+        private $days_letter;
+        private $days_number;
+
         function __construct()
         {
             $this->name = explode('/', $_SERVER['PHP_SELF'])[1];
@@ -26,6 +29,9 @@
             require_once($this->getRoute());
             $this->connection = new Connection();
             $this->connection->Connect();
+
+            $this->days_letter = array("Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo");
+            $this->days_number =  array('Domingo' => 00, 'Lunes' => 01, 'Martes' => 02, 'Miercoles' => 03, 'Jueves' => 04, 'Viernes' =>05, 'Sabado'=>06);
 
         }
 
@@ -147,11 +153,12 @@
                 $r = false;
                 ini_set("date.timezone", 'America/El_Salvador');
                 $hour = date("G:i:s");
+                $day = $this->days_letter[date('w')];
                 $query = "SHOW TABLES FROM ezic WHERE TABLES_IN_ezic LIKE 'teacher_schedule_".$_SESSION['id']."'";
                 $result = $this->connection->connection->query($query);
                 if ($result->num_rows > 0 && $_SESSION['type'] == 'T') {
                    if ($_SESSION['type'] == 'T') {//Teacher
-                        $query = "SELECT subject.acronym, section.sectionIdentifier, level.level FROM `teacher_schedule_".$_SESSION['id']."` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_".$_SESSION['id'].".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN subject ON subject.idSubject = schedule_register.idSubject WHERE schedule_register.startTime BETWEEN schedule_register.startTime AND '$hour' AND schedule_register.endTime BETWEEN '$hour' AND schedule_register.endTime";
+                        $query = "SELECT subject.acronym, section.sectionIdentifier, level.level FROM `teacher_schedule_".$_SESSION['id']."` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_".$_SESSION['id'].".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN subject ON subject.idSubject = schedule_register.idSubject WHERE schedule_register.startTime BETWEEN schedule_register.startTime AND '$hour' AND schedule_register.endTime BETWEEN '$hour' AND schedule_register.endTime AND schedule_register.day ='$day'";
                         $result = $this->connection->connection->query($query);
                         
                         while ($fila = $result->fetch_assoc()) {
@@ -161,7 +168,7 @@
                     }
                 }else{
                     if($_SESSION['type'] == 'S'){//Student
-                        $query = "SELECT subject.acronym, teacher.name, teacher.lastName, schedule_register.nthHour, student.idStudent FROM `schedule_register` INNER JOIN subject ON subject.idSubject = schedule_register.idSubject INNER JOIN teacher ON teacher.idTeacher = subject.idTeacher INNER JOIN student ON student.idSection = schedule_register.idSection WHERE schedule_register.startTime BETWEEN schedule_register.startTime AND '$hour' AND schedule_register.endTime BETWEEN '$hour' AND schedule_register.endTime AND student.idStudent = '".$_SESSION['id']."'";
+                        $query = "SELECT subject.acronym, teacher.name, teacher.lastName, schedule_register.nthHour, student.idStudent FROM `schedule_register` INNER JOIN subject ON subject.idSubject = schedule_register.idSubject INNER JOIN teacher ON teacher.idTeacher = subject.idTeacher INNER JOIN student ON student.idSection = schedule_register.idSection WHERE schedule_register.startTime BETWEEN schedule_register.startTime AND '$hour' AND schedule_register.endTime BETWEEN '$hour' AND schedule_register.endTime AND student.idStudent = '".$_SESSION['id']."' AND schedule_register.day ='$day'";
                         $result = $this->connection->connection->query($query);
                         while ($fila = $result->fetch_assoc()) {
                             $sentence = "Recibiendo clase de: ".strtoupper($fila['acronym'])." - ".$fila['lastName'].", ".$fila['name']."";

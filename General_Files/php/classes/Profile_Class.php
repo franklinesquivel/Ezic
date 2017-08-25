@@ -62,6 +62,59 @@
 			return (json_encode($array));
 		}
 
+		function getProfilesInGrades($idSubject, $idPeriod){
+			$profilesGrades = $this->checkProfilesGrades($idSubject, $idPeriod); #Obtiene los perfiles ingresados en la tabla 'grades'
+			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile, teacher.lastName FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idSubject = $idSubject AND evaluation_profile.idPeriod = $idPeriod ORDER BY evaluation_profile.percentage";
+
+			$result	= $this->connection->connection->query($query);
+			$array = array();
+			$i = 0;
+			$valid = false;
+			while($fila = $result->fetch_assoc()) {
+				if(count($profilesGrades) > 0){
+					for($x = 0; $x < count($profilesGrades); $x++ ){
+						if($fila['idProfile'] == $profilesGrades[$x]){
+							$valid = true;
+							break;
+						}
+					}
+				}else{
+					$valid = false;
+				}
+				
+				if($valid){
+					$array[$i] = [
+						"id" => $fila['idProfile'],
+						"name" => $fila['nameProfile'],
+						"percentage" => $fila['percentage'],
+						"description" => $fila['description'],
+						"teacherName" => $fila['name'],
+						"idTeacher" => $fila['idTeacher'],
+						"subject" => $fila['nameSubject'],
+						"period" => $fila['numPeriod'],
+						"teacherlastName" =>  $fila['lastName']
+					];
+					$i++;
+				}
+				$valid = false;	
+			}
+			return (json_encode($array));
+		}
+
+		function checkProfilesGrades($idSubject, $idPeriod){
+			$query = "SELECT evp.idProfile FROM grade INNER JOIN evaluation_profile evp ON evp.idProfile = grade.idProfile  WHERE evp.idPeriod = $idPeriod AND evp.idSubject = $idSubject  GROUP BY evp.idProfile";
+			$result = $this->connection->connection->query($query);
+			$profiles = array();
+			$i = 0; 
+			if($result->num_rows > 0){
+				while($fila = $result->fetch_assoc()){
+					$profiles[$i] = $fila['idProfile'];
+					$i++;
+				}
+			}
+			return ($profiles);
+		}
+
 		function modifyProfile($id, $name, $percentage, $description){
 			$query = "UPDATE evaluation_profile SET name = '$name' , percentage = $percentage, description = '$description' WHERE idProfile = $id";
 
@@ -238,7 +291,7 @@
 					</div> 
 				</div>"; 
 			}else{
-				$select_period = 0;
+				$select_period = "<br><div class='row'><div class='alert_ col s8 offset-s2'><h4>No hay períodos Ingresados</h4></div></div>";
 			}
 			return $select_period;	
 		}
@@ -372,10 +425,8 @@
 							    </div>
 						    </div>
 						    <div class='r-divider'>
-						    	<div class=''>
-									<div class='n-perfiles'>
-						        		<span class='title'>Por ingresar: </span><span class='result n-perfiles'>".$fila['num_profile']."</span>
-						        	</div>
+						    	<div class='n-perfiles'>
+						        	<span class='title'>Por ingresar: </span><span class='result n-perfiles'>".$fila['num_profile']."</span>
 						    	</div>
 						    	<div>
 						    		<button class='btn waves-effect waves-light green btnProfiles' id='".$fila['idSubject']."'>Ver Perfiles

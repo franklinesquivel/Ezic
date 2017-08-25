@@ -48,6 +48,9 @@
             $res = $this->connection->connection->query($query);
             $row = $res->fetch_assoc();
 
+            $gradeRes = $this->connection->connection->query("SELECT COUNT(*) as cant FROM grade g WHERE g.idStudent = '$id';");
+            $gradeFlag = ($gradeRes->fetch_assoc()['cant'] == 0 ? 1 : 0);
+
             $frm = "
             <div class='row'>
                 <div class='header_info_cont'>";
@@ -119,29 +122,42 @@
                 </div>
                 ";
             }else{
-                $frm = $frm . "
-                <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
-                    <select name='cmbLvl_Mod' id='cmbLvl_Mod' class='cmbUpdate'>
-                        <option value='' disabled>Seleccione una opción</option>";
-
-                $lvlRes = $this->connection->connection->query("SELECT * FROM level");
-                while ($lvlRow = $lvlRes->fetch_assoc()) {
+                if ($gradeFlag) {
                     $frm = $frm . "
-                        <option value='" . $lvlRow['idLevel'] . "' " . ( $row['idLevel'] == $lvlRow['idLevel'] ? "selected" : "")  . ">Año " . $lvlRow['level'] . "</option>
-                    ";
-                }
+                    <div class='input-field col l5 m5 s10 offset-l1 offset-m1 offset-s1'>
+                        <select name='cmbLvl_Mod' id='cmbLvl_Mod' class='cmbUpdate'>
+                            <option value='' disabled>Seleccione una opción</option>";
 
-                $frm .= "
-                    </select>
-                    <label>Grado</label>
-                </div>
-                <div class='input-field col l5 m5 s10 offset-s1'>
-                    <select name='cmbSection_Mod' id='cmbSection_Mod'  class='cmbUpdate'>
-                        <option disabled >Seleccione una opción</option>
-                        <option value='" . $row['idSection'] . "' selected>" . $row['sName'] . ", " . $row['sectionIdentifier'] . "</option>    
-                    </select>
-                    <label>Sección</label>
-                </div>";
+                    $lvlRes = $this->connection->connection->query("SELECT * FROM level;");
+                    $snAux = "";
+                    while ($lvlRow = $lvlRes->fetch_assoc()) {
+                        $frm = $frm . "
+                            <option value='" . $lvlRow['idLevel'] . "' " . ( $row['idLevel'] == $lvlRow['idLevel'] ? "selected" : "")  . ">Año " . $lvlRow['level'] . "</option>
+                        ";
+
+                        $snRes = $this->connection->connection->query("SELECT * FROM section sn INNER JOIN level l ON l.idLevel = sn.idLevel INNER JOIN specialty sy ON sy.idSpecialty = sn.idSpecialty WHERE sn.idLevel = " . $row['idLevel'] . ";");
+
+                        // echo "SELECT * FROM section sn INNER JOIN level l ON l.idLevel = sn.idLevel INNER JOIN specialty sy ON sy.idSpecialty = sn.idSpecialty WHERE sn.idSection = " . $row['idSection'] . ";";
+
+                        while ($snRow = $snRes->fetch_assoc()) {
+                            if ($lvlRow['idLevel'] == $row['idLevel']) {
+                                $snAux .= "<option value='" . $snRow['idSection'] . "' " . ( $row['idSection'] == $snRow['idSection'] ? "selected" : "")  . ">" . $snRow['sName'] . ", " . $snRow['sectionIdentifier'] . "</option>";
+                            }
+                        }
+
+                    }
+                    $frm .= "
+                        </select>
+                        <label>Grado</label>
+                    </div>
+                    <div class='input-field col l5 m5 s10 offset-s1'>
+                        <select name='cmbSection_Mod' id='cmbSection_Mod'  class='cmbUpdate'>
+                            <option disabled>Seleccione una opción</option>
+                            $snAux
+                        </select>
+                        <label>Sección</label>
+                    </div>";
+                }
             }
 
             $frm = $frm . "
@@ -168,6 +184,19 @@
             </div>";
 
             return $frm;
+        }
+
+        function getSection($lvl)
+        {   
+            $aux = "";
+            $query = "SELECT * FROM section sn INNER JOIN specialty sy ON sy.idSpecialty = sn.idSpecialty WHERE sn.idLevel = $lvl;";
+            
+            $res = $this->connection->connection->query($query);
+            while ($row = $res->fetch_assoc()) {
+                $aux .= "<option value='" . $row['idSection'] . "'>" . $row['sName'] . ", " . $row['sectionIdentifier'] . "</option>";
+            }
+
+            return $aux;
         }
 
         function upload_Tmp_Img($id, $file)

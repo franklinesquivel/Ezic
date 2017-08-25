@@ -14,7 +14,7 @@
 					["Coordinadores", "person", "add_coordinator"]
 				]];
 				$this->options[count($this->options)] = ["Secciones", "tab", [
-					["Añadir", "library_add", ""],
+					["Añadir", "library_add", "add_section"],
 					["Eliminar", "delete", ""],
 					["Ver", "visibility", "view_sections"],
 					["Subir fotografías", "add_to_photos", "photo_sections"],
@@ -53,6 +53,7 @@
 					["Modificar", "edit", "modify_code"],
 					["Eliminar", "delete", "delete_code"],
 					["Ver", "visibility", "v_code"],
+					["General", "setting", "gnrl_code"]
 				]];
 
 				$this->options[count($this->options)] = ['Aceptar Permisos', "lock_open", "accept_permission"];
@@ -60,6 +61,7 @@
 				$this->options[count($this->options)] = ['Administración', "folder", "administration"];
 				$this->options[count($this->options)] = ['Estadísticas', "insert_chart", "stadistics"];
 			}elseif($type == 'T'){
+				$this->options[count($this->options)] = ["Administrar sección", "wc", "section"];
 				$this->options[count($this->options)] = ["Ver horario", "schedule", "schedule"];
 				$this->options[count($this->options)] = ["Asistencia", "date_range", "assistance"];
 				$this->options[count($this->options)] = ["Agregar notas", "grade", "addGrade"];

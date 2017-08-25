@@ -75,7 +75,7 @@
 			div = new Element('div');
 			div.setClass('row col l8 m10 s10 offset-l2 offset-m1 offset-s1');
 			table = new Element('table');
-			table.setClass('centered');
+			table.setClass('centered responsive-table');
 
 			thead = new Element('thead');
 			tr[z] = new Element('tr');
@@ -128,10 +128,9 @@
 
 			setTimeout(function(){
 				$(".result_cont .table_profiles").css("display", "none");
-			}, 300);
+			}, 200);
 
 			loader.out();
-			// $(".result_cont .row form").empty();
 		});
 
 		$(".btnSave").click(function(){
@@ -152,7 +151,7 @@
 
 						setTimeout(function(){
 							$(".result_cont .table_profiles").css("display", "none");
-						}, 300);
+						}, 200);
 						
 						$("#selectPeriod").val('');
 						$("#selectPeriod").material_select();

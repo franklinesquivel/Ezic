@@ -59,6 +59,8 @@
 
 	$(document).on("click", ".btnModifyProfile", function(){
 		if (errorSelect($("select"))) {
+			var loader = new Loader();
+			loader.in();
 			$.ajax({
 				type:'POST',
 				url:'../../files/php/C_Controller.php',
@@ -76,6 +78,7 @@
 					$("main .result_cont").html("<div class='search_error col s8 offset-s2'><span>No hay perfiles de evaluación registrados según datos seleccionados</span></div>");
 				}
 			});
+			loader.out();
 		}else{
 			Materialize.toast('Oh oh! Al parecer faltan campos por seleccionar', 3000, "red darken-1");
 		}
@@ -96,7 +99,6 @@
 						object: JSON.stringify(info_profiles)
 					}
 				}).done(function(r){
-					console.log(r);
 					if (r == 1) {
 						load_page();
 						Materialize.toast('Modificación exitosa', 3000);

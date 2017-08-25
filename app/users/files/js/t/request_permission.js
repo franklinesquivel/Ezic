@@ -12,7 +12,7 @@
 			load_page();
 		});
 		$('.btnFilters').sideNav({
-			menuWidth: 350, // Default is 300
+			menuWidth: 250, // Default is 300
 			edge: 'right', // Choose the horizontal origin
 			closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
 			onOpen: function(el) {  }, // A function to be called when sideNav is opened
@@ -148,6 +148,8 @@
 						$("#selectProfiles").append("<option value='"+ object[i].id +"'> "+ object[i].name +" ("+ object[i].percentage +"%)  </option>");
 					}
 					$("select#selectProfiles").material_select();
+				}else{
+					Materialize.toast("No se han encontrado perfiles para modificar", 3000, "red");
 				}			
 			});
 		}
@@ -176,7 +178,7 @@
                 }
 			},
 			submitHandler: function(form) {
-				if(errorSelect($("form.Send Email select"))){
+				if(errorSelect($("form.SendEmail select"))){
 					let loader = new Loader();
 					loader.in();
 					let object = JSON.stringify(student);
@@ -220,7 +222,7 @@
 			}
 		}
 
-		for (var i = 0; i <= $('.list-add .modal-content .container .row .student-row .id-student').length; i++) {
+		for (var i = 0; i < $('.list-add .modal-content .container .row .student-row .id-student').length; i++) {
 			if ($('.list-add .modal-content .container .row .student-row .id-student').eq(i).attr("id") == id) {
 				$('.list-add .modal-content .container .row .student-row .id-student').eq(i).addClass("active");
 				$('.list-add .modal-content .container .row .student-row .id-student').eq(i).fadeOut(200, function(){
@@ -253,6 +255,7 @@
 	function createContainerId(numStudents){ /* Crea un nueva fila para el modal de alumnos seleccionados */
 		if (numStudents == 3) {
 			k++;
+			z = 0;
 			createContainer = true;
 		}
 		if (createContainer) {
