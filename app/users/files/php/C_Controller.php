@@ -23,6 +23,8 @@
 //--------------------------------------------------------------------------------------------
 
 	require_once '../../../../General_Files/php/classes/Stadistics.php';
+	require_once '../../../../General_Files/php/classes/Permission_Grade.php';
+	require_once '../../../../General_Files/php/classes/Specialty_Class.php';
 
 //--------------------------------------------------------------------------------------------
 //CLASES INSTANCIADAS HASTA EZIC 1.5
@@ -47,6 +49,8 @@
 //--------------------------------------------------------------------------------------------
 
 	$stadistic = new Stadistics();
+	$permission_grade = new Permission_Grade();
+	$specialty = new Specialty();
 
 //--------------------------------------------------------------------------------------------
 //		AGREGAR NUEVO PERIODO
@@ -101,6 +105,10 @@
 		}
 		$id = (isset($_REQUEST['id']) ? $_REQUEST['id'] : $_SESSION['id']);
 		echo $modify->load_Form($id);
+	}
+
+	if (isset($_POST['getSectionForMod'])) {
+		echo $modify->getSection($_POST['level']);
 	}
 
 	if (isset($_FILES['file']) && isset($_POST['id'])) {
@@ -238,9 +246,9 @@
 
 //--------------------------------------------------------------------------------------
 //		ELEGIR PERFIL PARA MODIFICAR
-	if (isset($_REQUEST['chose_modifyProfile'])) {
-		echo ($listSubject = $profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
-	}
+	// if (isset($_REQUEST['chose_modifyProfile'])) {
+	// 	echo ($listSubject = $profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
+	// }
 // FIN ELEGIR PERFIL PARA MODIFICAR
 //--------------------------------------------------------------------------------------
 
@@ -606,6 +614,84 @@
 		echo ($profile->table_modifyProfile($_REQUEST['subject'], $_REQUEST['period']));
 	}
 // FIN ELEGIR PERFIL PARA MODIFICAR
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		OBTENCIÓN DE VISTA PARA ACEPTAR PERMISOS DE MODIFICACIÓN DE NOTAS
+	if (isset($_REQUEST['v_permissionCoordinator'])) {
+		echo ($permission_grade->v_permissionCoordinator());
+	}
+// OBTENCIÓN DE VISTA PARA ACEPTAR PERMISOS DE MODIFICACIÓN DE NOTAS
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		OBTENEMOS LA INFORMACIÓN PARA EL MODAL DE PERMISOS DE MODIFICAR NOTAS
+	if (isset($_REQUEST['infoPermission'])) {
+		echo ($permission_grade->getInfoPermission($_REQUEST['idPermission']));
+	}
+// OBTENEMOS LA INFORMACIÓN PARA EL MODAL DE PERMISOS DE MODIFICAR NOTAS
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		SE ACEPTAN LOS PERMISOS PARA MODIFICAR NOTAS
+	if (isset($_REQUEST['accept_permission'])) {
+		$object = json_decode($_REQUEST['permissions']);
+		$z = 0;
+		for($i = 0; $i < count($object); $i++){
+			if($permission_grade->AcceptPermission($object[$i]->id)){
+				$z++;
+			}
+		}
+		echo($z = ($z == count($object)) ? 1 : 0);
+	}
+// SE ACEPTAN LOS PERMISOS PARA MODIFICAR NOTAS
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		REGISTRO DE SECCIONES
+	if(isset($_REQUEST['addSection'])){
+		echo($section->addSection($specialty->getSpecialty(), $teacher->getTeachers()));
+	}
+// REGISTRO DE SECCIONES
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		SE OBTIENE LA LETRA DE LA SIGUIENTE SECCIÓN
+	if(isset($_REQUEST['getSectionIdentifier'])){
+		echo($section->getSectionIdentifier($_REQUEST['level']));
+	}
+// SE OBTIENE LA LETRA DE LA SIGUIENTE SECCIÓN
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		REGISTRAR SECCIÓN
+	if(isset($_REQUEST['registerSection'])){
+		echo($section->NewSection($_REQUEST['level'], $_REQUEST['specialty'], $_REQUEST['teacher'], $_REQUEST['identifier']));
+	}
+// REGISTRAR SECCIÓN
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		VISTA DE INFORMACIÓN GENERAL DE CÓDIGOS
+	if(isset($_REQUEST['v_grnlCode'])){
+		echo($code->v_gnrlCode());
+	}
+// VISTA DE INFORMACIÓN GENERAL DE CÓDIGOS
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		MODIFICAR TABLA GENERAL DE CÓDIGOS
+	if(isset($_REQUEST['modify_gnrlCode'])){
+		$object = json_decode($_REQUEST['object']);
+		$z = 0;
+		for($i = 0; $i < count($object); $i++){
+			if($code->UpdateGnrl($object[$i]->id, $object[$i]->value)){
+				$z++;
+			}
+		}
+		echo($z = ($z > 0) ? 1 : 0);
+	}
+// MODIFICAR TABLA GENERAL DE CÓDIGOS
 //--------------------------------------------------------------------------------------
 	
 	if (isset($_REQUEST['getUsers'])) {

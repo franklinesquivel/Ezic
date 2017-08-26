@@ -4,6 +4,9 @@
 		
 		private $connection;
 		private $aux;
+		
+		private $grnl_code; //Conexión a la clase de Info general de código
+		private $info_gnrl; //Conexión a la clase de información general de nuestro proyecto
 		function __construct(){
 
 			require_once('Page_Constructor.php');
@@ -14,6 +17,14 @@
 			require_once($this->aux);
 			$this->connection = new Connection();
 			$this->connection->Connect();
+
+			require_once('Info_Code.php');
+			$this->gnrl_code = new Info_Code();
+			$this->gnrl_code->setQuery(); 
+
+			require_once('Info_Gnrl.php');
+			$this->info_gnrl = new Info_Gnrl();
+			$this->info_gnrl->setQuery();
 		}
 
 		function v_addCode(){
@@ -236,13 +247,34 @@
 		}
 
 		function getForDelete($category){
-			$query = "SELECT code.idCode, code.description, code_type.type, code_type.color, code_type.idType FROM `code` INNER JOIN code_type ON code_type.idtype = code.type WHERE code.category = '$category' AND code.idCode NOT IN (SELECT idCode FROM applied_code) ORDER BY code_type.type";
-			$result = $this->connection->connection->query($query);
+			$query_1 = "SELECT code.idCode, code.description, code_type.type, code_type.color, code_type.idType FROM `code` INNER JOIN code_type ON code_type.idtype = code.type WHERE code.category = '$category' AND code.idCode NOT IN (SELECT idCode FROM applied_code) ORDER BY code_type.type;";
+			$query_2 = "SELECT code.idCode FROM code WHERE code.category = '$category' AND code.idCode IN (SELECT gnrl_code.code_result FROM gnrl_code) ORDER BY code.idCode; ";
+			$result_1 = $this->connection->connection->query($query_1);
+			$result_2 = $this->connection->connection->query($query_2);
+			$codes_array = array();
 			$i = 0;
-			$x = 0;
+			$valid = true;
 
-			$idCode = array();
-			if ($result->num_rows > 0) {
+			while($fila_1 = $result_1->fetch_assoc()){
+				while($fila_2 = $result_2->fetch_assoc()){
+					if($fila_1['idCode'] == $fila_2['idCode']){$valid = false;}
+				}
+
+				if($valid){
+					$codes_array[$i] = [
+						"id" => $fila_1['idCode'],
+						"description" => $fila_1['description'],
+						"type" => $fila_1['type'],
+						"color" => $fila_1['color'],
+						"idType" => $fila_1['idType']
+					];
+					$i++;
+				}
+				$valid = true;
+			}
+			
+			$x = 0;
+			if (count($codes_array) > 0) {
 				$table = "<div class='row'><table class='col l12 m10 s12  offset-m1 offset-s0 responsive-table centered'>
 				<thead>
            			<tr>
@@ -253,15 +285,15 @@
               		</tr>
             	</thead>
             	<tbody>";
-				while ($fila = $result->fetch_assoc()) {
+				foreach($codes_array AS $key){
 					$x++;
-					$table .= "<tr id='".$fila['idType']."'>
+					$table .= "<tr id='".$key['idType']."'>
     					<td>".$x."</td>
-    					<td>".$fila['description']."</td>
-    					<td>".$fila['type']."</td>
+    					<td>".$key['description']."</td>
+    					<td>".$key['type']."</td>
     					<td>
-          					<input type='checkbox' class='btn_checkbox' id=".$fila['idCode']." />
-          					<label for=".$fila['idCode'].">Eliminar</label>
+          					<input type='checkbox' class='btn_checkbox' id=".$key['id']." />
+          					<label for=".$key['id'].">Eliminar</label>
         				</td>
             		</tr>";
 				}
@@ -402,24 +434,154 @@
 	            		$idPeriod = $rowPeriod['idPeriod'];
 	            		break;
 	            	}
-	            }
+				}
 
-				$queryApply = "
-				INSERT INTO applied_code
-				VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
-
-				// return $queryApply;
-
+				$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
 				$valInsertApply = $this->connection->connection->query($queryApply);
 
 				$idApplyCode = $this->connection->connection->insert_id;
-
 				$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student')";
-				
 				$valInsertRecord = $this->connection->connection->query($queryRecord);
+
+				if($this->checkType($code)){
+					$a_codes = $this->AccumulationCodes($student, $idPeriod);				
+					if($a_codes != false){
+						for($i = 0; $i < count($a_codes); $i++){
+							$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', '".$a_codes[$i]."', $idPeriod);";
+							$valInsertApply = $this->connection->connection->query($queryApply);
+			
+							$idApplyCode = $this->connection->connection->insert_id;
+							$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student')";
+							$valInsertRecord = $this->connection->connection->query($queryRecord);
+						}
+					}
+				}
+			
+				$this->state_expulsion($student, $idPeriod, $date);
 
 				return (($valInsertApply && $valInsertRecord) ? 1 : 0);
             }
+		}
+
+		function state_expulsion($student, $idPeriod, $date){
+			$endDate = strtotime("+ ".$this->info_gnrl->days_expulsion." days", strtotime($date));
+			$endDate = date("Y-m-d", $endDate);
+
+			$query = "SELECT * FROM record r INNER JOIN applied_code ap ON ap.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ap.idCode WHERE c.type = 'MG' AND ap.idPeriod = $idPeriod AND r.idStudent = '".$student."'";
+			$result = $this->connection->connection->query($query);
+			
+			if($result->num_rows > 0){
+				$query_suspended = "INSERT INTO suspended(idStudent, StartDate, EndDate) VALUES('$student', '$date', '$endDate')";
+				$this->connection->connection->query($query_suspended);
+				
+				$query_state = "UPDATE student SET stateAcademic = '".$this->info_gnrl->expulsion_state."' WHERE idStudent = '$student'";
+				$this->connection->connection->query($query_state);
+			}
+		}
+
+		function checkType($code){
+			$query = "SELECT * FROM code WHERE idCode = $code";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+			return ($r = ($fila['type'] == 'MG') ? 0 : 1);
+		}
+
+		function AccumulationCodes($idStudent, $idPeriod){
+			$z = 0;
+			$a_codes = array();
+			for($i = 0; $i < count($this->gnrl_code->c_reference); $i++){
+				$query = "SELECT COUNT(r.idRecord) AS n_code FROM record r INNER JOIN applied_code ap ON ap.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ap.idCode WHERE c.type ='".$this->gnrl_code->c_reference[$i]."' AND  ap.idPeriod = $idPeriod AND r.idStudent = '".$idStudent."' ";
+				$result = $this->connection->connection->query($query);
+				$fila = $result->fetch_assoc();
+
+				if($fila['n_code'] == $this->gnrl_code->c_code[$i]){
+					$code = $this->gnrl_code->c_result[$i];
+					$a_codes[$z] = $code;
+					$z++;
+				}
+			}
+			return ($z = ($z > 0) ? $a_codes : false);
+		}
+
+		function v_gnrlCode(){
+			$query =  "SELECT * FROM gnrl_code";
+			$result = $this->connection->connection->query($query);
+			$form = "<div class='row'><table class='centered col s10 offset-s1 responsive-table'>
+				<thead>
+					<tr>
+					<th>Código de Referencia</th>
+					<th>N° de Códigos</th>
+					<th>Código Resultante</th>
+					<th>Código Resultante</th>
+					</tr>
+				</thead>
+				<tbody>
+			";
+			$i = 0;
+
+			while($fila = $result->fetch_assoc()){
+				$form .= "
+					<tr>
+						<td>".$this->getInfoType($fila['code_reference'])."</td>
+						<td>".$fila['cant_code']."</td>
+						<td>
+							<div class='input-field s12'> 
+								<select name='selectCode".$i."' id='selectCode".$i."' gnrl_id='".$fila['id_GnrlCode']."'>
+									".$this->getCodesGnrl($fila['type_result'], $fila['code_result'])."
+								</select>
+							</div>
+						</td>
+						<td>".$this->getInfoType($fila['type_result'])."</td>						
+					</tr>
+				";
+				$i++;
+			}
+
+			$form .= "</tbody></table></div>
+				<div class='row'>
+					<div class='col l2 m2 s4 offset-l5 offset-m5 offset-s4 btn waves-effect waves-light black darken-2 btnSave'>Guardar
+						<i class='material-icons right'>save</i>
+					</div>
+				</div>
+			";
+			
+			return $form;
+		}
+
+		function getInfoType($type){
+			$query = "SELECT * FROM code_type WHERE idType  = '$type'";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+			return ($fila['type']);
+		}
+
+		function getCodesGnrl($type, $idCodeResult){
+			$query = "SELECT * FROM code WHERE type = '$type' ORDER BY idCode";
+			$result = $this->connection->connection->query($query);
+			$options = "";
+			$valid = false;
+			$i = 0;
+			while($fila = $result->fetch_assoc()){
+				$i++;
+				if($fila['idCode'] == $idCodeResult){
+					$selected = 'selected';
+					$valid = true;
+				}else{
+					$selected = '';
+				}
+				$options .= "<option value='".$fila['idCode']."' $selected>".$i."° - ".$fila['description']."</option>";
+			}
+			if($valid){
+				$option = "<option value='' disabled>Elegir Código</option> $options";
+			}else{
+				$option = "<option value='' selected disabled>Elegir Código</option> $options";
+			}
+			return $option;
+		}
+
+		function UpdateGnrl($id, $value){
+			$query = "UPDATE gnrl_code SET code_result = '$value' WHERE id_GnrlCode = $id";
+			return ($this->connection->connection->query($query));
 		}
 	}
 ?>

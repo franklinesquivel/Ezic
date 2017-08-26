@@ -86,8 +86,8 @@
                             student: g_id
                         }
                     }).done(function(r){
-                        if (r=="0") {
-                            $('main').html("<div class='row search_error col s8 offset-s2'><div class='alert_ red-text text-darken-4'>Usuario seleccionado aún no cuenta con un horario</div></div>");
+                        if (r==0) {
+                            $('main').html("<div class='row search_error'><div class='col s8 offset-s2 alert_ red-text text-darken-4'>Usuario seleccionado aún no cuenta con un horario</div></div>");
                         }else{
                             $('main').html(r);
                             $('select').material_select();

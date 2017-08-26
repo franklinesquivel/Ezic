@@ -52,11 +52,11 @@
 		}
 
 		function register_subject($idSubject, $sections){
-			for ($i=0; $i < count($sections) ; $i++) { 
-				$query = "INSERT INTO register_subject(idSubject, idSection) VALUES($idSubject, $sections[$i])";
-				$this->connection->connection->query($query);
-			}
-			return true;
+			//for ($i=0; $i < count($sections) ; $i++) { 
+				$query = "INSERT INTO register_subject(idSubject, idSection) VALUES($idSubject, $sections)";
+				return($this->connection->connection->query($query));
+			//}
+			//return true;
 		}
 
 		function verifySubject($name, $teacher, $idLevel){
@@ -74,41 +74,82 @@
 
 		function getForDelete(){
 			//Se obtienen las materias que si existen en las tablas
-			$query = "SELECT idSubject FROM subject WHERE idSubject NOT IN ( SELECT DISTINCT idSubject FROM evaluation_profile) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM averages)) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM schedule_register)) UNION (SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM code))";
-			$result = $this->connection->connection->query($query);
-			$i = 0;
+			$query_1 = "SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM evaluation_profile)";  
+			$query_2 = "SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM averages)";
+			$query_3 = "SELECT idSubject FROM subject WHERE idSubject NOT IN (SELECT DISTINCT idSubject FROM schedule_register)";
+			$result_1 = $this->connection->connection->query($query_1);
+			$result_2 = $this->connection->connection->query($query_2);
+			$result_3 = $this->connection->connection->query($query_3);
 			$subject = array();
+			$subject_1 = array();
+			$subject_2 = array();
+			$subject_3 = array();
 
-			if ($result->num_rows > 0) {
-				while ($fila = $result->fetch_assoc()) {
-					$subject[$i] = $fila['idSubject'];
+			$i = 0;
+			while ($fila_1 = $result_1->fetch_assoc()) {			
+					$subject_1[$i] = $fila_1['idSubject'];
 					$i++;
-				}
-			}else{
-				$subject[0] = 0;
 			}
-			
+			$i = 0;
+			while ($fila_2 = $result_2->fetch_assoc()) {
+				$subject_2[$i] = $fila_2['idSubject'];
+				$i++;			
+			}	
+			$i = 0;
+			while($fila_3 = $result_3->fetch_assoc()){
+				$subject_3[$i] = $fila_3['idSubject'];
+				$i++;
+			}
+
+			$i = 0;
+			for($j = 0; $j < count($subject_1);  $j++){
+				for($x = 0; $x < count($subject_2); $x++){
+
+					for($z = 0; $z < count($subject_3); $z++){
+						if($subject_2[$x] == $subject_3[$z]){
+							if(count($subject) > 0){
+								for($y = 0; $y < count($subject); $y++){
+									if($subject_3[$z] != $subject[$y]){
+										$subject[$i] = $subject_3[$z];
+										$i++;
+									}	
+								}
+							}else{
+								$subject[$i] = $subject_3[$z];
+								$i++;
+							}
+							
+						}
+					}
+					//if(count($subject) > 0){
+						if($subject_2[$x] == $subject_1[$j]){
+							for($y = 0; $y < count($subject); $y++){
+								if($subject_2[$x] != $subject[$y]){
+									$subject[$i] = $subject_2[$x];
+									$i++;
+								}	
+							}
+						}
+					// }else{
+					// 	$subject[$i] = $subject_2[$x];
+					// 	$i++;
+					// }
+				}		
+				// for($y = 0; $y < count($subject); $y++){
+				// 	if($subject_1[$j] != $subject[$y]){
+				// 		$subject[$i] = $subject_1[$j];
+				// 		$i++;
+				// 	}	
+				// }
+			}
+
 			//Se obtienen las materias que no cuentan con regsitros, solo en las tablas subject y register_subject
 			$i = 0;
 			$info = array();
 
-			if ($subject[0] == 0) {
-				$query = "SELECT subject.idSubject, subject.nameSubject, subject.acronym, subject.idTeacher, level.level FROM subject INNER JOIN register_subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN level ON level.idLevel = section.idLevel GROUP BY subject.idSubject";
-				$result = $this->connection->connection->query($query);
-
-				while ($fila = $result->fetch_assoc()) {
-					$info[$i] = [
-						"id"=>$fila['idSubject'],
-						"name"=>$fila['nameSubject'],
-						"acronym"=>$fila['acronym'],
-						"teacher"=>$fila['idTeacher'],
-						"level"=>$fila['level']
-					];
-					$i++;
-				}
-			}else{
+			if (count($subject) > 0){
 				for ($x=0; $x < count($subject) ; $x++) { 
-					$query = "SELECT subject.idSubject, subject.nameSubject, subject.acronym, subject.idTeacher, level.level FROM subject INNER JOIN register_subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = $subject[$x]";
+					$query = "SELECT subject.idSubject, subject.nameSubject, subject.acronym, subject.idTeacher, level.level FROM subject INNER JOIN register_subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = '".$subject[$x]."' GROUP BY subject.idSubject LIMIT 1";
 					$result = $this->connection->connection->query($query);
 
 					while ($fila = $result->fetch_assoc()) {
@@ -123,7 +164,6 @@
 					}
 				}
 			}
-			
 			return (json_encode($info));			
 		}
 

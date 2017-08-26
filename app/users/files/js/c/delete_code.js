@@ -27,9 +27,12 @@
 				v_deleteCode: 'Si'
 			}
 		}).done(function(r){
+			$("main .container.table").empty();
 			if (r != 0) {
 				$("main .container.form").html(r);
 				$('select').material_select();
+			}else{
+				$("main .container.table").html("<div class='col l8 m8 s12 offset-l2 offset-m2'><div class='alert_ red-text text-darken-4'>No se han econtrados códigos para eliminar</div></div>");
 			}
 			loader.out();
 			$("main").fadeIn("slow");
@@ -47,7 +50,7 @@
 				category: $(this).val()
 			}
 		}).done(function(r){
-			if (r != "0") {
+			if (r != 0) {
 				$("main .container.table").html(r);
 				remove_li_btnfloating();
 				add_li_btnfloating();

@@ -106,10 +106,10 @@
             data: {getListAssistance: 1, hour: hour, date: date},
             success: function(r){
 
-                if (r == "0") {
+                if (r == 0) {
                     btn_floatingOptions();
                     $('main .container .list').html("<div class='alert_ red-text text-darken-4'>Según su horario no hay secciones por evaluar</div>");    
-                }else if(r == "n"){
+                }else if(r == -1){
                     btn_floatingOptions();
                     $('main .container .list').html("<div class='alert_ red-text text-darken-4'>No hay un horario asignado a este usuario</div>");
                 }else{
@@ -131,6 +131,7 @@
     };
 
     $(document).on("click", ".btnSave", function(){
+        let array = ($("table").attr("register")).split(", ");
         let object = validate_radio();
         if (object != false) {
             $.ajax({

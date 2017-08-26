@@ -43,7 +43,9 @@
         }
 
         function getSubjects(){
-            ///session_start();
+            if(!isset($_SESSION)){
+                session_start();
+            }
             $query = "SELECT level.level, subject.nameSubject, subject.idSubject FROM subject INNER JOIN register_subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN level ON section.idLevel = level.idLevel WHERE subject.idTeacher = '". $_SESSION['id'] ."' GROUP BY subject.idSubject";
             $result = $this->connection->connection->query($query);
             $i = 0;

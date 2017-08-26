@@ -9,6 +9,7 @@
     require_once("../../../../General_Files/php/classes/Email_Class.php");
     require_once("../../../../General_Files/php/classes/Period.php");
     require_once("../../../../General_Files/php/classes/Permission_Grade.php");
+    require_once("../../../../General_Files/php/classes/Section_Class.php");
 
     $schedule = new Schedule();
     $assistance = new Assistance();
@@ -20,9 +21,12 @@
     $email = new Email();
     $period = new Period();
     $permission_grade = new Permission_Grade();
+    $section = new Section();
 
     if (isset($_REQUEST['loadSchedule'])) {
-        session_start();
+        if(!isset($_REQUEST)){
+            session_start();
+        }
         echo $schedule->loadSchedule('T', $_SESSION['id']);
     }
 
@@ -55,7 +59,9 @@
     }
 
     if (isset($_REQUEST['applyCode'])) {
-        session_start();
+        if(!isset($_SESSION)){
+            session_start();
+        }
         echo $code->applyCode($_REQUEST['idCode'], $_REQUEST['idStudent'], $_SESSION['id'], $_SESSION['type']);
     }
 
@@ -111,7 +117,7 @@
     }
 
     if (isset($_REQUEST['getStudents_Permission'])) {
-        echo ($student->v_permission($_REQUEST['subject']));
+        echo ($student->v_permission($_REQUEST['subject'], $_REQUEST['section']));
     }
 
     if(isset($_REQUEST['getFormEmail'])){ /* Solicita el formulario para enviar el correo */
@@ -119,11 +125,80 @@
     }
 
     if(isset($_REQUEST['getProfiles_Permission'])){
-        echo ($profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
+        echo ($profile->getProfilesInGrades($_REQUEST['subject'], $_REQUEST['period']));
     }
 
-    if(isset($_REQUEST['register_permission'])){
-        $students = $email->setStudents(json_decode($_REQUEST['students']));
-        echo($email->SendEmail_FromTeacher($students, $_REQUEST['justification'], json_decode($period->selectPeriod($_REQUEST['period'])), $_REQUEST['subject'], $_REQUEST['profiles']));
+    if(isset($_REQUEST['register_permission'])){ /* Ingresa Todo del envío del email */
+        $object = json_decode($_REQUEST['students']);
+        $z = 0;
+
+        for($i = 0; $i < count($object); $i++){/* Se verifica la existencia de los permisos según los datos */
+            if(($permission_grade->verifyPermission($object[$i]->id, $_REQUEST['profiles'])) == false){$z++;}
+        }
+
+        if($z > 0){ /* Si existe algún registro similar*/
+            echo "0";
+        }else{
+            $students = $email->listStudents($object);
+            $profiles = $email->listProfiles($_REQUEST['profiles']);
+            if($permission_grade->InsertPermission($_REQUEST['students'], $_REQUEST['justification'], $_REQUEST['profiles'])){
+                echo($email->SendEmail_FromTeacher($students, $_REQUEST['justification'], json_decode($period->selectPeriod($_REQUEST['period'])), $_REQUEST['subject'],  $profiles));
+            }
+        }
+    }
+
+    if(isset($_REQUEST['getSection'])){/* Función que carga las secciones en request_permission.php */
+        echo($section->getAllForSubject($_REQUEST['subject']));
+    }
+
+    if(isset($_REQUEST['modify_grade'])){/* Se obtiene la vista para modificar notas */
+        echo($grade->v_modifyGrade());
+    }
+
+    if(isset($_REQUEST['getInfoPermission'])){/* Se obtienen los perfiles a modificar */
+        echo($grade->getGradesModification($_REQUEST['idPermission']));
+    }
+
+    if(isset($_REQUEST['listStudentModification'])){/* Lista de estudiantes a modificar */
+        echo($grade->Students_Modification($_REQUEST['idPermission'], $_REQUEST['idProfile']));
+    }
+
+    if(isset($_REQUEST['updateGrades'])){ /* Ingresa las nuevas notas (Modificadas) */
+        $z = 0;
+        $object = json_decode($_REQUEST['json_students']);
+        for($i = 0; $i < count($object); $i++){
+            if(($grade->UpdateGrade($_REQUEST['idProfile'], $_REQUEST['idPermission'], $object[$i]->idStudent, $object[$i]->Grade)) == 1){
+                $z++;
+            }
+        }
+        echo ($z = ($z > 0) ? 1 : 0);
+    }
+
+    if (isset($_POST['teacher_getStudents'])) {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+        echo $section->getStudensSection($_SESSION['id']);
+    }
+
+    if (isset($_POST['listSection'])) {
+        echo $section->showSection($_POST['idSection']);
+    }
+
+    if (isset($_POST['studentGrades'])) {
+        echo json_encode($grade->getGrades($_POST['idStudent']));
+    }
+
+    if (isset($_POST['showUser'])) {
+        echo $admin->showUser($admin->get_user_data($_POST['idStudent']));
+    }
+
+    if (isset($_POST['record'])) {
+        echo $admin->conductRecord($_POST['idStudent']);
+    }
+
+    if (isset($_POST['getMandated'])) {
+        echo $admin->getMandated($_POST['id']);
     }
 ?>

@@ -57,7 +57,7 @@
         <div class="modal-content">
             <div class="container section">
                 <p class="">
-                    <span id="lvlHelper"></span>:
+                    <span id="lvlHelper"></span>,
                     <i>"<span id="identifierHelper"></span>"</i><br>
                     <span id="sctnCant"></span><br>
                     <span id="sctnLimit"></span>

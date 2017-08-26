@@ -186,9 +186,14 @@
                                     <label for="txtSPass">Contraseña</label>
                                 </div>
                                 <div class="col s12 m12 l12">
-                                    <center>
-                                        <button class="student btnSend btn blue darken-2 waves-effect waves-light submit" id="submit-button"><i class="material-icons right">send</i> Enviar</button>
-                                    </center>
+                                    <div class="col s12 m4 l4 offset-m4 offset-l4">
+                                        <a id="recover_pass1">Recuperar Contraseña</a>
+                                    </div><br><br>
+                                    <div>
+                                        <center>
+                                            <button class="student btnSend btn blue darken-2 waves-effect waves-light submit" id="submit-button"><i class="material-icons right">send</i> Enviar</button>
+                                        </center>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -205,9 +210,14 @@
                                     <label for="txtWorkerPass">Contraseña</label>
                                 </div>
                                 <div class="col s12 m12 l12">
-                                    <center>
-                                        <button class="worker btnSend btn blue darken-2 waves-effect waves-light submit" id="submit-button"><i class="material-icons right">send</i> Enviar</button>
-                                    </center>
+                                    <div class="col s12 m4 l4 offset-m4 offset-l4">
+                                        <a id="recover_pass2">Recuperar Contraseña</a>
+                                    </div><br><br>
+                                    <div>
+                                        <center>
+                                            <button class="worker btnSend btn blue darken-2 waves-effect waves-light submit" id="submit-button"><i class="material-icons right">send</i> Enviar</button>
+                                        </center>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -233,6 +243,37 @@
                     <div class='circle'></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="modal_pass" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                <div class="warning grey lighten-2">
+                    <i class="material-icons">vpn_key</i>
+                    <p><b>Nota: </b>Debes ser un usuario activo para este servicio (No de Baja).</p>
+                </div>
+            </div>
+           <div class="row">
+                <div id="form_pass1" class="col s12">
+                    <form id="frm_recover">
+                        <div class="row">
+                            <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
+                                <input id="txtCodeEmail" name="txtCodeEmail" placeholder="AA0000 / D0000 / C0000" type="text">
+                                <label for="txtCodeEmail">Código</label>
+                            </div>
+                            <div class="col s12 m12 l12">
+                                <center>
+                                    <button class="btnSend btn blue darken-2 waves-effect waves-light submit" id="submit-button"><i class="material-icons right">send</i> Enviar</button>
+                                </center>  
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div> 
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cerrar</a>
         </div>
     </div>
 

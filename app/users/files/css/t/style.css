@@ -328,13 +328,114 @@ ul#slide-filter .section-select .select-dropdown{
     font-size: 14px;
 }
 
+/*-------------------------------------------------------------------------*/
+#tblTeacherSection td.student-action{                                      
+    transition: color .3s ease;
+    cursor: pointer;
+    color: #e0e0e0;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#tblTeacherSection td.student-action:hover{
+    color: #388E3C;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#tblTeacherSection thead th{
+    border: 1px solid #388E3C;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#tblTeacherSection thead th.tblHead{
+    padding: 10px;
+    font-size: 30px;
+    font-weight: 400;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#sectionInfo center{
+    margin-bottom: 5%;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#sectionInfo h4{
+    padding: 10px;
+    margin: 0;
+}/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+
+#sectionInfo .row{
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px;
+    display: flex;
+    align-items: center;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#sectionInfo .row:nth-child(4){
+    padding-bottom: 20px;
+    /*background: red;*/
+}
+
+#sectionInfo .row > div{
+    padding: 5px;
+}
+/*-------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+#sectionInfo .row > div:first-child{
+    font-weight: bold;
+    font-size: 22px;
+}
+
 @media only screen and (max-width: 768px){
+    /*-------------------------------------------------------------------------*/
+    /*-------------------------------------------------------------------------*/
+    #tblTeacherSection thead th.tblHead{
+        font-size: 20px;
+        height: 100%;
+        display: block;
+    }
+    /*-------------------------------------------------------------------------*/
+    /*-------------------------------------------------------------------------*/
+    #sectionInfo center{
+        margin-bottom: 10%;
+    }
+
     .alert_{
         background: #e74c3c;
         color: #B71C1C;
         font-size: 1.2em;
         padding: 10px;
         text-align: center;
+    }
+
+    .collection.with-header .collection-header{
+        border: none;
+        padding-left: 0px;
+    }
+    .collection.with-header .collection-item.collection-subject, .collection.with-header .collection-item.collection-permission{padding: 0px;} 
+    .collection.with-header .collection-item.collection.subject, .collection.with-header .collection-item.collection.subject{margin-left: 0px;} 
+
+    .collection-item.collection-subject, .collection-item.collection-permission{
+        display: block;
+        margin-bottom: 10px;
+        box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.55);
+    }
+
+    .collection-item.collection-subject .name-subject, .collection-item.collection-permission .name-subject{
+        border: none;
+        background: #388e3c;
+        color: white;
+        width: 100%;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .collection-item.collection-permission .info-subject, .collection-item.collection-subject .info-subject{
+        width: 100%;
+        padding: 10px;
+        background: #FFFFFF;
     }
 
     .collection-item.collection-subject .info-subject .r-divider, .collection-item.collection-permission .info-subject .r-divider{
@@ -349,6 +450,11 @@ ul#slide-filter .section-select .select-dropdown{
         margin-bottom: 5px;
         display: inline-block;
     }
+
+    .collection-item.collection-subject .info-subject .r-divider .btn, .collection-item.collection-permission .info-subject .r-divider .btn{
+        width: 40%;
+        margin-left: 30%;
+    }
     
     .collection-item.collection-subject .info-subject .r-divider div.select-sections{
         display: flex; 
@@ -356,10 +462,6 @@ ul#slide-filter .section-select .select-dropdown{
         position: relative;
     }
 
-    .collection-item.collection-subject .name-subject{
-        display: flex;
-        align-items: center;
-    }
     .student-list{
         width: 99%;
         margin-left: 0.5%;
@@ -391,8 +493,3 @@ ul#slide-filter .section-select .select-dropdown{
         margin: 0px auto 20px auto;
     }
 }
-
-/* ul#slide-filters{
-    width: 100%;
-    background: green;
-} */

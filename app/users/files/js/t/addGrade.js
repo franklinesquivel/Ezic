@@ -74,8 +74,9 @@
 	});
 
 	$(document).on("click", "#btnSaveGrades", function(){
+		let loader  = new Loader();
 		if(validate_inputs()){
-			//Materialize.toast("Yei",3000);
+			loader.in();
 			let object = SaveGrade();
 			$.ajax({
 				type:'POST',
@@ -92,6 +93,7 @@
 					load_page();
 				}else{
 					Materialize.toast("MAL", 3000);
+					loder.out();
 				}
 			});
 		}else{
@@ -118,8 +120,8 @@
 	const SaveGrade = () =>{
 		for (var i = 0; i < $("tbody input[type=number]").length; i++) {
 			json_grades[i] = {
-				"idStudent": $("tbody input[type=number]").attr("id"),
-				"Grade": $("tbody input[type=number]").eq(i).val()
+				"idStudent": $("tbody input[type=number]").eq(i).attr("id"),
+				"Grade": parseFloat($("tbody input[type=number]").eq(i).val())
 			};
 		}
 		return JSON.stringify(json_grades);

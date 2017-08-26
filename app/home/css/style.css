@@ -78,8 +78,43 @@ body{
     height: 100%;
 }
 
-@media only screen and (max-width: 768px){
+#recover_pass1:hover, #recover_pass2:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
 
+#modal_pass{background: white;}
+
+#modal_pass .modal-content .warning{
+    width: 80%;
+    display: flex;
+    padding: 10px;
+    margin: auto;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+#modal_pass .modal-content .warning i{
+    width: 10%;
+    margin-left: 3.6%;
+    font-size: 36px;
+    color: grey;
+}
+
+#modal_pass .modal-content .warning p{
+    width: 85%;
+    color: grey;
+    text-align: justify;
+}
+
+@media only screen and (max-width: 768px){
+    #modal_pass .modal-content .warning{
+        width: 100%;
+        display: block;
+    }
+    #modal_pass .modal-content .warning i{display: none;}
+    #modal_pass .modal-content .warning p{width: 100%;}
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-height: 640px) and (orientation : landscape){

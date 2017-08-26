@@ -29,8 +29,11 @@
 		function nth_Period(){//Obtiene el campo 'nthperiod' de la tabla - el número
 			$query = "SELECT COUNT(*) FROM period";
 			$result = $this->connection->connection->query($query);
-			$row = $result->fetch_assoc();
-			return ($row['COUNT(*)']);
+			if($result->num_rows > 0){
+				$row = $result->fetch_assoc();
+				return ($row['COUNT(*)']);
+			}
+			return 0;
 		}
 
 		function getPeriods(){
