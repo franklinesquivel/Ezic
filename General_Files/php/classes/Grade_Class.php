@@ -217,13 +217,14 @@
 			return $form;
 		}
 
-		function InsertGrades($student, $grade, $profile, $subject){
+		function InsertGrades($student, $grade, $profile, $subject, $period){
+			if($period == 0){$period = $this->getPeriod();}
 
 			$query = "INSERT INTO grade(grade, idProfile, idStudent) VALUES(ROUND('$grade',2), '$profile', '$student')";
 			
 			if (($this->connection->connection->query($query)) &&
-				($this->InsertAverages($student, $this->getPeriod(), $subject, $grade, $profile)) && 
-				($this->InsertACC($student, $subject, $this->getPeriod())) && 
+				($this->InsertAverages($student, $period, $subject, $grade, $profile)) && 
+				($this->InsertACC($student, $subject, $period)) && 
 				($this->addACCStudent($student))) {
 				return true;
 			}else{return false;}
@@ -242,7 +243,7 @@
 				$fila = $result->fetch_assoc();
 				$average = $fila['average'] + $grade;
 				$query = "UPDATE averages SET average = '$average' WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]." ";
-				if($this->connection->connection->query($query)){if($this->checkApproved("averages", $student, $fila['average'], $subject, $period[0][0])){return true;}}
+				if($this->connection->connection->query($query)){if($this->checkApproved("averages", $student, $average, $subject, $period[0][0])){return true;}}
 			}else{
 				$average = $grade;
 				$approved = ($average >= $this->info_gnrl->approved_grade) ? 1 : 0;
@@ -784,29 +785,49 @@
 		}
 
 		function UpdateGrade($idProfile, $idPermission, $idStudent, $grade){
+			$query = "SELECT * FROM grade WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
+			$result = $this->connection->connection->query($query);
 			$grade_previus = $this->getInfoGrade($idProfile, $idStudent);
-			$query = "UPDATE grade SET grade = $grade WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
 
-			if($this->connection->connection->query($query)){
-				if($this->UpdateAverages($grade_previus[0][2], $grade_previus[0][3], $grade_previus[0][0], $idStudent, ($grade_previus[0][1] * $grade))){
-					if($this->UpdateACC($idStudent, $grade_previus[0][2], $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent))){
-						if($this->changeStatePermission($idProfile, $idPermission)){
-							if($this->UpdateACCStudent($idStudent)){return true;}
+			if($result->num_rows > 0){
+				$query = "UPDATE grade SET grade = ROUND($grade, 2) WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
+	
+				if($this->connection->connection->query($query)){
+					if($this->UpdateAverages($grade_previus[0][2], $grade_previus[0][3], $grade_previus[0][0], $idStudent, ($grade_previus[0][1] * $grade))){
+						if($this->UpdateACC($idStudent, $grade_previus[0][2], $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent))){
+							if($this->changeStatePermission($idProfile, $idPermission)){
+								if($this->UpdateACCStudent($idStudent)){return true;}
+							}
 						}
 					}
 				}
-			}
+			}else{
+				if($this->InsertGrades($idStudent, $grade, $idProfile, $grade_previus[0][2], $grade_previus)){
+					if($this->changeStatePermission($idProfile, $idPermission)){return true;}
+				}
+			}			
 			return false;
 		}
 
 		function getInfoGrade($idProfile, $idStudent){ /* Se obtiene el resultado anterios - previo a modificar*/
 			$query = "SELECT ((evp.percentage / 100) * grade.grade) AS multiplication, evp.percentage, subject.idSubject, period.idPeriod FROM grade INNER JOIN evaluation_profile evp ON evp.idProfile = grade.idProfile INNER JOIN subject ON subject.idSubject = evp.idSubject INNER JOIN period ON period.idPeriod = evp.idPeriod WHERE grade.idProfile = $idProfile AND grade.idStudent = '".$idStudent."'";
 			$result = $this->connection->connection->query($query);
-			$fila = $result->fetch_assoc();
-			$grade_previus[0][0] = $fila['multiplication'];
-			$grade_previus[0][1] = ($fila['percentage'] / 100);
-			$grade_previus[0][2] = $fila['idSubject'];
-			$grade_previus[0][3] = $fila['idPeriod'];
+			if($result->num_rows > 0){
+				$fila = $result->fetch_assoc();
+				$grade_previus[0][0] = $fila['multiplication'];
+				$grade_previus[0][1] = ($fila['percentage'] / 100);
+				$grade_previus[0][2] = $fila['idSubject'];
+				$grade_previus[0][3] = $fila['idPeriod'];
+			}else{
+				$query = "SELECT evp.percentage, subject.idSubject, period.idPeriod  FROM evaluation_profile evp INNER JOIN subject ON subject.idSubject = evp.idSubject INNER JOIN period ON period.idPeriod = evp.idPeriod WHERE evp.idProfile = $idProfile";
+				$result = $this->connection->connection->query($query);
+				$fila = $result->fetch_assoc();
+				$grade_previus[0][0] = $fila['idPeriod'];
+				$grade_previus[0][1] = "";
+				$grade_previus[0][2] = $fila['idSubject'];
+				$grade_previus[0][3] = ($fila['percentage']);
+			}
+			
 			return ($grade_previus);
 		}
 		
