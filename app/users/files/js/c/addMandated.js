@@ -241,6 +241,14 @@
     	return false;
     })
 
+    $(document).on('click', '.btnDeleteForm', function(){
+        if ($(`.frmMandatedContainer`).length > 1) {
+            $(`.frmMandatedContainer._${$(this).attr('frmIndex')}`).remove();
+        }else{
+            Materialize.toast('Debe registrar por lo menos un responsable!', 2000);
+        }
+    })
+
     const search_section = (lvl = '', spcty = '', sctn = '') => {
         loader.in()
     	$.ajax({

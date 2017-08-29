@@ -341,7 +341,7 @@
 					$aux .= "
 	<div class='col s12 frmMandatedContainer _$z'>
 		<div class='mandated-header " . ($z == 1 ? "active" : "") . ($_SESSION['type'] == 'C' ? ' black' : ' green darken-2') . "'>
-			<span class=''><div frmIndex='$z' class='btn btn-flat white-text waves-effect btnDeleteForm'><i class='material-icons'>close</i></div> " . $row['lastName'] . ", " . $row['name'] . "</span>
+			<span class=''><div frmIndex='$z' class='btn btn-flat white-text " . ($_SESSION['type'] == 'C' ? "waves-light" : "") . " waves-effect btnDeleteForm'><i class='material-icons'>close</i></div> " . $row['lastName'] . ", " . $row['name'] . "</span>
 		</div>
 		<div class='mandated-body " . $_SESSION['type'] . "'>
 			<form class='frmMandated _" . $z . "' autocomplete='off'>
