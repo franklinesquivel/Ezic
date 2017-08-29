@@ -82,7 +82,7 @@
         $grades = json_decode($_REQUEST['grades']);
         $z = 0;
         for ($i=0; $i < count($grades) ; $i++) {
-            if ($grade->InsertGrades($grades[$i]->idStudent, $grades[$i]->Grade, $_REQUEST['profile'], $_REQUEST['subject']  )) {
+            if ($grade->InsertGrades($grades[$i]->idStudent, $grades[$i]->Grade, $_REQUEST['profile'], $_REQUEST['subject'],  0)) {
                $z++;
             }
         }
@@ -125,7 +125,7 @@
     }
 
     if(isset($_REQUEST['getProfiles_Permission'])){
-        echo ($profile->getProfilesInGrades($_REQUEST['subject'], $_REQUEST['period']));
+        echo ($profile->getProfiles($_REQUEST['subject'], $_REQUEST['period']));
     }
 
     if(isset($_REQUEST['register_permission'])){ /* Ingresa Todo del envío del email */

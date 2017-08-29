@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `ezic_c`
+-- Base de datos: `ezic`
 --
 
 -- --------------------------------------------------------
@@ -544,10 +544,10 @@ CREATE TABLE `student_acc` (
 
 -- --------------------------------------------------------
 
+
 --
 -- Estructura de tabla para la tabla `student_average`
 --
-
 CREATE TABLE `student_average` (
   `idAverage` int(11) NOT NULL,
   `idStudent` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
@@ -898,7 +898,7 @@ ALTER TABLE `applied_code`
 -- AUTO_INCREMENT de la tabla `assistance`
 --
 ALTER TABLE `assistance`
-  MODIFY `idAssistance` int(15) NOT NULL AUTO_INCREMENT;
+  MODIFY `idAssistance` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `averages`
 --
@@ -933,7 +933,7 @@ ALTER TABLE `grade`
 -- AUTO_INCREMENT de la tabla `justification`
 --
 ALTER TABLE `justification`
-  MODIFY `idJustification` int(15) NOT NULL AUTO_INCREMENT;
+  MODIFY `idJustification` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `justify_abscense`
 --
@@ -954,6 +954,7 @@ ALTER TABLE `level`
 --
 ALTER TABLE `mandated`
   MODIFY `idMandated` int(15) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `period`
 --
