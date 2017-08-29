@@ -18,7 +18,24 @@
             }
         }
 
-        $('#getRowsData').modal();
+        $('#getRowsData').modal({
+            ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+                $("[name=file]").eq(0).prop('checked', 1);
+                $("#cmbPeriod").children().eq(0).attr("selected");
+                $("input#txtRows").val("");
+                $('input#txtRows').removeAttr('disabled');
+                $('#cmbPeriod').attr('disabled', 1);
+                $("select").material_select();
+            },
+            complete: function() {
+                $("[name=file]").eq(0).prop('checked', 1);
+                $("#cmbPeriod").children().eq(0).attr("selected");
+                $("input#txtRows").val("");
+                $('input#txtRows').removeAttr('disabled');
+                $('#cmbPeriod').attr('disabled', 1);
+                $("select").material_select();
+            }
+        });
         loader = new Loader();
         loader.in();
         $.ajax({

@@ -64,7 +64,6 @@
 
 			$this->_print = $this->administration->printRecord($id);
 
-			// $this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
 			$this->mpdf = new mPDF();
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Records.');
@@ -83,7 +82,7 @@
 				</div>
 				<div class='info'>
 					<p class='date'>$date</p>
-		            <h4 class='title'>$title</h4><br>
+		            <h4 class='title'>$title</h4>
 				</div>
 			</div>
             ";
@@ -105,7 +104,7 @@
 			$this->openPDF("Perfil de usuario", $id, $f, $dir);
 		}
 
-		function getGrades($id, $period, $f = 1, $dir = 0)
+		function getGrades($id, $period)
 		{
 			$this->stylesheet = file_get_contents('../../mpdf/resources/grades.css');
 			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
@@ -118,7 +117,8 @@
 			$this->mpdf->WriteHTML($auxCSS, 1);
 			$this->mpdf->setTitle('Ezic: Notas.');
 			$this->mpdf->setAuthor('Ezic ©');
-			$this->openPDF("Notas de estudiante", "Notas_" . $id . "_Periodo_$period", $f, $dir);
+			$this->mpdf->SetFooter('<span style="color: #ccc; font-size: 13px;">ACC: Nota Acumulada, NPI: Nota por Ingresar, NPP: Nota por Procesar</span>');
+			$this->openPDF("Notas de estudiante", "Notas_" . $id . "_Periodo_$period");
 		}
 
 		function getSection($id, $c)
@@ -136,40 +136,72 @@
 			$this->openPDF("Listado de sección", "Lista_" . $row['level'] . $row['sectionIdentifier']);
 		}
 
-		function multiGrades($id, $period)
+		function multiGrades($id, $period = "acc")
 		{
-			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id;";
+			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel INNER JOIN student_" . ($period != 'acc' ? "average" : "acc") . " sg ON sg.idStudent = st.idStudent WHERE sn.idSection = $id ORDER BY sg." . ($period != 'acc' ? 'average' : 'acc') . " DESC;";
+
 			$res = $this->connection->connection->query($query);
 			$resAux = $this->connection->connection->query($query);
 
 			$rowAux = $resAux->fetch_assoc();
-			$dirName = "Notas_" . $rowAux['level'] . $rowAux['sectionIdentifier'] . "_Periodo-" . $period;
 
-			mkdir("../../../app/users/files/tmp/$dirName", 0700);
-
+			$this->stylesheet = file_get_contents('../../mpdf/resources/grades.css');
+			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
+			$this->_print = "";
+			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
+			$this->mpdf->WriteHTML($this->stylesheet, 1);
+			$rowHelper = $res->num_rows;
+			$count = 1;
 			while ($row = $res->fetch_assoc()) {
-				$this->getGrades($row['idStudent'], $period, 0, $dirName);
+				$this->mpdf->WriteHTML($auxCSS, 1);
+				$this->genHeader("Notas de estudiante");
+				if ($period == "acc") {
+					$this->mpdf->WriteHTML($this->grade->printAcc($row['idStudent'], 1, $count++), 2);
+				}else{
+					$this->mpdf->WriteHTML($this->grade->printGrades($row['idStudent'], $period, 1, $count++), 2);
+				}
+				$this->mpdf->SetFooter('<span style="color: #ccc; font-size: 13px;">ACC: Nota Acumulada, NPI: Nota por Ingresar, NPP: Nota por Procesar</span>');
+				if (--$rowHelper != 0) {
+					$this->mpdf->addPage();
+				}
 			}
 
-			$this->createRar($dirName);
+			$this->mpdf->setTitle("Ezic: Notas.");
+			$this->mpdf->setAuthor('Ezic ©');
+
+			header("Content-Disposition: attachment; filename='Notas_" . $rowAux['level'] . $rowAux['sectionIdentifier'] . "_Periodo_$period.pdf'");
+			$this->mpdf->Output("Notas_" . $rowAux['level'] . $rowAux['sectionIdentifier'] . "_Periodo_$period.pdf", "D");
 		}
 
 		function multiRecords($id)
 		{
-			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id;";
+			$query = "SELECT * FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection";
 			$res = $this->connection->connection->query($query);
 			$resAux = $this->connection->connection->query($query);
 
 			$rowAux = $resAux->fetch_assoc();
 			$dirName = "Records_" . $rowAux['level'] . $rowAux['sectionIdentifier'];
 
-			mkdir("../../../app/users/files/tmp/$dirName", 0700);
-
+			$this->stylesheet = file_get_contents('../../mpdf/resources/record.css');
+			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
+			$this->_print = "";
+			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
+			$this->mpdf->WriteHTML($this->stylesheet, 1);
+			$rowHelper = $res->num_rows;
 			while ($row = $res->fetch_assoc()) {
-				$this->getRecord($row['idStudent'], 0, $dirName);
+				$this->mpdf->WriteHTML($auxCSS, 1);
+				$this->genHeader("Récord de estudiante");
+				$this->mpdf->WriteHTML($this->administration->printRecord($row['idStudent']), 2);
+				if (--$rowHelper != 0) {
+					$this->mpdf->addPage();
+				}
 			}
 
-			$this->createRar($dirName);
+			$this->mpdf->setTitle("Ezic: Récords.");
+			$this->mpdf->setAuthor('Ezic ©');
+
+			header('Content-Disposition: attachment; filename="' . $dirName . '.pdf"');
+			$this->mpdf->Output("$dirName.pdf", "D");
 		}
 
 		function multiUsers($id)
@@ -181,53 +213,37 @@
 			$rowAux = $resAux->fetch_assoc();
 			$dirName = "Estudiantes_" . $rowAux['level'] . $rowAux['sectionIdentifier'];
 
-			mkdir("../../../app/users/files/tmp/$dirName", 0700);
-
+			$this->stylesheet = file_get_contents('../../mpdf/resources/user.css');
+			$auxCSS = file_get_contents('../../mpdf/resources/colors.css');
+			$this->_print = "";
+			$this->mpdf = new mPDF('utf-8', 'A4', 0, '', 10, 10, 10, 0, 0, 0, 'P');
+			$this->mpdf->WriteHTML($this->stylesheet, 1);
+			$rowHelper = $res->num_rows;
 			while ($row = $res->fetch_assoc()) {
-				$this->getUser($row['idStudent'], 0, $dirName);
+				$this->mpdf->WriteHTML($auxCSS, 1);
+				$this->genHeader("Perfil de usuario");
+				$this->mpdf->WriteHTML($this->administration->printUser($this->administration->get_user_data($row['idStudent'])), 2);
+				if (--$rowHelper != 0) {
+					$this->mpdf->addPage();
+				}
 			}
 
-			$this->createRar($dirName);
+			$this->mpdf->setTitle("Ezic: Usuarios.");
+			$this->mpdf->setAuthor('Ezic ©');
+
+			header('Content-Disposition: attachment; filename="' . $dirName . '.pdf"');
+			$this->mpdf->Output("$dirName.pdf", "D");
 		}
 
 
-		function openPDF($title, $name, $f = 1, $dir = 0)
+		function openPDF($title, $name)
 		{
-			if ($f) {
-				header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
-			}
+			header('Content-Disposition: attachment; filename="' . $name . '.pdf"');
 			$this->mpdf->WriteHTML($this->stylesheet, 1);
 			$this->genHeader($title);
 			$this->mpdf->WriteHTML($this->_print, 2);
-			// $this->mpdf->Output($name.".pdf", "I");
-			$this->mpdf->Output( ($f ? '' : "../../../app/users/files/tmp/$dir/") . $name.".pdf", ($f ? "D" : "F"));
-		}
-
-		function createRar($name)
-		{
-			$zip = new ZipArchive();
-			$filename = "../../../app/users/files/tmp/$name.zip";
-			$tmp_file = tempnam("../../../app/users/files/tmp/$name.zip", "");
-
-			$zip->open($tmp_file, ZipArchive::CREATE);
-
-			foreach (glob("../../../app/users/files/tmp/$name/*.*") as $file) {
-				$zip->addFile($file, explode('/', $file)[count(explode('/', $file)) - 1]);
-			}
-
-		    $zip->close();
-
-		    header("Content-disposition: attachment; filename=$name.zip");
-		    header("Content-Type: application/zip");
-		    readfile($tmp_file);
-
-		    foreach (glob("../../../app/users/files/tmp/$name/*.*") as $file) {
-				unlink($file);
-			}
-		    rmdir("../../../app/users/files/tmp/$name");
-		    // header("Content-Transfer-Encoding: Binary");
-		    // header("Content-Length: ".filesize($tmp_file));
-		    // header("Content-Disposition: attachment; filename=\"".basename($tmp_file)."\"");
+			// $this->mpdf->Output($name.".pdf", 'I');
+			$this->mpdf->Output($name.".pdf", 'D');
 		}
 	}
 
@@ -246,7 +262,7 @@
 	}
 
 	if (isset($_POST['printGrades'])) {
-		$print->getGrades($_POST['id'], $_POST['period']);
+		$print->getGrades($_POST['id'], (isset($_POST['period']) ? $_POST['period'] : $_POST['idPeriod']));
 	}
 
 	if (isset($_POST['printSection'])) {

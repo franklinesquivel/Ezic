@@ -89,8 +89,11 @@
     </main>
     
     <div class="chart-cont-cont">
-        <div class="chart-container">
-            <canvas id="chart"></canvas>
+        <div class="chart-container users-cont innerCont">
+            <canvas id="users"></canvas>
+        </div>
+        <div class="chart-container sections-cont innerCont">
+            <canvas id="sections"></canvas>
         </div>
     </div>
 

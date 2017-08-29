@@ -182,7 +182,7 @@
 		        for ($i=0; $i < count($code_c); $i++) { //Recorrer categorías
 		        	$record_element .= ($i == 0 ? "" : "<br><br>") ."
 						<h5 class='table-title center "  . $code_c[$i]['color'] .  "'>"  . $code_c[$i]['category'] .  "</h5>
-						<table class='centered bordered recordTables'>
+						<table class='centered bordered recordTables '>
 							<thead>
 								<tr class='" . $code_c[$i]['color'] . "'>
 									<th>N°</th>
@@ -412,9 +412,6 @@
 	            <div class='record'>
 	            	<table class='infoTable'>
 						<tr>
-							<td class='photoCell'>
-								<img class='profile' src='../../../app/users/files/profile_photos/" . $user_info['photo'] . "'>
-							</td>
 							<td class='data' style='text-align: left;'>
 								<p><span style='font-weight: bold;'>Nombre: </span>" . $user_info['name'] . " ". $user_info['lastName'] . "</p>
 								<p><span style='font-weight: bold;'>Código: </span>" . $user_info['id'] . "</p>
@@ -439,7 +436,7 @@
 				if($naF){
 					for ($i=0; $i < count($non_attendance); $i++) { 
 						$record_element .= "
-									<tr>
+									<tr style='border: 1px solid #000;'>
 										<td>" . ($i + 1) . "</td>
 										<td>" . $non_attendance[$i]['date'] . "</td>
 										<td>" . $non_attendance[$i]['nameSubject'] . "</td>
@@ -447,14 +444,14 @@
 									</tr>";
 					}
 				}else{
-					$record_element .= "<tr><td colspan='4'>No posee inasistencias!</td></tr>";
+					$record_element .= "<tr style='border: 1px solid #000;'><td colspan='4'>No posee inasistencias!</td></tr>";
 				}
-				$record_element .= "</tbody></table><br><br>
+				$record_element .= "</tbody></table><br>
 				<h2 style='text-align: center;'>Control de Códigos</h2>";
 
 		        for ($i=0; $i < count($code_c); $i++) { //Recorrer categorías
 		        	$record_element .= "
-						<h5 class='table-title "  . $code_c[$i]['color'] .  "' style='margin-top: 5%; text-align: center; font-size: 1.2em;'>"  . $code_c[$i]['category'] .  "</h5>
+						<h5 class='table-title "  . $code_c[$i]['color'] .  "' style='margin-top: 2%; text-align: center; font-size: 1.2em;'>"  . $code_c[$i]['category'] .  "</h5>
 						<table class='centered bordered'>
 							<thead>
 								<tr class='" . $code_c[$i]['color'] . "'>
@@ -475,7 +472,7 @@
 			        			$applierIndex = $this->findKey($applier, 'id', $record[$x]['idApplier']);
 			        			$typeIndex = $this->findKey($code_t, 'idType', $record[$x]['type']);
 			        			$record_element .= "
-								<tr>
+								<tr style='border: 1px solid " . $code_c[$i]['hex'] . ";'>
 									<td>" . $j++ . "</td>
 									<td>" . $record[$x]['nthPeriod'] . "</td>
 									<td>" . $record[$x]['date'] . "</td>
@@ -488,7 +485,7 @@
 						}
 					}else{
 						$record_element .= "
-								<tr class=''>
+								<tr style='border: 1px solid " . $code_c[$i]['hex'] . ";'>
 									<td colspan='7'>El estudiante no posee códigos en esta categoría...</td>
 								<tr>";
 					}

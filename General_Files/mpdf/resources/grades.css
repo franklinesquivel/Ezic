@@ -42,6 +42,8 @@ th {
 	font-size: 15px;
 	padding: 10px 15px;
 	vertical-align: middle;
+	background: #1976D2;
+	color: #fff;
 }
 
 td{
@@ -51,8 +53,13 @@ td{
 	padding: 10px;
 }
 
+.subject{
+	/*background: red;*/
+	width: 200px;
+}
+
 .grade-wrapper{
-	margin-top: 7%;
+	/*margin-top: 7%;*/
 }
 
 .first{margin: 0;}
@@ -95,10 +102,19 @@ td, th{border: 1px solid #1976D2;}
 	/*background: red;*/
 	width: 55%;
 	text-align: left;
+	vertical-align: top;
 }
 
 .photoCell{
 	/*background: blue;*/
 	width: 45%;
 	text-align: right;
+}
+
+.leyend{
+	color: #ccc;
+	position: absolute;
+	bottom: 0;
+	background: red;
+	display: block;
 }

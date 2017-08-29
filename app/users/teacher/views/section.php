@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#167e1a">
     <meta name="msapplication-navbutton-color" content="#167e1a">
     <meta name="apple-mobile-web-app-status-bar-style" content="#167e1a">
-    <title>Ezic: Coodinador.</title>
+    <title>Ezic: Docente.</title>
 
     <link rel="shortcut icon" type="image/png" href="../../../../General_Files/img/ezic.png"/>
     <link rel="stylesheet" href="../../../../General_Files/materialize/css/materialize.css">
@@ -56,6 +56,7 @@
         </a>
         <ul>
             <li title="Refrescar"><a class="btn-floating green btnRefresh"><i class="material-icons">cached</i></a></li>
+            <li title="Descargar"><a class="btn-floating blue lighten-2 btnPrint" disabled><i class="material-icons">file_download</i></a></li>
             <li title="Regresar"><a disabled class="btn-floating grey btnBack"><i class="material-icons">arrow_back</i></a></li>
             <li title="Recomendaciones"><a class="btn-floating amber info_btn"><i class="material-icons">info_outline</i></a></li>
         </ul>  
@@ -78,6 +79,13 @@
             </div>
         </div>
     </div>
+
+    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="frmPrint"> 
+        <input type="hidden" id="frmAction" name="" value="1">
+        <input type="hidden" name="id" value="">
+        <input type="hidden" name="idPeriod" value="">
+        <input type="hidden" name="rows" value="5">
+    </form>
 </body>
 
 </html>

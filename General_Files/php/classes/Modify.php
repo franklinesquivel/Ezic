@@ -71,8 +71,8 @@
                     </div>";
             }
             $frm .= "
-                    <div class='info'>
-                        <h3><b id='userId'>" . $row[$idLog] . "</b></h3>
+                    <div class='info " . $_SESSION['type'] . "'>
+                        <h3 " . ($_SESSION['type'] == 'S' ? "class='center'" : "") . "><b id='userId'>" . $row[$idLog] . "</b></h3>
                         <h5>" . $row['lastName'] . ", " . $row['name'] . "</h5>
                     </div>
                 </div>
