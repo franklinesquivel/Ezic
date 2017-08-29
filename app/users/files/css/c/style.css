@@ -276,12 +276,12 @@ ul.user-cont div.user-item .info .data .id{
     line-height: 20px;
 }
 
-ul.user-cont div.user-item .info .data .name{
-    font-size: 15px;
+ul.user-cont div.user-item .info .data .name, ul.user-cont div.user-item .info .data .lastName{
+    font-size: 14px;
 }
 
 ul.user-cont div.user-item .info .data .xtra{
-    font-size: 13px;
+    font-size: 11px;
     font-style: italic;
     color: #959595;
 }
@@ -540,32 +540,11 @@ a.showTeacher{
 #modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.code{font-weight: bold;}
 #modal_permission .modal-content .info-gnrl .list-students .container-chips .chip span.section{font-style: italic;}
 
-.mandated-header:first-child{
-    margin-top: 3%;
-}
-
-.mandated-header{
-    width: 100%;
-    background: #000;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bolder;
-    text-align: center;
-    padding: 10px;
-}
-
-.mandated-body{
-    border: 2px solid #000;
-    margin-bottom: 3%;
-    padding: 20px;
-}
-
 #studentCant-modal p{
     padding-left: 25%;
     font-size: 20px;
     margin-bottom: 5%;
 }
-
 
 .row.next-section div{
     width: 40%;
@@ -582,6 +561,14 @@ a.showTeacher{
     padding: 5px;
     background: black;
     color: white;
+}
+
+.innerCont{
+    display: none;
+}
+
+.innerCont.active{
+    display: block;
 }
 
 @media only screen and (max-width: 768px){

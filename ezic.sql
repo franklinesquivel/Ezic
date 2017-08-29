@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.5.2
+-- version 4.7.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-08-2017 a las 02:59:48
--- Versión del servidor: 10.1.21-MariaDB
--- Versión de PHP: 5.6.30
+-- Tiempo de generación: 29-08-2017 a las 18:17:29
+-- Versión del servidor: 10.1.25-MariaDB
+-- Versión de PHP: 7.0.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -17,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `ezic_franklin`
+-- Base de datos: `ezic`
 --
 
 -- --------------------------------------------------------
@@ -542,14 +544,15 @@ CREATE TABLE `student_acc` (
 
 -- --------------------------------------------------------
 
+
 --
 -- Estructura de tabla para la tabla `student_average`
 --
-
 CREATE TABLE `student_average` (
   `idAverage` int(11) NOT NULL,
   `idStudent` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `average` decimal(2,2) NOT NULL,
+  `idPeriod` int(10) NOT NULL,
+  `average` float NOT NULL,
   `approved` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
@@ -853,7 +856,8 @@ ALTER TABLE `student_acc`
 --
 ALTER TABLE `student_average`
   ADD PRIMARY KEY (`idAverage`),
-  ADD KEY `idStudent` (`idStudent`);
+  ADD KEY `idStudent` (`idStudent`),
+  ADD KEY `idPeriod` (`idPeriod`);
 
 --
 -- Indices de la tabla `subject`
@@ -884,12 +888,12 @@ ALTER TABLE `teacher`
 -- AUTO_INCREMENT de la tabla `accumulated_note`
 --
 ALTER TABLE `accumulated_note`
-  MODIFY `idAccumulated` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idAccumulated` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `applied_code`
 --
 ALTER TABLE `applied_code`
-  MODIFY `idApplied_Code` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idApplied_Code` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `assistance`
 --
@@ -899,7 +903,7 @@ ALTER TABLE `assistance`
 -- AUTO_INCREMENT de la tabla `averages`
 --
 ALTER TABLE `averages`
-  MODIFY `idAverage` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idAverage` int(20) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `code`
 --
@@ -909,7 +913,7 @@ ALTER TABLE `code`
 -- AUTO_INCREMENT de la tabla `evaluation_profile`
 --
 ALTER TABLE `evaluation_profile`
-  MODIFY `idProfile` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idProfile` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `gnrl_code`
 --
@@ -924,7 +928,7 @@ ALTER TABLE `gnrl_info`
 -- AUTO_INCREMENT de la tabla `grade`
 --
 ALTER TABLE `grade`
-  MODIFY `idGrade` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idGrade` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `justification`
 --
@@ -949,12 +953,13 @@ ALTER TABLE `level`
 -- AUTO_INCREMENT de la tabla `mandated`
 --
 ALTER TABLE `mandated`
-  MODIFY `idMandated` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `idMandated` int(15) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT de la tabla `period`
 --
 ALTER TABLE `period`
-  MODIFY `idPeriod` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idPeriod` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `permission`
 --
@@ -964,52 +969,52 @@ ALTER TABLE `permission`
 -- AUTO_INCREMENT de la tabla `permission_grade`
 --
 ALTER TABLE `permission_grade`
-  MODIFY `idPermission_Grade` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `idPermission_Grade` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pg_profiles`
 --
 ALTER TABLE `pg_profiles`
-  MODIFY `idRP` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idRP` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pg_students`
 --
 ALTER TABLE `pg_students`
-  MODIFY `idRegisterPermission` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idRegisterPermission` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `record`
 --
 ALTER TABLE `record`
-  MODIFY `idRecord` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idRecord` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `register_subject`
 --
 ALTER TABLE `register_subject`
-  MODIFY `idRegisterSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idRegisterSubject` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `schedule_register`
 --
 ALTER TABLE `schedule_register`
-  MODIFY `idS_Register` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idS_Register` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `schedule_teacher_gnrl_info`
 --
 ALTER TABLE `schedule_teacher_gnrl_info`
-  MODIFY `idScheduleInfo` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `idScheduleInfo` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `section`
 --
 ALTER TABLE `section`
-  MODIFY `idSection` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idSection` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `specialty`
 --
 ALTER TABLE `specialty`
-  MODIFY `idSpecialty` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `idSpecialty` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `student_acc`
 --
 ALTER TABLE `student_acc`
-  MODIFY `idAcc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idAcc` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `student_average`
 --
@@ -1019,7 +1024,7 @@ ALTER TABLE `student_average`
 -- AUTO_INCREMENT de la tabla `subject`
 --
 ALTER TABLE `subject`
-  MODIFY `idSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idSubject` int(15) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `suspended`
 --
@@ -1188,7 +1193,8 @@ ALTER TABLE `student_acc`
 -- Filtros para la tabla `student_average`
 --
 ALTER TABLE `student_average`
-  ADD CONSTRAINT `student_average_ibfk_1` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`);
+  ADD CONSTRAINT `student_average_ibfk_1` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`),
+  ADD CONSTRAINT `student_average_ibfk_2` FOREIGN KEY (`idPeriod`) REFERENCES `period` (`idPeriod`);
 
 --
 -- Filtros para la tabla `subject`
@@ -1202,6 +1208,7 @@ ALTER TABLE `subject`
 ALTER TABLE `suspended`
   ADD CONSTRAINT `suspended_ibfk_1` FOREIGN KEY (`idCoordinator`) REFERENCES `coordinator` (`idCoor`),
   ADD CONSTRAINT `suspended_ibfk_2` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

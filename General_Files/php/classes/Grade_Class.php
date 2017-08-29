@@ -219,15 +219,22 @@
 
 		function InsertGrades($student, $grade, $profile, $subject, $period){
 			if($period == 0){$period = $this->getPeriod();}
-
-			$query = "INSERT INTO grade(grade, idProfile, idStudent) VALUES(ROUND('$grade',2), '$profile', '$student')";
-			
-			if (($this->connection->connection->query($query)) &&
-				($this->InsertAverages($student, $period, $subject, $grade, $profile)) && 
-				($this->InsertACC($student, $subject, $period)) && 
-				($this->addACCStudent($student))) {
-				return true;
-			}else{return false;}
+			$query = "SELECT * FROM grade WHERE idProfile = '$profile' AND idStudent = '$student'";
+            $result = $this->connection->connection->query($query);
+            
+			if($result->num_rows < 1){
+				$query = "INSERT INTO grade(grade, idProfile, idStudent) VALUES(ROUND('$grade',2), '$profile', '$student')";
+				
+				if (($this->connection->connection->query($query)) &&
+					($this->InsertAverages($student, $period, $subject, $grade, $profile)) && 
+					($this->InsertACC($student, $subject, $period)) && 
+                    ($this->addACCStudent($student)) && 
+                    ($this->InsertStudentAverage($student, $period[0][0]))) {
+					return true;
+				}else{return false;}
+			}else{
+				$this->UpdateGrade($profile, 0, $student, $grade);
+			}
 		}
 
 		function InsertAverages($student, $period, $subject, $grade, $profile){
@@ -239,7 +246,13 @@
 			$query = "SELECT * FROM averages WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]."";
 			$result = $this->connection->connection->query($query);
 
-			if ($result->num_rows > 0) {
+			// if ($result->num_rows > 0) {
+			// 	$fila = $result->fetch_assoc();
+			// 	$average = $fila['average'] + $grade;
+			// 	$query = "UPDATE averages SET average = '$average' WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]." ";
+			// 	if($this->connection->connection->query($query)){if($this->checkApproved("averages", $student, $average, $subject, $period[0][0])){return true;}}
+            // }
+            if ($result->num_rows > 0) {
 				$fila = $result->fetch_assoc();
 				$average = $fila['average'] + $grade;
 				$query = "UPDATE averages SET average = '$average' WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]." ";
@@ -250,7 +263,8 @@
 				$query = "INSERT INTO averages(idSubject, idStudent, idPeriod, average, approved) VALUES('$subject', '$student', '".$period[0][0]."', ROUND('$average', 2), '$approved')";
 				return ($this->connection->connection->query($query));
 			}
-		}
+        
+        }
 
 		function InsertACC($student, $subject, $period){
 			$query = "SELECT * FROM averages WHERE idStudent = '$student' AND idSubject = '$subject' AND idPeriod = ".$period[0][0]."";
@@ -343,6 +357,7 @@
 
 			                	if ($avRes->num_rows == 0) {
 			                		$accAux = 0;
+			                		$approvedFlag = 0;
 			                	}else{
 			                		$avRow = $avRes->fetch_assoc();
 			                		$accAux = $avRow['average'];
@@ -455,19 +470,70 @@
 			return $obj;
 		}
 
-		function printGrades($id, $period)
+		function printGrades($id, $period, $multi = 0, $pos = 0)
 		{
 			$user_info = [];
 			$user_info = $this->admin->get_user_data($id);
 			$periodQuery = "SELECT * FROM period WHERE idPeriod = $period";
 			$periodRes = $this->connection->connection->query($periodQuery);
 			$periodRow = $periodRes->fetch_assoc();
-			$aux = "
+
+			$c = 0;
+			$subjectQuery = "SELECT st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
+
+			$subjectRes = $this->connection->connection->query($subjectQuery);
+			if ($subjectRes->num_rows == 0) {
+				$aux = "";
+			}else{
+				while ($subjectRow = $subjectRes->fetch_assoc()) {
+					$epQuery = "SELECT * FROM evaluation_profile ep WHERE idSubject = " . $subjectRow['idSubject'] . " AND idPeriod = " . $periodRow['idPeriod'] . " ORDER BY ep.percentage ASC;";
+					$epRes = $this->connection->connection->query($epQuery);
+					$aux .= "
+
+					<tr>
+						<td class='subject' style='font-weight: bold;' rowspan='" . ($epRes->num_rows > 0 ? 2 : 1) . "'>" . $subjectRow['nameSubject'] . "</td>";
+
+					if ($epRes->num_rows > 0) {
+						$colHelper = $epRes->num_rows;
+						$gradeAux = "<tr>";
+						$cAux = 0;
+						$accQuery = "SELECT * FROM accumulated_note WHERE idSubject = " . $subjectRow['idSubject'] . " AND idStudent = '$id';";
+						$avQuery = "SELECT * FROM averages WHERE idStudent = '$id' AND idSubject = " . $subjectRow['idSubject'] . " AND idPeriod = $period";
+						$avRes = $this->connection->connection->query($avQuery);
+						$avFlag = $avRes->num_rows > 0;
+						$avContent = ($avFlag ? $avRes->fetch_assoc() : "NPP");
+						$accRes = $this->connection->connection->query($accQuery);
+						$accFlag = $accRes->num_rows > 0;
+						$accContent = ($accFlag ? $accRes->fetch_assoc() : "NPP");
+						while ($epRow = $epRes->fetch_assoc()) {
+							$cAux++;
+							$aux .= "<td style='color: #1976D2;' colspan='" . ((100 / $colHelper)) . "%'>" . $epRow['percentage'] . "%</td>
+							" . ($cAux == $colHelper ? ("<td rowspan='2' class='" . ($avFlag ? ($avContent['approved'] ? "green" : "red") : "") . "-text'>" . ($avFlag ? $avContent['average'] : $avContent) . "</td><td rowspan='2' class='" . ($accFlag ? ($accContent['approved'] ? "green" : "red") : "") . "-text'>" . ($accFlag ? $accContent['acc'] : $accContent) . "</td>") : "");
+							$gradeQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'] . " AND idStudent = '$id';";
+							$gradeRes = $this->connection->connection->query($gradeQuery);
+							if ($gradeRes->num_rows > 0) {
+								while ($gradeRow = $gradeRes->fetch_assoc()) {
+									$gradeAux .= "<td colspan='" . ((100 / $colHelper)) . "%'>" . $gradeRow['grade'] . "</td>";
+								}
+							}else{
+								$gradeAux .= "<td colspan='" . ((100 / $colHelper)) . "%'>NPI</td>";
+							}
+						}
+						$aux .= $gradeAux . "</tr>";
+					}else{
+						$aux .= "
+							<td colspan='101%'>No hay perfiles de evaluación registrados.</td>";
+					}
+
+					$aux .= "</tr>";
+				}
+			}
+
+			$aux .= "</table>";
+
+			$tblHeader = "
 				<table class='infoTable'>
 					<tr>
-						<td class='photoCell'>
-							<img class='profile' src='../../../app/users/files/profile_photos/" . $user_info['photo'] . "'>
-						</td>
 						<td class='data'>
 							<p><span style='font-weight: bold;'>Nombre: </span>" . $user_info['name'] . " ". $user_info['lastName'] . "</p>
 							<p><span style='font-weight: bold;'>Código: </span>" . $user_info['id'] . "</p>
@@ -475,89 +541,39 @@
 							<p><span style='font-weight: bold;'>Sección: </span>\"" . $user_info['sectionIdentifier'] . "\"</p>
 							<p><span style='font-weight: bold;'>Especialidad: </span>" . $user_info['sName'] . "</p>
 						</td>
+						<td class='data'>
+							<p><span style='font-weight: bold;'>Período: </span>N° " . $periodRow['nthPeriod'] . "</p>
+							<p><span style='font-weight: bold;'>Fecha de inicio: </span>" . $periodRow['startDate'] . "</p>
+							<p><span style='font-weight: bold;'>Fecha de fin: </span>" . $periodRow['endDate'] . "</p>
+						</td>
 					</tr>
 	            </table>
-	            <div class='periodCont'>
-				<h2 style='text-align: center;'>Período N° " . $periodRow['nthPeriod'] . "</h2>
-				<h3>Fecha de inicio: <span>" . $periodRow['startDate'] . "</span></h3>
-				<h3>Fecha de fin: <span>" . $periodRow['endDate'] . "</span></h3>
-			</div>";
+	            <table class='' style='width: 100%;'>
+	            	<tr>
+						<th>Materia</th>
+						<th colspan='100%'>Perfiles de Evaluación (%)</th>
+						<th colspan='1'>NF</th>
+						<th colspan='1'>ACC</th>
+	            	</tr>";
+	       $studentAccQuery = "SELECT * FROM student_average WHERE idStudent = '$id' AND idPeriod = $period;";
+	       $studentAccRes = $this->connection->connection->query($studentAccQuery);
+	       $studentAccContent = ($studentAccRes->num_rows > 0 ? $studentAccRes->fetch_assoc()['average'] : 'NPP');
+           $tblFooter = "
+       			<br><br>
+       			<h3>Promedio: <span style='font-weight: normal;'>$studentAccContent</span></h3>";
 
-			$c = 0;
-			$subjectQuery = "SELECT st.nameSubject, t.name as tName, t.lastName, st.nameSubject, st.acronym, st.idSubject FROM section sn INNER JOIN student s ON s.idSection = sn.idSection INNER JOIN register_subject rs ON sn.idSection = rs.idSection INNER JOIN subject st ON st.idSubject = rs.idSubject INNER JOIN teacher t ON t.idTeacher = st.idTeacher WHERE s.idStudent = '$id' ORDER BY st.nameSubject;";
+   			if ($multi) {
+   				$countQuery = "SELECT COUNT(*) AS total FROM student s WHERE s.idSection = (SELECT st.idSection FROM student st WHERE st.idStudent = '$id');";
+   				$studentsCant = $this->connection->connection->query($countQuery)->fetch_assoc()['total'];
 
-			$subjectRes = $this->connection->connection->query($subjectQuery);
-			if ($subjectRes->num_rows == 0) {
-				$aux = "";
-			}else{
-				while ($subjectRow = $subjectRes->fetch_assoc()) {
-					$percentageAux = 0;
-					$accAux = 0;
-					$aux .= "
-							<div class='grade-wrapper " . ($c == 0 ? 'first' : '') . "'>
-				                <div class='grade-header blue darken-2 white-text'>
-				                    <div class='subject'>Materia: <span class='content'>" . $subjectRow['nameSubject'] . " (" . $subjectRow['acronym'] . ")</span></div>
-				                    <div class='teacher'>Profesor: <span class='content'>" . $subjectRow['tName'] . " " . $subjectRow['lastName'] ."</span></div>
-				                </div>
-				                <table>
-				                    <tr style='background: #BBDEFB;'>
-				                        <th>N°</th>
-				                        <th>Perfil de Evaluación</th>
-				                        <th><b>%</b></th>
-				                        <th>Nota</th>
-				                    </tr>";
-			        $c++;
+   				 $tblFooter .= "
+       			<h3>Posición: <span style='font-weight: normal;'>$pos/$studentsCant</span></h3>";
+   			}
 
-	                $epQuery = "SELECT * FROM evaluation_profile WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $period . " ORDER BY percentage ASC";
-
-	                $epRes = $this->connection->connection->query($epQuery);
-
-	                if ($epRes->num_rows == 0) {
-	                	$aux .= "<tr><td colspan='4' class='red-text'>No se encontraron perfiles de evaluación</td></tr>";
-	                }else{
-	                	$z = 0;
-		                while ($epRow = $epRes->fetch_assoc()) {
-		                	$gQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'];
-		                	$gRes = $this->connection->connection->query($gQuery);
-
-		                	$avQuery = "SELECT * FROM averages WHERE idSubject = " . $subjectRow['idSubject'] ." AND idPeriod = " . $period;
-		                	$avRes = $this->connection->connection->query($avQuery);
-
-		                	if ($avRes->num_rows == 0) {
-		                		$accAux = 0;
-		                	}else{
-		                		$avRow = $avRes->fetch_assoc();
-		                		$accAux = $avRow['average'];
-		                		$approvedFlag = $avRow['approved'];
-		                	}
-		                	$aux .= "<tr>
-			                            <td>" . ++$z . "</td>
-			                            <td>" . $epRow['name'] . "</td>
-			                            <td>" . $epRow['percentage'] . "</td>";
-                            if ($gRes->num_rows == 0) {
-                            	$aux .= "<td title='Nota por ingresar!'>NPI</td>";
-                            }else{
-			                	$percentageAux += $epRow['percentage'];
-                            	$aux .= "<td><b>" . $gRes->fetch_assoc()['grade'] . "</b></td>";
-                            }
-			                $aux .= "</tr>";
-		                }
-	                }
-	                $aux .= "
-				                <tr>
-									<td colspan='3' class='indicator blue'>Nota acumulada (Total Procesado: $percentageAux%)</td>
-									<td class='grade white-text " . ($approvedFlag ? 'green' : 'red') . "'>$accAux</td>
-				                </tr>
-			                </table>
-			            </div>
-					";
-				}
-			}
-
-			return $aux;
+			return $tblHeader . $aux . $tblFooter;
 		}
 
-		function printAcc($id)
+		function printAcc($id, $multi = 0, $pos = 0)
 		{
 			$aux = "";
 
@@ -566,9 +582,6 @@
 			$aux = "
 				<table class='infoTable'>
 					<tr>
-						<td class='photoCell'>
-							<img class='profile' src='../../../app/users/files/profile_photos/" . $user_info['photo'] . "'>
-						</td>
 						<td class='data'>
 							<p><span style='font-weight: bold;'>Nombre: </span>" . $user_info['name'] . " ". $user_info['lastName'] . "</p>
 							<p><span style='font-weight: bold;'>Código: </span>" . $user_info['id'] . "</p>
@@ -659,9 +672,14 @@
 
 				$aux .=  ($studentAccFlag ? "
 					<tr>
-						<td colspan='$tdHelper' class='indicator blue'>Promedio</td>
-						<td class='grade white-text " . ($studentAccRow['approved'] ? 'green' : 'red') . " darken-1'>" . $studentAccRow['acc'] . "</td>
+						<td colspan='$tdHelper' class='indicator' style='background: #1976D2;'>Promedio</td>
+						<td class='grade white-text " . ($studentAccRow['approved'] ? 'green' : 'red') . "'>" . $studentAccRow['acc'] . "</td>
 		            </tr>" : "") . "</table></div>";
+				if($multi){
+					$studentsCant = $this->connection->connection->query("SELECT COUNT(*) AS total FROM student s WHERE s.idSection = (SELECT st.idSection FROM student st WHERE st.idStudent = '$id');")->fetch_assoc()['total'];
+					$aux .= "
+	       			<h3>Posición: <span style='font-weight: normal;'>$pos/$studentsCant</span></h3>";
+				}
 			}else{
 				$aux .= "<br><br><h2 style='color: #e74c3c; text-align: center;'>El estudiante no posee notas para mostrar.</h2>";
 			}
@@ -796,7 +814,9 @@
 					if($this->UpdateAverages($grade_previus[0][2], $grade_previus[0][3], $grade_previus[0][0], $idStudent, ($grade_previus[0][1] * $grade))){
 						if($this->UpdateACC($idStudent, $grade_previus[0][2], $this->getInfoAverage($grade_previus[0][2], $grade_previus[0][3], $idStudent))){
 							if($this->changeStatePermission($idProfile, $idPermission)){
-								if($this->UpdateACCStudent($idStudent)){return true;}
+								if($this->InsertStudentAverage($idStudent, $grade_previus[0][3])){
+									if($this->UpdateACCStudent($idStudent)){return true;}
+								}	
 							}
 						}
 					}
@@ -941,8 +961,99 @@
 					$result = $this->connection->connection->query($query);
 				}
 				return true;
+			}else if($table == "student_average"){
+				$approved = ($acc >= $this->info_gnrl->approved_grade) ? 1 : 0;
+				if($approved == 1){
+					$query = "UPDATE $table SET approved = '$approved' WHERE idStudent = '$idStudent' AND idPeriod = $period";
+					$result = $this->connection->connection->query($query);
+				}
+				return true;
 			}
 			return false;
+		}
+
+		function InsertStudentAverage($student, $idPeriod){
+			$query = "SELECT ROUND(AVG(average), 2) AS average FROM averages WHERE idStudent = '$student' AND idPeriod = $idPeriod";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+
+			$query_verify = "SELECT * FROM student_average WHERE idStudent = '$student' AND idPeriod = $idPeriod";
+			$result_verify = $this->connection->connection->query($query_verify);
+			
+			if($result_verify->num_rows > 0){
+				$query_insert = "UPDATE student_average SET average = '".$fila['average']."' WHERE idStudent = '$student' AND idPeriod = $idPeriod";
+			}else{
+				$query_insert = "INSERT INTO student_average(idStudent, idPeriod, average) VALUES('$student', $idPeriod, ROUND('".$fila['average']."', 2))";
+			}
+
+			if($this->connection->connection->query($query_insert)){
+				return($this->checkApproved("student_average", $student, $fila['average'], 0, $idPeriod));
+			}
+		}
+
+		function sectionGrades($id)
+		{
+			$z = 0;
+			$aux = "
+			<table class='centered responsive-table striped'>
+				<thead>
+					<th>N°</th>
+					<th>Código</th>
+					<th>Alumno</th>";
+			$tblHeaderQuery = "SELECT s.acronym, s.nameSubject FROM subject s INNER JOIN register_subject rs ON rs.idSubject = s.idSubject WHERE rs.idSection = $id";
+			$tblHeaderRes = $this->connection->connection->query($tblHeaderQuery);
+			while ($tblHeaderRow = $tblHeaderRes->fetch_assoc()) {
+				$aux .= "
+					<th title='" . $tblHeaderRow['nameSubject'] . "'>" . $tblHeaderRow['acronym'] . "</th>";
+			}
+			$aux .= "
+					<th title='Acumulado'>ACC</th>
+				</thead>
+				<tbody>";
+			$studentsQuery = "SELECT * FROM student s WHERE idSection = $id ORDER BY s.lastName ASC;";
+			$studentRes = $this->connection->connection->query($studentsQuery);
+			while ($studentRow = $studentRes->fetch_assoc()) {
+				$subjectQuery = "SELECT rs.idSubject FROM register_subject rs WHERE rs.idSection = $id GROUP BY rs.idSubject;";
+				$subjectRes = $this->connection->connection->query($subjectQuery);
+					$aux .= "
+					<tr>
+						<td>" . ++$z . "</td>
+						<td>" . $studentRow['idStudent'] . "</td>
+						<td>" . $studentRow['lastName'] . ", " . $studentRow['name'] . "</td>";
+				if ($subjectRes->num_rows > 0) {
+					while ($subjectRow = $subjectRes->fetch_assoc()) {
+						$accQuery = "SELECT an.acc, an.approved FROM accumulated_note an WHERE an.idStudent = '" . $studentRow['idStudent'] . "' AND an.idSubject = " . $subjectRow['idSubject'] . ";";
+						$accRes = $this->connection->connection->query($accQuery);
+						if ($accRes->num_rows > 0) {
+							while ($accRow = $accRes->fetch_assoc()) {
+								$aux .= "
+						<td title='" . ($accRow['approved'] ? 'Aprobada' : 'Reprobada') . "' class='" . ($accRow['approved'] ? 'green' : 'red') . "-text'>" . $accRow['acc'] . "</td>";
+							}
+						}else{
+						$aux .= "
+						<td>-</td>";
+						}
+					}
+				}else{
+				}
+				$studentAccQuery = "SELECT * FROM student_acc WHERE idStudent = '" . $studentRow['idStudent'] . "';";
+				$studentAccRes = $this->connection->connection->query($studentAccQuery);
+				if ($studentAccRes->num_rows > 0) {
+					while ($studentAccRow = $studentAccRes->fetch_assoc()) {
+						$aux .= "
+						<td title='" . ($studentAccRow['approved'] ? 'Aprobada' : 'Reprobada') . "' class='" . ($studentAccRow['approved'] ? 'green' : 'red') . " lighten-2 white-text'>" . $studentAccRow['acc'] . "</td>";
+					}
+				}else{
+					$aux .= "
+						<td>-</td>";
+				}
+				$aux .= "
+					</tr>";
+			}
+			$aux .= "
+				</tbody>
+			</table>";
+			return $aux;
 		}
 	}
 ?>

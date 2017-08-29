@@ -339,11 +339,11 @@
 			if ($res->num_rows > 0) {
 				while ($row = $res->fetch_assoc()) {
 					$aux .= "
-	<div class='col s12'>
-		<div class='mandated-header " . ($z == 1 ? "active" : "") . "'>
-			<span class=''>" . $row['lastName'] . ", " . $row['name'] . "</span>
+	<div class='col s12 frmMandatedContainer _$z'>
+		<div class='mandated-header " . ($z == 1 ? "active" : "") . ($_SESSION['type'] == 'C' ? ' black' : ' green darken-2') . "'>
+			<span class=''><div frmIndex='$z' class='btn btn-flat white-text " . ($_SESSION['type'] == 'C' ? "waves-light" : "") . " waves-effect btnDeleteForm'><i class='material-icons'>close</i></div> " . $row['lastName'] . ", " . $row['name'] . "</span>
 		</div>
-		<div class='mandated-body'>
+		<div class='mandated-body " . $_SESSION['type'] . "'>
 			<form class='frmMandated _" . $z . "' autocomplete='off'>
 			<input type='hidden' name='idStudent' value='" . $row['idStudent'] . "'>
 				<div class='row'>
@@ -560,7 +560,7 @@
 			$obj = [];
 			$obj['students'] = [];
 			$obj['snInfo'] = [];
-			$studentsQuery = "SELECT  s.idStudent, s.name, s.lastName, s.email, s.verified, s.photo, sa.color, sa.description FROM student s INNER JOIN state_academic sa ON sa.idState = s.stateAcademic WHERE s.idSection = (SELECT sn.idSection FROM section sn WHERE sn.idTeacher = '$id') AND s.state = 1 ORDER BY s.lastName;";
+			$studentsQuery = "SELECT s.idStudent, s.name, s.lastName, s.email, s.verified, s.photo, sa.color, sa.description FROM student s INNER JOIN state_academic sa ON sa.idState = s.stateAcademic WHERE s.idSection = (SELECT sn.idSection FROM section sn WHERE sn.idTeacher = '$id') AND s.state = 1 ORDER BY s.lastName;";
 			$sectionQuery = "SELECT sn.sectionIdentifier, sn.sState, sy.sName, l.level, sn.idSection FROM section sn INNER JOIN level l ON l.idLevel = sn.idLevel INNER JOIN specialty sy ON sy.idSpecialty = sn.idSpecialty WHERE sn.idTeacher = '$id'";
 
 			$studentsRes = $this->connection->connection->query($studentsQuery);

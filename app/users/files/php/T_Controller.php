@@ -201,4 +201,16 @@
     if (isset($_POST['getMandated'])) {
         echo $admin->getMandated($_POST['id']);
     }
+
+    if (isset($_POST['sectionGrades'])) {
+        echo $grade->sectionGrades($_POST['idSection']);
+    }
+
+    if (isset($_POST['getSectionStudents'])) {
+        echo $section->getSectionStudents($_POST['idSn']);
+    }
+
+    if (isset($_POST['addMandated'])) {
+        echo $section->addMandated(json_decode($_POST['data'], 1), $_POST['idSn']);
+    }
 ?>
