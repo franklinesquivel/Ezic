@@ -769,6 +769,18 @@
 		echo json_encode($stadistic->countUsers());
 	}
 
+	if (isset($_REQUEST['specialtyStats'])) {
+		echo json_encode($stadistic->specialtyStats());
+	}
+
+	if (isset($_POST['timelineGrades'])) {
+		echo json_encode($stadistic->gradesInTime());
+	}
+
+	if (isset($_POST['topStudents'])) {
+		echo json_encode($stadistic->topStudents());
+	}
+
 	if (isset($_REQUEST['filterSections'])) {
 		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}

@@ -31,8 +31,10 @@
 					}
 				}).done(function(r){
 					loader.out();
-					let objeto = JSON.parse(r);
-					let startDate = (objeto.startDate).split("-"), endDate = (objeto.endDate).split("-");
+					let objeto = JSON.parse(r)[0];
+					console.log(objeto);
+					let startDate = (objeto.startDate).split("-"), 
+						endDate = (objeto.endDate).split("-");
 
 					//Le asignamos valores a los inputs en el form.modify_period
 					$('#startDate').pickadate().pickadate('picker').set('select', new Date(startDate[0], (startDate[1] - 1), startDate[2]));
