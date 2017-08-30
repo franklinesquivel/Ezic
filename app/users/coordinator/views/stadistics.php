@@ -48,54 +48,56 @@
     </header>
 
     <main>
-        <div class="row">
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-image">
-                        <img src="../../../../General_Files/img/users.jpg">
-                        <span class="card-title">Usuarios</span>
-                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light grey darken-3 btnUsers"><i class="material-icons">forward</i></a>
+        <div class="section">
+            <div class="row">
+                <div id="top">
+                    <div class='col s12 m6 l6'>
+                        <div class='col-content z-depth-3' style="padding: 10px;">
+                            <h4 class="center">Top de Estudiantes por nivel según ACC</h4><br>
+                        </div>
                     </div>
-                    <div class="card-content">
-                        <p>Visualiza la sistematización de la cantidad de usuarios y tipo registrados en la plataforma!</p>
+                </div>
+                <div class='col s12 m6 l6'>
+                    <div class='col-content z-depth-3' style="padding: 10px;">
+                        <h4 class="center">Promedio de Notas Acumuladas de la plataforma</h4>
+                        <div id="gnrlACC"></div>
                     </div>
                 </div>
             </div>
-             <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-image">
-                        <img src="../../../../General_Files/img/sections.jpg">
-                        <span class="card-title">Secciones</span>
-                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light grey darken-3 btnSections"><i class="material-icons">forward</i></a>
-                    </div>
-                    <div class="card-content">
-                        <p>Visualiza la sistematización de la cantidad de usuarios y tipo registrados en la plataforma!</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m6">
-                <div class="card">
-                    <div class="card-image">
-                        <img src="../../../../General_Files/img/grades.jpg">
-                        <span class="card-title">Resultados Académicos</span>
-                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light grey darken-3"><i class="material-icons">forward</i></a>
-                    </div>
-                    <div class="card-content">
-                        <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+            <div class="row">
+                <div class="white chart col s12">
+                    <div class="col-content z-depth-2" style="padding: 0px 20px 20px 20px">
+                        <h5 class="grey-text">Promedio de notas por cada período</h5>
+                        <div class="divider"></div><br>
+                        <div id="usertChart-cont">
+                            <canvas id="gradesTN"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-      </div>
+            <div class="row">
+                <div class="white chart col l6 m6 s12">
+                    <div class="col-content z-depth-2">
+                        <h5 class="grey-text">Tipos de Usuarios</h5>
+                        <div class="divider"></div><br>
+                        <div id="usertChart-cont">
+                            <canvas id="users"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="white chart col l6 m6 s12">
+                    <div class="col-content z-depth-2">
+                        <h5 class="grey-text">Estudiantes por especialidad y nivel</h5>
+                        <div class="divider"></div><br>
+                        <div id="specialtyChart-cont">
+                            <canvas id="specialty"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     
-    <div class="chart-cont-cont">
-        <div class="chart-container users-cont innerCont">
-            <canvas id="users"></canvas>
-        </div>
-        <div class="chart-container sections-cont innerCont">
-            <canvas id="sections"></canvas>
-        </div>
-    </div>
 
     <div class="fixed-action-btn vertical btn_options">
         <a class="btn-floating btn-large black" id="info">

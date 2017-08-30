@@ -522,7 +522,7 @@
 						$aux .= $gradeAux . "</tr>";
 					}else{
 						$aux .= "
-							<td colspan='101%'>No hay perfiles de evaluación registrados.</td>";
+							<td colspan='102%'>No hay perfiles de evaluación registrados.</td>";
 					}
 
 					$aux .= "</tr>";
