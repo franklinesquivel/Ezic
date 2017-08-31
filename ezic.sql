@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-08-2017 a las 18:17:29
--- Versión del servidor: 10.1.25-MariaDB
--- Versión de PHP: 7.0.21
+-- Tiempo de generación: 01-09-2017 a las 00:44:39
+-- Versión del servidor: 10.1.21-MariaDB
+-- Versión de PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -19,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `ezic`
+-- Base de datos: `ezic_31`
 --
 
 -- --------------------------------------------------------
@@ -416,7 +414,8 @@ CREATE TABLE `pg_students` (
 CREATE TABLE `record` (
   `idRecord` int(11) NOT NULL,
   `idApplied_Code` int(11) NOT NULL,
-  `idStudent` varchar(6) COLLATE utf8_spanish2_ci NOT NULL
+  `idStudent` varchar(6) COLLATE utf8_spanish2_ci NOT NULL,
+  `accumulation_code` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
@@ -544,10 +543,10 @@ CREATE TABLE `student_acc` (
 
 -- --------------------------------------------------------
 
-
 --
 -- Estructura de tabla para la tabla `student_average`
 --
+
 CREATE TABLE `student_average` (
   `idAverage` int(11) NOT NULL,
   `idStudent` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
@@ -579,10 +578,10 @@ CREATE TABLE `subject` (
 CREATE TABLE `suspended` (
   `idSuspended` int(15) NOT NULL,
   `idStudent` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
-  `idCoordinator` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
   `StartDate` date NOT NULL,
   `EndDate` date NOT NULL,
-  `Justification` varchar(200) COLLATE utf8_spanish2_ci NOT NULL
+  `idApplied_Code` int(15) NOT NULL,
+  `state` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
@@ -872,7 +871,7 @@ ALTER TABLE `subject`
 ALTER TABLE `suspended`
   ADD PRIMARY KEY (`idSuspended`),
   ADD KEY `idStudent` (`idStudent`),
-  ADD KEY `idCoordinator` (`idCoordinator`);
+  ADD KEY `idApplied_Code` (`idApplied_Code`);
 
 --
 -- Indices de la tabla `teacher`
@@ -954,7 +953,6 @@ ALTER TABLE `level`
 --
 ALTER TABLE `mandated`
   MODIFY `idMandated` int(15) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT de la tabla `period`
 --
@@ -1206,9 +1204,8 @@ ALTER TABLE `subject`
 -- Filtros para la tabla `suspended`
 --
 ALTER TABLE `suspended`
-  ADD CONSTRAINT `suspended_ibfk_1` FOREIGN KEY (`idCoordinator`) REFERENCES `coordinator` (`idCoor`),
-  ADD CONSTRAINT `suspended_ibfk_2` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`);
-COMMIT;
+  ADD CONSTRAINT `suspended_ibfk_2` FOREIGN KEY (`idStudent`) REFERENCES `student` (`idStudent`),
+  ADD CONSTRAINT `suspended_ibfk_3` FOREIGN KEY (`idApplied_Code`) REFERENCES `applied_code` (`idApplied_Code`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
