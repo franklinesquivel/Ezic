@@ -445,6 +445,78 @@ a.showTeacher{
     height: 50vh;
 }
 
+ul.collection.permission-container{border: none;}
+.collection.permission-container .collection-item:last-child{border-bottom: 1px solid #e0e0e0;}
+.permission-container li.collection-item{
+    background: #fafafa;
+    padding: 0px;
+    border-right: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.permission-container li.collection-item .header{
+    display: flex;
+    background: black;
+    padding: 10px;
+    color: white;
+}
+.permission-container li.collection-item .header .teacher{width: 80%;}
+.permission-container li.collection-item .header .option{width: 20%;}   
+.permission-container li.collection-item .header .option input[type="checkbox"].checkbox_add + label{color: white;}
+.permission-container li.collection-item .header .option [type="checkbox"] + label::before, [type="checkbox"].checkbox_add:not(.filled-in) + label::after{border: 2px solid white;}
+.permission-container li.collection-item .info-permission{padding: 15px;}
+.permission-container li.collection-item .header .option [type="checkbox"].checkbox_add:checked + label:before {/* Clase que se modifica para cambiar de color los checkbox */
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    border-left: none;
+    border-top: none;
+}
+
+.permission-container li.collection-item .info-permission .gnrl-info{
+    width: 100%;
+    display: flex;
+}
+
+.permission-container li.collection-item  .info-permission div{width: 50%;}
+.permission-container li.collection-item .info-permission .gnrl-info .title{
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.permission-container li.collection-item  .info-permission .subject{
+    display: flex;
+    width: 100%;    
+}
+
+.permission-container li.collection-item .info-permission .gnrl-info, .permission-container li.collection-item  .info-permission .subject{padding: 5px;}
+.permission-container li.collection-item  .info-permission .subject div{width: 50%;}
+.permission-container li.collection-item  .info-permission .subject .info{display: flex;}
+.permission-container li.collection-item .info-permission .subject .info .title{
+    font-weight: bold;
+    margin-right: 5px;
+}
+.permission-container li.collection-item  .info-permission .description{width: 100%;}
+.permission-container li.collection-item  .info-permission .description .title{
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.permission-container li.collection-item  .info-permission .description .result{
+    padding: 10px;
+    border: 1px solid #eee;
+    background: #f5f5f5;
+    text-align: justify;
+    word-wrap: break-word;
+    width: 90%;
+    margin: auto;
+}
+
+.permission-container li.collection-item  .info-permission .option-view{
+    padding: 15px;
+    width: 100%;
+}
+
 #modal_permission .modal-content{padding: 0px;}
 #modal_permission .modal-content .title{
     color: white;

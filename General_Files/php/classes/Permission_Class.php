@@ -14,7 +14,7 @@
 			require_once($this->aux);
 			$this->connection = new Connection();
 			$this->connection->Connect();
-			$this->days_letter = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado", "Domingo");
+			$this->days_letter = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado");
 			$this->days_number =  array('Domingo' => 00, 'Lunes' => 01, 'Martes' => 02, 'Miercoles' => 03, 'Jueves' => 04, 'Viernes' =>05, 'Sabado'=>06);
 		}
 

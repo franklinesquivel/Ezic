@@ -146,7 +146,7 @@
 					}
 				}).done(function(r){
 					loader.out();
-					if (r == "1") {
+					if (r == 1) {
 						Materialize.updateTextFields();
 
 						setTimeout(function(){

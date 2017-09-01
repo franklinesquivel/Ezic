@@ -38,24 +38,24 @@
 							</select>
 							<label>Elegir Período</label>
 		          		</div>
-						<div class='container-justification'>
+		          		<div class='row col l8 m10 s10 offset-l2 offset-m1 offset-s1 container-justification'>
 
 						</div>
 					</form>
 				</div> 
-			</div>";
+			";
 
 			return $row;
 		}
 
 		function getTableAssistance($period, $student){
 			$period = json_decode($period);
-			$query = "SELECT assistance.date, assistance.idAssistance, subject.acronym FROM `assistance` INNER JOIN schedule_register ON schedule_register.idS_Register = assistance.idSchedule INNER JOIN subject ON subject.idSubject = schedule_register.idSubject WHERE assistance.attended = 0 AND assistance.idStudent = '$student' AND assistance.date BETWEEN '".$period[0]->startDate."' AND '".$period[0]->endDate."'";
+			$query = "SELECT assistance.date, assistance.idAssistance, subject.acronym FROM `assistance` INNER JOIN schedule_register ON schedule_register.idS_Register = assistance.idSchedule INNER JOIN subject ON subject.idSubject = schedule_register.idSubject WHERE assistance.attended = 'N' AND assistance.idStudent = '$student' AND assistance.date BETWEEN '".$period[0]->startDate."' AND '".$period[0]->endDate."'";
 			$result = $this->connection->connection->query($query);
 			$verify = true;
 
 			if ($result->num_rows > 0) {
-				$table = "<div class='row'><table class='justification centered col l8 m10 s10 offset-l2 offset-m1 offset-s1'>
+				$table = "<div class='row'><table class='justification centered'>
 					<thead>
 						<tr>
 							<th>Fecha</th>
@@ -92,7 +92,7 @@
 				</div>
 				";
 			}else{
-				$table = "0";
+				$table = "<div class='alert_'><h4>No se han encontrado faltas en el período seleccionado</h4></div>";
 			}
 
 			return $table;

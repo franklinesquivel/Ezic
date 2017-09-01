@@ -18,7 +18,7 @@
 						$("#selectSection").empty();
 						$("#selectSection").append("<option value='' disabled selected>Elegir Secciones</option>");
 						for (var i in object) {
-							$("#selectSection").append("<option value="+object[i].id+">"+object[i].level+"° "+object[i].seccion+": "+object[i].nombre+"</option>");
+							$("#selectSection").append("<option value="+object[i].id+">"+object[i].level+"° '"+object[i].seccion+"' "+object[i].nombre+"</option>");
 							$("#selectSection").material_select();
 						}
 					}

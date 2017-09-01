@@ -32,7 +32,13 @@
 		}
 
 		function getForSubject($idSubject){//Función realizada para: assign_subjectSection.php
-			$query = "SELECT section.idSection, level.level FROM section INNER JOIN level ON section.idLevel = level.idLevel WHERE section.idSection IN (SELECT section.idSection FROM section INNER JOIN register_subject ON register_subject.idSection = section.idSection INNER JOIN level ON section.idLevel = level.idLevel WHERE register_subject.idSubject = $idSubject)";
+
+			$query_infoS = "SELECT level.idLevel FROM subject INNER JOIN register_subject rs ON rs.idSubject = subject.idSubject INNER JOIN section ON section.idSection = rs.idSection INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = $idSubject LIMIT 1";
+			$result_infoS = $this->connection->connection->query($query_infoS);
+			$fila_infoS = $result_infoS->fetch_assoc();
+
+
+			$query = "SELECT section.idSection, level.idLevel AS level FROM section INNER JOIN level ON section.idLevel = level.idLevel WHERE section.idSection NOT IN (SELECT section.idSection FROM section INNER JOIN register_subject ON register_subject.idSection = section.idSection INNER JOIN level ON section.idLevel = level.idLevel WHERE register_subject.idSubject = $idSubject)";
 			$result = $this->connection->connection->query($query);
 			$sections = array();//Aqui Se guardaran las secciones en las cuales ya esta esa materia
 			$info = array();
@@ -40,16 +46,15 @@
 
 			while ($fila = $result->fetch_assoc()) {
 				$sections[$i][0] = $fila['idSection'];
-				$sections[$i][1] = $fila['level'];
+				$sections[$i][1] = $fila_infoS['idLevel'];
 				$i++;
 			}
 
 			$i = 0;
 			for ($x=0; $x <count($sections) ; $x++) { 
-				$query = "SELECT section.idSection, specialty.sName, section.sectionIdentifier, level.level FROM `section` INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN specialty ON section.idSection = specialty.idSpecialty WHERE section.idSection != ".$sections[$x][0]." AND level.level  = ".$sections[$x][1]."";
+				$query = "SELECT section.idSection, specialty.sName, section.sectionIdentifier, level.level FROM `section` INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN specialty ON section.idSection = specialty.idSpecialty WHERE section.idSection = ".$sections[$x][0]." AND level.idLevel  = ".$sections[$x][1]."";
 				$result = $this->connection->connection->query($query);
 				while ($fila = $result->fetch_assoc()) {
-
 					$info[$i] = [
 						'id' => $fila['idSection'],
 						'nombre' => $fila['sName'],
@@ -334,7 +339,7 @@
 		{
 			$aux = "";
 			$z = 1;
-			$query = "SELECT * FROM student WHERE idSection = $id AND verified = 0 AND state = 1;";
+			$query = "SELECT * FROM student WHERE idSection = $id AND verified = 1 AND state = 1;";
 			$res = $this->connection->connection->query($query);
 			if ($res->num_rows > 0) {
 				while ($row = $res->fetch_assoc()) {
@@ -589,6 +594,119 @@
 			}
 
 			return json_encode($obj);
+		}
+
+		function v_delete(){
+			$sections = $this->getForDelete();
+
+			if(count($sections) > 0){
+				$sections_tr = "";
+				$x = 0;
+				for($i = 0; $i < count($sections); $i++){
+					$query = "SELECT section.idSection, section.sectionIdentifier, level.level, specialty.sName FROM `section` INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN specialty ON specialty.idSpecialty = section.idSpecialty WHERE section.idSection = '".$sections[$i]."'";
+					$result = $this->connection->connection->query($query);
+					$fila = $result->fetch_assoc();
+					$x++;
+					$sections_tr .= "
+					<tr>
+						<td>".$x++."</td>
+						<td>".$fila['level']."° </td>
+						<td>".$fila['sectionIdentifier']."</td>
+						<td>".$fila['sName']."</td>
+						<td>
+							<input type='checkbox' class='btn_checkbox' id='".$fila['idSection']."' />
+							<label for='".$fila['idSection']."' ></label>
+						</td>
+					</tr>
+					";
+				}
+				
+				$form = "<form class='deleteSection'>
+					<div class='row'>
+						<table class='centered bordered responsive-table delete-section col l10 offset-l1'>
+							<thead>
+								<th>N°</th>
+								<th>Nivel</th>
+								<th>Sección</th>
+								<th>Especialidad</th>
+								<th>Opción</th>
+							</thead>
+							<tbody>
+								$sections_tr
+							</tbdoy>
+						</table>
+					</div>
+					<div class='row'>
+						<div class='col l2 m2 s4 offset-l5 offset-m5 offset-s4 btn waves-effect waves-light black darken-2 btnSave'>Guardar
+							<i class='material-icons right'>save</i>
+						</div>
+					</div>
+				</form>"; 	
+			}else{
+				$form = "Noup";
+			}
+			return ($form);
+		}
+		
+		function getForDelete(){
+			$sections = array();
+			$i = 0;
+			#Obtiene las secciones que no estan en los alumnos
+			$query_student = "SELECT section.idSection FROM `section` WHERE section.idSection NOT IN (SELECT student.idSection FROM student)";
+			#Obtiene las secciones que no estan en schedule
+			$query_schedule = "SELECT section.idSection FROM `section` WHERE section.idSection NOT IN (SELECT schedule_register.idSection FROM schedule_register) ";
+			#Obtiene las secciones que no estan en register subject
+			$query_RS = "SELECT section.idSection FROM `section` WHERE section.idSection NOT IN (SELECT register_subject.idSection FROM register_subject) ";
+
+			$result_student = $this->connection->connection->query($query_student);
+			if($result_student->num_rows > 0){
+				while($fila = $result_student->fetch_assoc()){
+					$sections[$i] = $fila['idSection'];
+					$i++;
+				}
+			}
+			
+			$result_schedule = $this->connection->connection->query($query_schedule);
+			if($result_schedule->num_rows > 0){
+				$valid  = false;
+				while($fila = $result_schedule->fetch_assoc()){
+					for($x = 0; $x < count($sections); $x++ ){
+						if($sections[$x] == $fila['idSection']){
+							$valid = true;
+							break;
+						}
+					}
+					if($valid){
+						$sections[$i] = $fila['idSection'];
+						$i++;
+					}
+					$valid = false;
+				}
+			}
+			$result_RS = $this->connection->connection->query($query_RS);
+			if($result_RS->num_rows > 0){
+				$valid  = false;
+				while($fila = $result_RS->fetch_assoc()){
+					for($x = 0; $x < count($sections); $x++ ){
+						if($sections[$x] == $fila['idSection']){
+							$valid = true;
+							break;
+						}
+					}
+					if($valid){
+						$sections[$i] = $fila['idSection'];
+						$i++;
+					}
+					$valid = false;
+				}
+			}
+
+			return (array_unique($sections));
+		}
+
+		function deleteSection($id){
+			$query = "DELETE FROM section WHERE idSection = $id";
+			return($this->connection->connection->query($query));
 		}
 	}
 ?>

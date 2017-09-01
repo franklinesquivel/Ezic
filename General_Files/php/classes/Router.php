@@ -15,7 +15,7 @@
 				]];
 				$this->options[count($this->options)] = ["Secciones", "tab", [
 					["Añadir", "library_add", "add_section"],
-					["Eliminar", "delete", ""],
+					["Eliminar", "delete", "delete_section"],
 					["Ver", "visibility", "view_sections"],
 					["Subir fotografías", "add_to_photos", "photo_sections"],
 					["Asignar responsables", "contacts", "add_mandated"]
@@ -53,8 +53,10 @@
 					["Modificar", "edit", "modify_code"],
 					["Eliminar", "delete", "delete_code"],
 					["Ver", "visibility", "v_code"],
-					["General", "setting", "gnrl_code"]
+					["General", "security", "gnrl_code"]
 				]];
+
+				$this->options[count($this->options)] = ['Suspensiones', "sentiment_very_dissatisfied", "v_suspended"];
 
 				$this->options[count($this->options)] = ['Aceptar Permisos', "lock_open", "accept_permission"];
 				

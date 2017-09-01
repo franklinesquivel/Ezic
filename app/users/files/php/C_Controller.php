@@ -25,6 +25,7 @@
 	require_once '../../../../General_Files/php/classes/Stadistics.php';
 	require_once '../../../../General_Files/php/classes/Permission_Grade.php';
 	require_once '../../../../General_Files/php/classes/Specialty_Class.php';
+	require_once '../../../../General_Files/php/classes/Suspended_Class.php';
 
 //--------------------------------------------------------------------------------------------
 //CLASES INSTANCIADAS HASTA EZIC 1.5
@@ -51,6 +52,7 @@
 	$stadistic = new Stadistics();
 	$permission_grade = new Permission_Grade();
 	$specialty = new Specialty();
+	$suspended = new Suspended();
 
 //--------------------------------------------------------------------------------------------
 //		AGREGAR NUEVO PERIODO
@@ -346,7 +348,13 @@
 //---------------------------------------------------------------------------------------
 //		ASIGNAR MATERIA A SECCIÓN
 	if (isset($_REQUEST['assign_SubjectSection'])) {
-		echo ($subject->register_subject($_REQUEST['subject'], $_REQUEST['sections']));
+		$sections = $_REQUEST['sections'];
+		$z = 0;
+		for ($i=0; $i <count($sections) ; $i++) { 
+			$subject->register_subject($_REQUEST['subject'], $sections[$i]);//Llenamos la tabla que contiene la sección
+			$z++;
+		}
+		echo ($z = ($z == count($sections)) ? 1 : 0);
 	}
 // FIN ASIGNAR MATERIA A SECCIÓN
 //--------------------------------------------------------------------------------------
@@ -468,7 +476,7 @@
 					$insert++;
 				}
 			}
-			echo "S";
+			echo "-1";
 		}else{
 			echo (json_encode($z));
 		}
@@ -693,6 +701,30 @@
 	}
 // MODIFICAR TABLA GENERAL DE CÓDIGOS
 //--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+//		ELIMINAR SECCIONES
+	if(isset($_REQUEST['v_deleteSection'])){
+		echo($section->v_delete());
+	}
+
+	if(isset($_REQUEST['deleteSection'])){
+		$object = json_decode($_REQUEST['sections']);
+		$z = 0;
+		for($i = 0; $i < count($object); $i++){
+			if($section->deleteSection($object[$i]->id)){$z++;}
+		}
+		echo($z = ($z > 0) ? 1 : 0);
+	}
+// ELIMINAR SECCIONES
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		VER SUSPENSIONES
+	if(isset($_REQUEST['v_suspended'])){
+		echo($suspended->v_suspended());
+	}
+// VER SUSPENSIONES
+//--------------------------------------------------------------------------------------
 	
 	if (isset($_REQUEST['getUsers'])) {
 		echo json_encode($admin->sendUsers());
@@ -758,7 +790,7 @@
 	}
 
 	if (isset($_REQUEST['getStudentCodes'])) {
-		echo $admin->getStudentCodes($_REQUEST['id']);
+		echo $admin->getStudentCodes($_REQUEST['id'], $period->getPeriods());
 	}
 
 	if (isset($_REQUEST['rmvCodes'])) {

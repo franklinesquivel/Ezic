@@ -125,7 +125,7 @@
     const btn_floatingOptions = () =>{
         for (var i = 0; i <  $(".btn_options ul li a").length; i++) {
             if ($(".btn_options ul li a").eq(i).attr("class") != $(".btn_options ul li a").eq($(".btn_options ul li a").length - 1).attr("class")) {
-                    $(".btn_options ul li a").eq(i).attr("disabled", true);
+                $(".btn_options ul li a").eq(i).attr("disabled", true);
             }
         }
     };
@@ -133,6 +133,7 @@
     $(document).on("click", ".btnSave", function(){
         let array = ($("table").attr("register")).split(", ");
         let object = validate_radio();
+        //console.log(object);
         if (object != false) {
             $.ajax({
                 type: 'POST',
@@ -163,7 +164,7 @@
             if(!($("table tbody tr input[type='radio']").eq(i).attr("disabled"))){
                 if($("table tbody tr input[name='student_"+i+"']:checked").val() != undefined){
                     assistance_values[y] = {
-                        "idStudent": $("table tbody tr").attr("id"),
+                        "idStudent": $("table tbody tr").eq(i).attr("id"),
                         "attended": $("table tbody tr input[name='student_"+i+"']:checked").val()
                     };
                     y++;

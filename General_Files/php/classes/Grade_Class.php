@@ -276,7 +276,10 @@
 			$result = $this->connection->connection->query($query);
 
 			if ($result->num_rows > 0) {
+				$previus = $this->getInfoAccumulatedNote($student, $subject, $period[0][0]);
+				$acc = $previus + $acc;
 				$query  = "UPDATE accumulated_note SET acc = ROUND('$acc', 2) WHERE idSubject = '$subject' AND idStudent = '$student'";
+				
 				if($this->connection->connection->query($query)){
 					if($this->checkApproved("accumulated_note", $student, $acc, $subject, 0)){return true;}
 				}
@@ -285,6 +288,21 @@
 				$query = "INSERT INTO accumulated_note(idSubject, idStudent, acc, approved) VALUES('$subject', '$student', ROUND('$acc', 2), '$approved')";
 				return ($this->connection->connection->query($query));
 			}
+		}
+
+		function getInfoAccumulatedNote($student, $subject, $idPeriod){
+			$query = "SELECT ((period.percentage / 100) * averages.average) AS multiplication FROM averages INNER JOIN period ON period.idPeriod = averages.idPeriod WHERE averages.idStudent = '$student' AND averages.idSubject = '$subject' AND averages.idPeriod != ".$idPeriod."";
+			$result = $this->connection->connection->query($query);
+			
+			if($result->num_rows > 0){
+				$acc = 0;
+				while($fila = $result->fetch_assoc()){
+					$acc += $fila['multiplication'];
+				}
+				return $acc;
+			}
+			
+			return 0;
 		}
 
 		function getGrades($id)
@@ -865,8 +883,10 @@
 			$query = "SELECT (averages.average * (period.percentage / 100)) AS multiplication, period.percentage FROM averages INNER JOIN period ON period.idPeriod = averages.idPeriod WHERE averages.idPeriod = $idPeriod AND averages.idSubject = $idSubject AND averages.idStudent = '".$idStudent."'  ";
 			$result = $this->connection->connection->query($query);
 			$fila = $result->fetch_assoc();
-			
-			return $fila['multiplication'];
+
+			$previus = $this->getInfoAccumulatedNote($idStudent, $idSubject, $idPeriod);
+			$acc = $previus + $fila['multiplication'];
+			return $acc;
 		}
 
 		function UpdateACC($idStudent, $idSubject, $acc){

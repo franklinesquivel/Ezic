@@ -89,20 +89,7 @@
             <p class="center" style="font-size: 1.2em;"><span class="apply-id"></span>  -  <span class="apply-name"></span></p>
             <br>
             <div class="row">
-                <table class="centered responsive-table" style="display: none;">
-                    <thead>
-                        <tr>
-                            <th>N°</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Código</th>
-                            <th>Selección</th>
-                        </tr>
-                    </thead>
-                    <tbody class="tblRmvCode">
-                        
-                    </tbody>
-                </table>
+                
             </div>
         </div>
         <div class="modal-footer">

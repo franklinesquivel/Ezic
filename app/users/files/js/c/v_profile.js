@@ -82,7 +82,7 @@ $(document).ready(function(){
 	});
 
 	var create_table = (object) =>{
-		let table, div, thead, tr = new Array(), th = new Array(2), tbody, td = new Array(), z = 0, li = new Array(), a = new Array(), Period_ID;
+		let table, div, thead, tr = new Array(), th = new Array(3), tbody, td = new Array(), z = 0, li = new Array(), a = new Array(), Period_ID;
 		div = new Element('div');
 		div.setClass('row col l8 m10 s10 offset-l2 offset-m1 offset-s1');
 		table = new Element('table');
@@ -91,9 +91,9 @@ $(document).ready(function(){
 		//CABEZA
 		thead = new Element('thead');
 		tr[z] = new Element('tr');
-		th[0] = new Element('th'); th[1] = new Element('th'); th[2] = new Element('th');
-		th[0].content("# Perfil"); th[1].content("Nombre"); th[2].content("Porcentaje (%)");
-		tr[z].add_el(th[0].element); tr[z].add_el(th[1].element); tr[z].add_el(th[2].element);
+		th[0] = new Element('th'); th[1] = new Element('th'); th[2] = new Element('th'); th[3] = new Element('th');
+		th[0].content("# Perfil"); th[1].content("Nombre"); th[2].content("Porcentaje (%)"); th[3].content("Período");
+		tr[z].add_el(th[0].element); tr[z].add_el(th[1].element); tr[z].add_el(th[2].element); tr[z].add_el(th[3].element);
 		thead.add_el(tr[z].element);
 
 		//CUERPO
@@ -109,10 +109,13 @@ $(document).ready(function(){
 			td[i+1].content(object[i].name);
 			td[i+2] = new Element('td');
 			td[i+2].content(object[i].percentage);
+			td[i+3] = new Element('td');
+			td[i+3].content(object[i].period);
 
 			tr[z].add_el(td[i].element);
 			tr[z].add_el(td[i+1].element);
 			tr[z].add_el(td[i+2].element);
+			tr[z].add_el(td[i+3].element);
 			tbody.add_el(tr[z].element);
 
 			//Creación y agregar los periodos al boton flotante
