@@ -138,7 +138,6 @@ $(document).ready(function(){
 		div.add_el(table.element);
 		return (div.element);
 	};
-
 	$('.info_btn').click(function(){
         $('.tap-target').tapTarget('open');
     });

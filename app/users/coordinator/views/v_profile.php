@@ -80,8 +80,8 @@
                     </div>
                 </div>
             </div>
-
-            <div class="fixed-action-btn vertical btn_periodContainer">
+        </main>
+        <div class="fixed-action-btn vertical btn_periodContainer">
                 <a class="btn-floating btn-large black">
                     <i class="large material-icons">menu</i>
                 </a>
@@ -96,9 +96,8 @@
             <div class="tap-target black" data-activates="info">
                 <div class="tap-target-content">
                     <h5>Acerca de este apartado:</h5>
-                    <p>El coordinador podrá ver los perfiles de evaluación según la materpia seleccionada. Además el apartado cuenta con controles de período, para que se visualizar los perfiles según el período seleccionado</p>
+                    <p>Para poder ver el perfil de evaluación tienes que seleccionar el profesor y la materia deseada.</p>
                 </div>
             </div>
-        </main>
 	</body>
 </html>

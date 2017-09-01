@@ -129,7 +129,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>Yei.</p>
+            <p>En el presente apartado se tiene que suben las imágenes adentro de una carpeta comprimida con la extensión .zip, si no es de ese formato retornara un error haciéndolo saber.</p>
         </div>
     </div>
 </body>

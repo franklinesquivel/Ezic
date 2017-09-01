@@ -35,7 +35,7 @@
 	<header>
         <nav class="top-nav black">
             <div class="container">
-                <div class="nav-wrapper"><a class="page-title">Eliminar especialidad</a></div>
+                <div class="nav-wrapper"><a class="page-title">Eliminar Sección</a></div>
             </div>
         </nav>
 
@@ -66,7 +66,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>.</p>
+            <p>Siempre y cuando las secciones no esten registradas en un horario o hacia un grupo de personas. Tú podrás eliminar cada sección.</p>
         </div>
     </div>
 </body>

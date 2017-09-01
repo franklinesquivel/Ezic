@@ -96,7 +96,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>Se muestra la sección correspondiente al horario para que se pase lista. Así mismo el apartado tiene en cuenta los permisos previos y el estado conductual de los alumnos</p>
+            <p>Puedes añadir según sea el alumno cada responsable. Además tienes unos filtros de busca de usuarios, para facilitar tú estancia.</p>
         </div>
     </div>
 </body>

@@ -63,7 +63,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>.</p>
+            <p>Este apartado solo cuenta con la vista de una tabla con todas las especialidades registradas.</p>
         </div>
     </div>
 </body>
