@@ -138,7 +138,7 @@
             <div class="tap-target black" data-activates="info">
                 <div class="tap-target-content">
                     <h5>Acerca de este apartado:</h5>
-                    <p>El coordinador podrá eliminar los perfiles de evaluación según el profesor, materia y período seleccionados.</p>
+                    <p>Se podrá eliminar los códigos buscándolos por su categoría y luego seleccionar los códigos que se desean eliminar.</p>
                 </div>
             </div>
     	</main>

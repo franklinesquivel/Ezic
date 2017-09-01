@@ -63,7 +63,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>.</p>
+            <p>En este apartado solo se tiene que digitar el tipo de nueva especialidad que se desea registrar.</p>
         </div>
     </div>
 </body>

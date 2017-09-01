@@ -145,10 +145,10 @@
         </div>
     </div>
 
-    <div class="tap-target blue" data-activates="info">
+    <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
-            <h5>Title</h5>
-            <p>A bunch of text</p>
+            <h5>Acerca de este apartado:</h5>
+            <p>En este apartado tienes acceso a diversas herramientas para manipular la información de todos los usuarios registrados en la plataforma.</p>
         </div>
     </div>
 

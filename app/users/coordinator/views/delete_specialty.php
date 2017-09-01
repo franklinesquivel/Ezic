@@ -63,7 +63,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>.</p>
+            <p>Se muestra un cuadro con todas las especialidades registradas y a la par de ellas puede seleccionar la que desea eliminar ya sea una o más.</p>
         </div>
     </div>
 </body>

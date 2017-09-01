@@ -64,7 +64,7 @@
         <div class="tap-target black" data-activates="info">
             <div class="tap-target-content">
                 <h5>Acerca de este apartado:</h5>
-                <p>Se podran registrar códigos a aplicar eligiendo categoría y tipo.</p>
+                <p>En este apartado se puede agregar una nueva sección, pero recuerda que se necesita un maestro guía para que cada una.</p>
             </div>
         </div>
     </main>

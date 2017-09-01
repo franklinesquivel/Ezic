@@ -68,7 +68,7 @@
     <div class="tap-target black" data-activates="info">
         <div class="tap-target-content">
             <h5>Acerca de este apartado:</h5>
-            <p>.</p>
+            <p>En este apartado se ingresan todos los datos necesarios para poder registrar a un coordinador nuevo.</p>
         </div>
     </div>
 </body>

@@ -807,7 +807,8 @@
 						if($infoCode['accumulation_code'] == '1'){
 							$codes[$x] = $this->CodeGrave($ids[$i], $infoCode['period'], $equivalence['c_ref'], $equivalence['c_code'], $equivalence['t_result'], $infoCode['idStudent']);
 
-							if($codes[$x] != false){#En busca de códgio Leve
+							$infoCode = $this->getInfoCode($codes[$x]);
+							if($codes[$x] != false && $infoCode['accumulation_code'] == '1'){#En busca de códgio Leve
 								//if($codes[$x]['accumulation_code'] == '1'){
 									$infoCode = $this->getInfoCode($codes[$x]);
 									$equivalence = $this->EquivalenceInfoCode($infoCode['type']);
@@ -819,7 +820,6 @@
 								//}
 							}
 						}
-
 					}elseif($infoCode['type'] == 'G'){// && $infoCode['accumulation_code'] == '1'
 						$codes[$x] = $this->CodeLevel($ids[$i], $infoCode['period'], $equivalence['c_ref'], $equivalence['c_code'], $equivalence['t_result'], $infoCode['idStudent']);
 					}
