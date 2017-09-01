@@ -448,6 +448,7 @@
 				$equivalence = $this->EquivalenceInfoCode($infoCode['type']);
 
 				if(($equivalence != false) && ($infoCode['type'] != 'MG')){
+					$initial = $infoCode['type'];
 					$code = $this->AccumulationCodes($infoCode['idRecord'], $equivalence['c_code'], $equivalence['c_ref'], $equivalence['t_result'],  $equivalence['c_result'], $student, $idPeriod);
 					if($code != false){
 						$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
@@ -456,7 +457,14 @@
 						$idApplyCode = $this->connection->connection->insert_id;
 						$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
 						$valInsertRecord = $this->connection->connection->query($queryRecord);	
+					
+						if($initial == 'G'){
+							$endDate = $this->EndSuspended($date);
+							$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$idApplyCode', 1)";
+							$result_suspended = $this->connection->connection->query($query_suspended);
+						}
 					}
+					
 				}else{
 					if($infoCode['type'] == 'MG'){
 						// $queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
@@ -555,47 +563,51 @@
 			if($result->num_rows > 0){
 				while($fila = $result->fetch_assoc()){
 					if($fila['type'] == 'G'){
-						if($z == 2){
-							$z = 0;
-						}else{
+						// if($z == 2){
+						// 	$z = 0;
+						// }else{
 							$z++;
-						}
+						// }
 					}
 					if($fila['type'] == 'MG'){
-						$id_MG = $fila['idApplied_Code'];
+						// $valid = true;
+						$z = 0;
 					}
 				}
 			}
 
-			// for($i =0; $i < count($this->gnrl_code->c_reference); $i++){
-			// 	if($this->gnrl_code->c_reference[$i] == 'G'){
-			// 		$code = $this->gnrl_code->c_result[$i];
-			// 	}
-			// }
+			
 
 			if($z == 2){
-				$valid = true;
-				$query_verifyS = "SELECT * FROM suspended WHERE idApplied_Code = $id_MG";
-				$result_verifyS = $this->connection->connection->query($query_verifyS);
-				
-				if($result_verifyS->num_rows > 0){
-					$valid = false;
-				}else{
-					$valid = true;
+
+				for($i =0; $i < count($this->gnrl_code->c_reference); $i++){
+					if($this->gnrl_code->c_reference[$i] == 'G'){
+						$code = $this->gnrl_code->c_result[$i];
+					}
 				}
 
-				if($valid){
-					// $queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
-					// $valInsertApply = $this->connection->connection->query($queryApply);
+				// $valid = true;
+				// $query_verifyS = "SELECT * FROM suspended WHERE idApplied_Code = $id_MG";
+				// $result_verifyS = $this->connection->connection->query($query_verifyS);
+				
+				// if($result_verifyS->num_rows > 0){
+				// 	$valid = false;
+				// }else{
+				// 	$valid = true;
+				// }
 
-					// $idApplyCode = $this->connection->connection->insert_id;
-					// $queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
-					// $valInsertRecord = $this->connection->connection->query($queryRecord);
+				//if($valid){
+					$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+					$valInsertApply = $this->connection->connection->query($queryApply);
+
+					$idApplyCode = $this->connection->connection->insert_id;
+					$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
+					$valInsertRecord = $this->connection->connection->query($queryRecord);
 
 					$endDate = $this->EndSuspended($date);
-					$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$id_MG', 1)";
+					$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$idApplyCode', 1)";
 					$result_suspended = $this->connection->connection->query($query_suspended);
-				}
+				//}
 			}
 		}
 
