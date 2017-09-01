@@ -11,7 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv=”Expires” content=”0″>
     <meta http-equiv=”Last-Modified” content=”0″>
-    <!-- <meta http-equiv=”Cache-Control” content=”no-cache, mustrevalidate”> -->
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv=”Pragma” content=”no-cache”>
 
@@ -36,7 +35,6 @@
     <script src="../../files/js/init.js" charset="utf-8"></script>
     <script src="../../files/js/Loader.js" charset="utf-8"></script>
     <script src='../../files/js/c/search.js' charset='utf-8'></script>
-    <!-- <script src='../../files/js/c/administration.js' charset='utf-8'></script> -->
 </head>
 <body>
 

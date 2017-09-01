@@ -181,15 +181,15 @@
 		            }
 		        },submitHandler: function(form) {
 		        	let auxObj = {
-		        		"idStudent": $(`form._${i + 1} input[name=idStudent]`).val(),
-		        		"name": $(`#txtName_${i + 1}`).val(),
-		        		"lastName": $(`#txtLastName_${i + 1}`).val(),
-		        		"dui": $(`#txtDui_${i + 1}`).val(),
-		        		"email": $(`#txtEmail_${i + 1}`).val(),
-		        		"phone": $(`#txtPhone_${i + 1}`).val(),
-		        		"sex": $(`form._${i + 1} input[name=txtSex]:checked`).val(),
-		        		"relation": $(`#txtRelation_${i + 1}`).val(),
-		        		"birthdate": $(`#txtBirthdate_${i + 1}`).val()
+		        		"idStudent": $(".frmMandated").eq(i).find(`input[name=idStudent]`).val(),
+                        "name": $(".frmMandated").eq(i).find(`[name=txtName]`).val(),
+                        "lastName": $(".frmMandated").eq(i).find(`[name=txtLastName]`).val(),
+                        "dui": $(".frmMandated").eq(i).find(`[name=txtDui]`).val(),
+                        "email": $(".frmMandated").eq(i).find(`[name=txtEmail]`).val(),
+                        "phone": $(".frmMandated").eq(i).find(`[name=txtPhone]`).val(),
+                        "sex": $(".frmMandated").eq(i).find(`input[name=txtSex]:checked`).val(),
+                        "relation": $(".frmMandated").eq(i).find(`[name=txtRelation]`).val(),
+                        "birthdate": $(".frmMandated").eq(i).find(`[name=txtBirthdate]`).val()
 		        	}
 
 		        	data.push(auxObj);
@@ -253,7 +253,7 @@
         loader.in()
     	$.ajax({
     		url: '../../files/php/C_Controller.php',
-    		data: {filterSections: 1, lvl, spcty, sctn},
+    		data: {filterSectionsForMandated: 1, lvl, spcty, sctn},
     		success: r => {
                 if (r != -1) {
         			$(".sectionCollection").html(r);

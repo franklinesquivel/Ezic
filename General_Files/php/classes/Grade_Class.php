@@ -523,19 +523,25 @@
 						$accRes = $this->connection->connection->query($accQuery);
 						$accFlag = $accRes->num_rows > 0;
 						$accContent = ($accFlag ? $accRes->fetch_assoc() : "NPP");
+						$sumAux = 0;
+						$rowCAux = $colHelper;
 						while ($epRow = $epRes->fetch_assoc()) {
+							$colAux = 100;
 							$cAux++;
-							$aux .= "<td style='color: #1976D2;' colspan='" . ((100 / $colHelper)) . "%'>" . $epRow['percentage'] . "%</td>
+							$colValue = ceil(($colAux / $colHelper));
+							$sumAux += $colValue;
+							$aux .= "<td style='color: #1976D2;' colspan='" . ($sumAux <= 100 ? $colValue : ($colValue - ($sumAux - 100))) . "%'>" . $epRow['percentage'] . "%</td>
 							" . ($cAux == $colHelper ? ("<td rowspan='2' class='" . ($avFlag ? ($avContent['approved'] ? "green" : "red") : "") . "-text'>" . ($avFlag ? $avContent['average'] : $avContent) . "</td><td rowspan='2' class='" . ($accFlag ? ($accContent['approved'] ? "green" : "red") : "") . "-text'>" . ($accFlag ? $accContent['acc'] : $accContent) . "</td>") : "");
 							$gradeQuery = "SELECT * FROM grade WHERE idProfile = " . $epRow['idProfile'] . " AND idStudent = '$id';";
 							$gradeRes = $this->connection->connection->query($gradeQuery);
 							if ($gradeRes->num_rows > 0) {
 								while ($gradeRow = $gradeRes->fetch_assoc()) {
-									$gradeAux .= "<td colspan='" . ((100 / $colHelper)) . "%'>" . $gradeRow['grade'] . "</td>";
+									$gradeAux .= "<td colspan='" . ($sumAux <= 100 ? $colValue : ($colValue - ($sumAux - 100))) . "%'>" . $gradeRow['grade'] . "</td>";
 								}
 							}else{
-								$gradeAux .= "<td colspan='" . ((100 / $colHelper)) . "%'>NPI</td>";
+								$gradeAux .= "<td colspan='" . ($sumAux <= 100 ? $colValue : ($colValue - ($sumAux - 100))) . "%'>NPI</td>";
 							}
+							$rowCAux--;
 						}
 						$aux .= $gradeAux . "</tr>";
 					}else{

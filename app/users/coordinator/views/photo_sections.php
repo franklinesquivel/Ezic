@@ -49,7 +49,7 @@
     <main class="show">
     	<div class="row">
             <br>
-            <h5 class="center">Selecciona el archivo que deseas subir (.zip)</h5>
+            <h5 class="center">Selecciona el archivo que deseas subir (.zip) (Máximo 40MB)</h5>
             <form action="#" class="col l6 m6 s10 offset-s1 offset-m3 offset-l3">
                 <div class="file-field input-field">
                     <div class="btn black" >

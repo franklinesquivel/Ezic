@@ -220,6 +220,19 @@
 						$disabled = "";
 						$class_tr = "";
 						$title = "";
+
+					 	$table .= "
+					 	<tr class='".$class_tr."' title='".$title."'>
+							<td>".$fila['nameSubject']."</td>
+							<td>".$fila['lastName'].", ".$fila['name']."</td>
+							<td>".$percentage."%</td>
+							<td>".$fila['level']."°</td>
+							<td>".$fila['section']."</td>
+							<td>
+								<input type='checkbox' class='btn_checkbox' id=".$fila['idSubject']." $disabled/>
+		          				<label for=".$fila['idSubject'].">Seleccionar</label>
+							</td>
+					 	<tr>";
 					}else{
 						$disabled = "";
 						$class_tr = "";
@@ -228,20 +241,6 @@
 						$class_tr = "#9e9e9e grey";
 						$title = "Materia con el 100% registrado";
 					}
-
-				 	$table .= "
-				 	<tr class='".$class_tr."' title='".$title."'>
-						<td>".$fila['nameSubject']."</td>
-						<td>".$fila['lastName'].", ".$fila['name']."</td>
-						<td>".$percentage."%</td>
-						<td>".$fila['level']."°</td>
-						<td>".$fila['section']."</td>
-						<td>
-							<input type='checkbox' class='btn_checkbox' id=".$fila['idSubject']." $disabled/>
-	          				<label for=".$fila['idSubject'].">Seleccionar</label>
-						</td>
-				 	<tr>
-				 	";
 				}
 				$table .= "</tbody></table></div>
 					

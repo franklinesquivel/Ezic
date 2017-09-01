@@ -68,6 +68,34 @@
 		   	return (json_encode($info));
 		}
 
+		function filterSectionsForMandated($lvl, $spcty, $sctn)
+		{
+			$aux = "";
+			$query = "SELECT * FROM section sn INNER JOIN level ll ON sn.idLevel = ll.idLevel INNER JOIN specialty sy ON sn.idSpecialty = sy.idSpecialty WHERE sn.sState = 0" . ($lvl != '' ? " AND ll.idLevel = $lvl " . ($spcty != '' ? "AND sy.idSpecialty = $spcty " . ($sctn != '' ? "AND sn.idSection = $sctn" : '') : '') : ';');
+
+			// return $query;
+
+			$res = $this->connection->connection->query($query);
+
+			if($res->num_rows == 0) return -1;
+			while ($row = $res->fetch_assoc()) {
+				$cantNONQuery = "SELECT COUNT(*) as nonV FROM student WHERE verified = 0 AND idSection = " . $row['idSection'];
+				$cantQuery = "SELECT COUNT(*) as total FROM student WHERE idSection = " . $row['idSection'];
+				$cantNON = $this->connection->connection->query($cantNONQuery)->fetch_assoc()['nonV'];
+				$cant = $this->connection->connection->query($cantQuery)->fetch_assoc()['total'];
+				$aux .= "
+					<a class='collection-item waves-effect sctnItem waves-black ' idSn='" . $row['idSection'] . "'>
+	                    <span class='title black-text'> " . ($row['level'] == 1 ? '1er' : ($row['level'] == 2 ? '2do' : '3er')) . " Año, &nbsp</span>
+	                    <span class='title black-text'><i>" . $row['sName'] . ":</i> &nbsp </span>
+	                    <span class='title black-text'><b>Sección <i>\"". $row['sectionIdentifier'] ."\"</i></b></span><br>
+	                    <span title='Cantidad de Estudiantes' class='grey-text text-darken-1'>" . $cantNON . " estudiantes sin verificar /$cant</span>
+	                </a>
+				";
+			}
+
+			return $aux;
+		}
+
 		function filterSections($lvl, $spcty, $sctn)
 		{
 			$aux = "";
@@ -262,7 +290,7 @@
 								for ($i=0; $i < count($oldPhotos); $i++) {
 									for ($j=0; $j < count($newPhotos); $j++) { 
 										if ($oldPhotos[$i]['name'] == $newPhotos[$j]['name']) {
-											$info['matches']++;
+											// $info['matches']++;
 											$oldName = $oldPhotos[$i]['name'] . "." . $oldPhotos[$i]['type'];
 											$u = unlink("../../files/profile_photos/$oldName");
 
@@ -290,6 +318,7 @@
 										$aux[$key] = $value;
 									}
 									if ($row['idStudent'] == $newPhotos[$j]['name']) {
+										$info['matches']++;
 										array_push($info['students'], $aux);
 										$newName = $newPhotos[$j]['name'] . "." . $newPhotos[$j]['type'];
 										if (file_exists("../../files/tmp/sectionPhotos/$newName")) {

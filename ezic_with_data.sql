@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-08-2017 a las 06:59:39
+-- Tiempo de generación: 31-08-2017 a las 22:17:57
 -- Versión del servidor: 10.1.25-MariaDB
 -- Versión de PHP: 7.0.21
 
@@ -359,7 +359,7 @@ CREATE TABLE `period` (
 --
 
 INSERT INTO `period` (`idPeriod`, `startDate`, `endDate`, `percentage`, `nthPeriod`) VALUES
-(1, '2017-08-30', '2017-09-08', 20, 1);
+(1, '2017-08-30', '2017-09-06', 20, 1);
 
 -- --------------------------------------------------------
 
@@ -465,50 +465,53 @@ INSERT INTO `register_subject` (`idRegisterSubject`, `idSubject`, `idSection`) V
 (20, 11, 2),
 (21, 11, 3),
 (22, 11, 4),
-(23, 11, 5),
-(24, 11, 6),
-(25, 11, 7),
-(26, 11, 8),
+(23, 27, 5),
+(24, 27, 6),
+(25, 27, 7),
+(26, 27, 8),
 (27, 1, 3),
 (28, 1, 4),
-(29, 1, 5),
-(30, 1, 6),
-(31, 1, 7),
-(32, 1, 8),
+(29, 22, 5),
+(30, 22, 6),
+(31, 22, 7),
+(32, 22, 8),
 (33, 2, 3),
 (34, 2, 4),
-(35, 2, 5),
-(36, 2, 6),
-(37, 2, 7),
-(38, 2, 8),
+(35, 23, 5),
+(36, 23, 6),
+(37, 23, 7),
+(38, 23, 8),
 (39, 12, 2),
 (40, 12, 3),
 (41, 12, 4),
-(42, 12, 5),
-(43, 12, 6),
-(44, 12, 7),
-(45, 12, 8),
+(42, 25, 5),
+(43, 25, 6),
+(44, 25, 7),
+(45, 25, 8),
 (46, 13, 2),
 (47, 13, 3),
 (48, 13, 4),
-(49, 13, 5),
-(50, 13, 6),
-(51, 13, 7),
-(52, 13, 8),
+(49, 24, 5),
+(50, 24, 6),
+(51, 24, 7),
+(52, 24, 8),
 (53, 14, 2),
 (54, 14, 3),
 (55, 14, 4),
-(56, 14, 5),
-(57, 14, 6),
-(58, 14, 7),
-(59, 14, 8),
+(56, 26, 5),
+(57, 26, 6),
+(58, 26, 7),
+(59, 26, 8),
 (60, 15, 2),
 (61, 16, 5),
 (62, 17, 9),
 (63, 18, 9),
 (64, 19, 11),
 (65, 20, 10),
-(66, 21, 12);
+(66, 21, 12),
+(67, 12, 1),
+(68, 13, 1),
+(69, 14, 1);
 
 -- --------------------------------------------------------
 
@@ -1172,7 +1175,13 @@ INSERT INTO `subject` (`idSubject`, `nameSubject`, `idTeacher`, `acronym`, `desc
 (18, 'Programación Orientada a Objetos', 'D6979', 'POO', 'Paradigma de programación POO'),
 (19, 'Sistemas Digitales y Electrónicos', 'D9292', 'SDE', 'Estudio de los sistemas eléctricos y digitales que componen los automóviles.'),
 (20, 'Lenguajes de Programación', 'D6151', 'LP', 'Programación avanzada de circuitos integrados.'),
-(21, 'Automatización Avanzada', 'D4198', 'AUTA', 'Procesos avanzados y profesionales');
+(21, 'Automatización Avanzada', 'D4198', 'AUTA', 'Procesos avanzados y profesionales'),
+(22, 'Estudios Sociales', 'D5991', 'SOC', 'El campo de los estudios sociales es un campo amplio y multidisciplinario que comprende las ciencias'),
+(23, 'Lenguaje', 'D1466', 'LN', 'El lenguaje y la literatura son los medios que la humanidad ha establecido para facilitar la comunic'),
+(24, 'Ciencias Biológicas', 'D2414', 'CB', 'Es la disciplina que tiene como foco de estudio a los organismos vivos y todo lo inherente a los mis'),
+(25, 'Ciencias Físicas', 'D4994', 'CF', 'Entender la estructura de las leyes de la Física y tomar parte en el descubrimiento de nuevos fenóme'),
+(26, 'Ciencias Químicas', 'D3132', 'CQ', 'Es la disciplina que tiene como foco de estudio a los organismos vivos y todo lo inherente a los mis'),
+(27, 'Matemática', 'D3132', 'MAT', ' partir de axiomas y siguiendo razonamientos lógicos, las matemáticas analizan estructuras, magnitud');
 
 -- --------------------------------------------------------
 
@@ -1688,7 +1697,7 @@ ALTER TABLE `record`
 -- AUTO_INCREMENT de la tabla `register_subject`
 --
 ALTER TABLE `register_subject`
-  MODIFY `idRegisterSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `idRegisterSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 --
 -- AUTO_INCREMENT de la tabla `schedule_register`
 --
@@ -1783,7 +1792,7 @@ ALTER TABLE `student_average`
 -- AUTO_INCREMENT de la tabla `subject`
 --
 ALTER TABLE `subject`
-  MODIFY `idSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `idSubject` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT de la tabla `suspended`
 --

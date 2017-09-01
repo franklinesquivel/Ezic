@@ -138,9 +138,13 @@
 
 		function multiGrades($id, $period = "acc")
 		{
-
-			$query = "SELECT st.idStudent FROM student st INNER JOIN section sn ON st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id";
-			// $query = "SELECT st.idStudent FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel INNER JOIN student_" . ($period != 'acc' ? "average" : "acc") . " sg ON sg.idStudent = st.idStudent WHERE sn.idSection = $id " . ($period != 'acc' ? "AND sg.idPeriod = $period" : '') . " ORDER BY sg." . ($period != 'acc' ? 'average' : 'acc') . " DESC;";
+			$ifGradeQuery = "SELECT idGrade FROM grade;";
+			$ifGradeRes = $this->connection->connection->query($ifGradeQuery);
+			if ($ifGradeRes->num_rows > 0) {
+			$query = "SELECT st.idStudent FROM student st INNER JOIN section sn on st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel INNER JOIN student_" . ($period != 'acc' ? "average" : "acc") . " sg ON sg.idStudent = st.idStudent WHERE sn.idSection = $id " . ($period != 'acc' ? "AND sg.idPeriod = $period" : '') . " ORDER BY sg." . ($period != 'acc' ? 'average' : 'acc') . " DESC;";
+			}else{
+				$query = "SELECT st.idStudent FROM student st INNER JOIN section sn ON st.idSection = sn.idSection INNER JOIN level lvl ON lvl.idLevel = sn.idLevel WHERE sn.idSection = $id";
+			}
 
 			$res = $this->connection->connection->query($query);
 			$resAux = $this->connection->connection->query($query);
@@ -244,7 +248,6 @@
 			$this->mpdf->WriteHTML($this->stylesheet, 1);
 			$this->genHeader($title);
 			$this->mpdf->WriteHTML($this->_print, 2);
-			// $this->mpdf->Output($name.".pdf", 'I');
 			$this->mpdf->Output($name.".pdf", 'D');
 		}
 	}

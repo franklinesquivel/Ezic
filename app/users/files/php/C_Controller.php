@@ -817,6 +817,10 @@
 		echo $section->filterSections($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
 	}
 
+	if (isset($_REQUEST['filterSectionsForMandated'])) {
+		echo $section->filterSectionsForMandated($_REQUEST['lvl'], $_REQUEST['spcty'], $_REQUEST['sctn']);
+	}
+
 	if (isset($_POST['filterSectionsForRegister'])) {
 		echo $section->filterSectionsForRegister($_POST['lvl'], $_POST['spcty'], $_POST['sctn']);
 	}

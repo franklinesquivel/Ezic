@@ -8,31 +8,41 @@
             loader.in();
             $('main').fadeOut('slow');
             let nav = document.createElement('nav');
-            nav.innerHTML = "<div class='nav-wrapper black '><form class='search'><div class='input-field'><input placeholder='Buscar usuario por código' id='search' type='search' required><label class='label-icon' for='search'><i class='material-icons'>search</i></label><i class='material-icons'>close</i></div></form></div>";
+            nav.innerHTML = "<div class='nav-wrapper black '><form class='search'><div class='input-field'><input autocomplete='off' placeholder='Buscar usuario por código' id='search' type='search' required><label class='label-icon' for='search'><i class='material-icons'>search</i></label><i class='material-icons'>close</i></div></form></div>";
             let row = document.createElement('row');
             row.classList = 'row';
             row.innerHTML = "<div class='search_container col l12 m12 s12'><ul class='user-cont'></ul></div>";
             $('main').html(nav);
             $('main').append(row);
-            $.ajax({
-                url: '../../files/php/C_Controller.php',
-                data: {getUsers: 1},
-                success: function(r){
-                    users = JSON.parse(r);
-                    // console.log(users);
-                    sort_users();
-                    for (let i = 0 ; i < users.length; i++) {
-                        show_user(users[i]);
+            if (users === undefined) {
+                $.ajax({
+                    url: '../../files/php/C_Controller.php',
+                    data: {getUsers: 1},
+                    success: function(r){
+                        users = JSON.parse(r);
+                        sort_users();
+                        for (let i = 0 ; i < users.length; i++) {
+                            show_user(users[i]);
+                        }
+                        $.getScript('../../files/js/init.js');
+                        initSearch();
+                        initFunctions();
+                        $('main').fadeIn('slow', loader.out());
                     }
-                    $.getScript('../../files/js/init.js');
-                    initSearch();
-                    initFunctions();
-                    $('main').fadeIn('slow', loader.out());
+                })
+            }else{
+                $.getScript('../../files/js/init.js');
+                for (let i = 0 ; i < users.length; i++) {
+                    show_user(users[i]);
                 }
-            })
+                initSearch();
+                initFunctions();
+                $('main').fadeIn('slow', loader.out());
+            }
             $('.btnBack').attr('disabled', 1);
             $('.btnPrint').attr('disabled', 1);
             $('.options_btn').removeAttr('disabled');
+            $("#search").removeAttr('disabled');
             back_i++;
             f = 1;
         },
@@ -74,15 +84,13 @@
                     })
                 },
                 () => {
-                    //$('main').html('<h3 class="center">Permiso</h3>');
-                    //TRABAJAR CÓDIGO PARA MOSTRAR FOMULARIO DE LOS PERMISOS
                     schedules_id.length = 0;
                     loader.in();
                     $.ajax({
                         type: 'POST',
                         url: '../../files/php/C_Controller.php',
                         data:{
-                            v_permmission: 1,//,
+                            v_permmission: 1,
                             student: g_id
                         }
                     }).done(function(r){
@@ -96,15 +104,13 @@
                     });
                 },
                 () => {
-                    //$('main').html('<h3 class="center">Justificante</h3>');
-                    //lO MISMO DE ARRIBA PERO PARA LA JUSTIFICACIÓN :v
                     justification_id.length = 0;
                     loader.in();
                     $.ajax({
                         type: 'POST',
                         url: '../../files/php/C_Controller.php',
                         data:{
-                            v_justification: 1,//,
+                            v_justification: 1,
                             student: g_id
                         }
                     }).done(function(r){
@@ -155,7 +161,7 @@
                 $('main').fadeOut('slow');
                 $.ajax({
                     url: '../../files/php/C_Controller.php',
-                    data: {showSchedule: '1', id: id, type: (id[0] == 'D' ? 'T' : (id[0] == 'C' ? 'C' : 'S')) },
+                    data: {showSchedule: '1', id: id, type: (id[0] == 'D' && !isNaN(id[1]) ? 'T' : (id[0] == 'C' && !isNaN(id[1]) ? 'C' : 'S')) },
                     success: (r) => {
                         if (r == -1) {
                             $('main').html("<br><div class='container alert_ red-text text-darken-4'>No posee un horario asignado</div>");
@@ -671,7 +677,6 @@
         })
 
         $('#cmbBehaviourState').change(function(){
-            console.log($(this).val());
             search_user('S', attr, state, $('#search').val(), $(this).val());
         })
 
@@ -732,7 +737,6 @@
             Materialize.toast('Seleccione el código que desea remover!', 2000);
         }else{
             loader.in();
-            //console.log(ids);
             $.ajax({
                 url: '../../files/php/C_Controller.php',
                 data: {rmvCodes: 1, ids: ids},
