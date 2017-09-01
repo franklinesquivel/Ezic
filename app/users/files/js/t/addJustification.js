@@ -70,6 +70,8 @@
 		if (validate_inputs()) {
 			save_info();
 			if (verify_info()) {
+				let loader = new Loader();
+				loader.in();
 				$.ajax({
 					type:'POST',
 					url:'../../files/php/T_Controller.php',
@@ -84,6 +86,7 @@
 					}else{
 						Materialize.toast('Ha ocurrido un problema, favor intentarlo más tarde', 3000);
 					}
+					loader.out();
 				});
 			}else{
 				Materialize.toast('Favor no repetir información', 3000);

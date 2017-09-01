@@ -23,7 +23,6 @@
                 subject[i] = {"id": $("table tbody tr input[type='checkbox']").eq(i).attr("id")};
             }
             loader.out();
-            console.log(JSON.stringify(subject));
         });
     });
    
@@ -116,7 +115,6 @@
             var loader = new Loader();
             loader.in();
             let object = JSON.stringify(subject);
-            console.log(object+" - "+name+" - "+percentage);
             $.ajax({
                 type: 'POST',
                 url: '../../files/php/C_Controller.php',
@@ -146,8 +144,8 @@
     const make_error_tr = (object) =>{
         for (var i = 0; i < $("table tbody tr input[type='checkbox']").length; i++) {
             for (var x = 0; x < object.length; x++) {
-               if (($("table tbody tr input[type='checkbox']").eq(i).attr("id")) == (object[i].id)) {
-                    $("table tbody").css({"background": "#d32f2f", "color": "white"});
+               if (($("table tbody tr input[type='checkbox']").eq(i).attr("id")) == (object[x].id)) {
+                    $("table tbody tr input[type='checkbox']").eq(i).parent().parent().css({"background": "#d32f2f", "color": "white"});
                 }
             }
         }

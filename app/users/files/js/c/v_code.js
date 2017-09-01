@@ -43,7 +43,7 @@
 				category: $("#selectCategory").val()
 			}
 		}).done(function(r){
-			if (r != "0") {
+			if (r != 0) {
 				$("main .container.table").html(r);
 			}else{
 				$("main .container.table").html("<div class='col l8 m8 s12 offset-l2 offset-m2'><div class='alert_ red-text text-darken-4'>No se han encontrado códigos registrados según datos selecccionados</div></div>");

@@ -115,8 +115,8 @@
 			return ($profiles);
 		}
 
-		function modifyProfile($id, $name, $percentage, $description){
-			$query = "UPDATE evaluation_profile SET name = '$name' , percentage = $percentage, description = '$description' WHERE idProfile = $id";
+		function modifyProfile($id, $name, $description){
+			$query = "UPDATE evaluation_profile SET name = '$name' , description = '$description' WHERE idProfile = $id";
 
 			if ($this->connection->connection->query($query)) {
 				return true;
@@ -129,7 +129,7 @@
 		}
 
 		function getProfilesForDelete($idSubject, $idPeriod){
-			$query = "SELECT evaluation_profile.idProfile FROM evaluation_profile WHERE evaluation_profile.idProfile IN (SELECT evaluation_profile.idProfile FROM evaluation_profile INNER JOIN grade ON grade.idProfile = evaluation_profile.idProfile WHERE evaluation_profile.idPeriod = $idPeriod AND evaluation_profile.idSubject = $idSubject)";
+			$query = "SELECT evaluation_profile.idProfile FROM evaluation_profile WHERE evaluation_profile.idProfile NOT IN (SELECT evaluation_profile.idProfile FROM evaluation_profile INNER JOIN grade ON grade.idProfile = evaluation_profile.idProfile WHERE evaluation_profile.idPeriod = $idPeriod AND evaluation_profile.idSubject = $idSubject)";
 
 			$result = $this->connection->connection->query($query);
 			$profiles = array();
@@ -147,7 +147,7 @@
 
 			$i = 0;
 			for ($x=0; $x < count($profiles) ; $x++) { 
-				$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idProfile != '".$profiles[$x]."' GROUP BY evaluation_profile.idProfile ORDER BY evaluation_profile.name ";
+				$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE subject.idSubject = '$idSubject' AND evaluation_profile.idProfile = '".$profiles[$x]."' AND evaluation_profile.idPeriod = $idPeriod GROUP BY evaluation_profile.idProfile ORDER BY evaluation_profile.name ";
 				$result = $this->connection->connection->query($query);
 				while ($fila = $result->fetch_assoc()) {
 
@@ -168,7 +168,7 @@
 		}
 
 		function getProfilesForView($idSubject){
-			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.nthPeriod WHERE evaluation_profile.idSubject = $idSubject ORDER BY period.nthPeriod";
+			$query = "SELECT evaluation_profile.name AS nameProfile, evaluation_profile.percentage, evaluation_profile.description, subject.nameSubject, period.nthPeriod AS numPeriod, teacher.name, teacher.idTeacher, evaluation_profile.idProfile FROM evaluation_profile INNER JOIN subject ON evaluation_profile.idSubject = subject.idSubject INNER JOIN teacher ON subject.idTeacher = teacher.idTeacher INNER JOIN period ON evaluation_profile.idPeriod = period.idPeriod WHERE evaluation_profile.idSubject = $idSubject ORDER BY period.nthPeriod";
 			$result	= $this->connection->connection->query($query);
 			$array = array();
 			$i = 0;
@@ -229,7 +229,8 @@
 						$title = "Materia con el 100% registrado";
 					}
 
-				 	$table .= "<tr class='".$class_tr."' title='".$title."'>
+				 	$table .= "
+				 	<tr class='".$class_tr."' title='".$title."'>
 						<td>".$fila['nameSubject']."</td>
 						<td>".$fila['lastName'].", ".$fila['name']."</td>
 						<td>".$percentage."%</td>
@@ -308,7 +309,7 @@
 
 					$form .= "<div class='row'>
 						<div class='title-profile col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
-							<blockquote><h5 class='center-align'>".$fila['name']."</h5></blockquote>
+							<blockquote profile_id='".$fila['idProfile']."'><h5 class='center-align'>".$fila['name']."</h5></blockquote>
 							<div class='percentage'>".$fila['percentage']." %</div>
 						</div>
 						
@@ -439,7 +440,7 @@
 				}
 				$form .= "</ul></div>";
 			}else{
-				$form = "<div class='alert_ col s8 offset-s2'><span>No hay perfiles de evaluación con descriciones por ingresar en este período</span></div>";
+				$form = "<div class='alert_ col s8 offset-s2'><span>No hay perfiles de evaluación con descripciones por ingresar en este período</span></div>";
 			}
 
 			return $form;

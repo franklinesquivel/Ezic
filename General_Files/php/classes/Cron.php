@@ -1,15 +1,19 @@
 <?php
-    require_once 'Assistance_Class.php';
-    require_once 'Suspended.php';
-    require_once 'Email_Class.php';
-
-    $email = new Email();
-    $suspended = new Suspended();
+    /*
+        Este Archivo es ejecutado diaramente - Según la configuración del Cron Jobs del servidor
+    */
+    require_once('Assistance_Class.php');
+    require_once('Suspended_Class.php');
+    require_once('Email_Class.php');
     $assistance = new Assistance();
+    $suspended = new Suspended();
+    $email = new Email();
 
     $schedules = $assistance->getSchedule();#Se obtiene el horario de todas las secciones
-    
-    if($schedules){
-        $assistance->checkAssistance(json_decode($schedules)); #Se obtiene las secciones en las cuales se paso lista
+    if($schedules != false){
+        $email->recordAssistance($assistance->checkAssistance(json_decode($schedules)));
     }
+
+    #Chequea los estudiantes expulsados
+    $suspended->ChangeState();
 ?>

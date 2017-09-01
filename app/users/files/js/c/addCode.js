@@ -67,7 +67,7 @@
     					}
             		}).done(function(r){
                         // alert(r);
-            			if (r != "0") {
+            			if (r != 0) {
             				$("#description").val('');
             				$("#selectCategory").val('');
             				$("#selectCategory").material_select();
@@ -75,12 +75,12 @@
             				$("#selectType").material_select();
             				Materialize.toast('Código registrado con exito', 3000);
             			}else{
-            				Materialize.toast('ERROR, este código ya existe', 3000);
+            				Materialize.toast('ERROR, este código ya existe', 3000, 'red');
             			}
             			loader.out();
             		});
             	}else{
-            		Materialize.toast('Oh oh! Al parecer faltan campos por seleccionar', 3000);
+            		Materialize.toast('Oh oh! Al parecer faltan campos por seleccionar', 3000, 'red');
             	}
             }
     	});

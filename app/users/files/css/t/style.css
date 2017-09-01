@@ -31,6 +31,9 @@
     background: #4CAF50;
 }
 
+[type="radio"]:checked + label::after, .with-gap[type="radio"]:checked + label::before, .with-gap[type="radio"]:checked + label::after{
+    border: 2px solid #4CAF50;
+}
 table.assistance tr.permission, tr.expulsed td{
     color: white;
 }
@@ -456,12 +459,18 @@ ul#slide-filter .section-select .select-dropdown{
         margin-left: 30%;
     }
     
-    .collection-item.collection-subject .info-subject .r-divider div.select-sections{
-        display: flex; 
+   .collection-item.collection-subject .info-subject .r-divider div.select-sections{
+        /* display: flex;  */
         align-items: center;
         position: relative;
     }
-
+    .dropdown-content{
+        /* position: center; */
+        margin-left: 30%;
+    }
+    .btn.dropdown-button i{
+        line-height: normal;
+    }
     .student-list{
         width: 99%;
         margin-left: 0.5%;

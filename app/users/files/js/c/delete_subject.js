@@ -22,6 +22,7 @@
 				view_deleteSubject: 'Si'
 			}
 		}).done(function(r){
+			// console.log(r);
 			if (r != 0) {
 				$("main .container").html(r);
 			}else{//Error

@@ -7,6 +7,7 @@
 		
 		private $grnl_code; //Conexión a la clase de Info general de código
 		private $info_gnrl; //Conexión a la clase de información general de nuestro proyecto
+		private $days_letter;
 		function __construct(){
 
 			require_once('Page_Constructor.php');
@@ -25,6 +26,7 @@
 			require_once('Info_Gnrl.php');
 			$this->info_gnrl = new Info_Gnrl();
 			$this->info_gnrl->setQuery();
+			$this->days_letter = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado");
 		}
 
 		function v_addCode(){
@@ -247,7 +249,7 @@
 		}
 
 		function getForDelete($category){
-			$query_1 = "SELECT code.idCode, code.description, code_type.type, code_type.color, code_type.idType FROM `code` INNER JOIN code_type ON code_type.idtype = code.type WHERE code.category = '$category' AND code.idCode NOT IN (SELECT idCode FROM applied_code) ORDER BY code_type.type;";
+			$query_1 = "SELECT code.idCode, code.description, code_type.type, code_type.color, code_type.idType FROM `code` INNER JOIN code_type ON code_type.idtype = code.type WHERE code.category = '$category' AND code.idCode NOT IN (SELECT idCode FROM applied_code) ORDER BY code.idCode;";
 			$query_2 = "SELECT code.idCode FROM code WHERE code.category = '$category' AND code.idCode IN (SELECT gnrl_code.code_result FROM gnrl_code) ORDER BY code.idCode; ";
 			$result_1 = $this->connection->connection->query($query_1);
 			$result_2 = $this->connection->connection->query($query_2);
@@ -256,9 +258,7 @@
 			$valid = true;
 
 			while($fila_1 = $result_1->fetch_assoc()){
-				while($fila_2 = $result_2->fetch_assoc()){
-					if($fila_1['idCode'] == $fila_2['idCode']){$valid = false;}
-				}
+				while($fila_2 = $result_2->fetch_assoc()){if($fila_1['idCode'] == $fila_2['idCode']){$valid = false; break;}}
 
 				if($valid){
 					$codes_array[$i] = [
@@ -270,7 +270,7 @@
 					];
 					$i++;
 				}
-				$valid = true;
+				$valid = true;	
 			}
 			
 			$x = 0;
@@ -290,7 +290,7 @@
 					$table .= "<tr id='".$key['idType']."'>
     					<td>".$x."</td>
     					<td>".$key['description']."</td>
-    					<td>".$key['type']."</td>
+    					<td class='" . $key['color'] . "' style='color: #fff;'><b>".$key['type']."</b></td>
     					<td>
           					<input type='checkbox' class='btn_checkbox' id=".$key['id']." />
           					<label for=".$key['id'].">Eliminar</label>
@@ -440,67 +440,206 @@
 				$valInsertApply = $this->connection->connection->query($queryApply);
 
 				$idApplyCode = $this->connection->connection->insert_id;
-				$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student')";
+				$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 0)";
 				$valInsertRecord = $this->connection->connection->query($queryRecord);
 
-				if($this->checkType($code)){
-					$a_codes = $this->AccumulationCodes($student, $idPeriod);				
-					if($a_codes != false){
-						for($i = 0; $i < count($a_codes); $i++){
-							$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', '".$a_codes[$i]."', $idPeriod);";
-							$valInsertApply = $this->connection->connection->query($queryApply);
-			
-							$idApplyCode = $this->connection->connection->insert_id;
-							$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student')";
-							$valInsertRecord = $this->connection->connection->query($queryRecord);
-						}
+				#Acumulación de Códigos
+				$infoCode = $this->getInfoCode($student, $idPeriod);
+				$equivalence = $this->EquivalenceInfoCode($infoCode['type']);
+
+				if(($equivalence != false) && ($infoCode['type'] != 'MG')){
+					$code = $this->AccumulationCodes($infoCode['idRecord'], $equivalence['c_code'], $equivalence['c_ref'], $equivalence['t_result'],  $equivalence['c_result'], $student, $idPeriod);
+					if($code != false){
+						$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+						$valInsertApply = $this->connection->connection->query($queryApply);
+		
+						$idApplyCode = $this->connection->connection->insert_id;
+						$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
+						$valInsertRecord = $this->connection->connection->query($queryRecord);	
+					}
+				}else{
+					if($infoCode['type'] == 'MG'){
+						// $queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+						// $valInsertApply = $this->connection->connection->query($queryApply);
+		
+						// $idApplyCode = $this->connection->connection->insert_id;
+						// $queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 0)";
+
+						$endDate = $this->EndSuspended($date);
+						$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$idApplyCode', 1)";
+						$result_suspended = $this->connection->connection->query($query_suspended);
 					}
 				}
-			
-				$this->state_expulsion($student, $idPeriod, $date);
+				$this->state_expulsion($student, $idPeriod, $date, $hour, $idApplier, $type);
+				$this->verifyStateAcademic($student);
 
 				return (($valInsertApply && $valInsertRecord) ? 1 : 0);
             }
 		}
 
-		function state_expulsion($student, $idPeriod, $date){
+		function getInfoCode($student, $idPeriod){#Se obtiene la información de un código cualquiera
+			$query_id = "SELECT MAX(idRecord) AS id FROM record r INNER JOIN applied_code ac ON ac.idApplied_code = r.idApplied_code WHERE r.idStudent = '$student' AND ac.idPeriod = $idPeriod";
+			$result_id =  $this->connection->connection->query($query_id);
+			$fila = $result_id->fetch_assoc();
+			$id = $fila['id'];
+
+
+			$query = "SELECT r.idRecord, r.idStudent, ac.idApplied_Code, ac.date, ac.idPeriod, c.idCode, c.type, c.category FROM `record` r INNER JOIN applied_code ac ON ac.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ac.idCode WHERE r.idRecord = $id";
+			$result = $this->connection->connection->query($query);
+			$fila = $result->fetch_assoc();
+
+			return (array("idRecord" => $fila['idRecord'],"idStudent" => $fila['idStudent'], "Applied_Code" => $fila['idApplied_Code'], "date" => $fila['date'], "period" => $fila['idPeriod'], "idCode" => $fila['idCode'], "type" => $fila['type'], "category" => $fila['category']));
+		}
+
+		function EquivalenceInfoCode($type){return ($this->gnrl_code->getForReference($type));}
+
+		function verifyStateAcademic($student){
+			ini_set("date.timezone", 'America/El_Salvador');
+			$periodQuery = "SELECT * FROM period;";
+            $periodRes = $this->connection->connection->query($periodQuery);
+			
+			$date = date("Y-m-d");
+			while ($rowPeriod = $periodRes->fetch_assoc()) {
+				if ((($rowPeriod['startDate']) <= ($date)) && (($rowPeriod['endDate']) >= ($date))) {
+					$idPeriod = $rowPeriod['idPeriod'];
+					break;
+				}
+			}
+
+			$query = "SELECT * FROM record INNER JOIN applied_code ON applied_code.idApplied_Code = record.idApplied_Code INNER JOIN code ON code.idCode = applied_code.idCode  WHERE record.idStudent = '$student' AND applied_code.idPeriod = $idPeriod";
+			$result = $this->connection->connection->query($query);
+			$e = 0; //Expulsado
+			$a = 0;//Excelente
+			$r = 0;//Regular
+			$w = 0;//Advartido
+
+
+			if($result->num_rows > 0){
+				while($fila = $result->fetch_assoc()){
+					if($fila['type'] == 'MG'){
+						$query_checkCode = "SELECT * FROM record r INNER JOIN applied_code ac ON ac.idApplied_Code = r.idApplied_Code INNER JOIN suspended S ON s.idApplied_Code = ac.idApplied_Code WHERE r.idApplied_Code = '".$fila['idApplied_Code']."'";			
+						$result_checkCode = $this->connection->connection->query($query_checkCode);
+						if($result_checkCode->num_rows > 0){
+							$fila_checkCode = $result_checkCode->fetch_assoc();
+							if($fila_checkCode['state'] == '1'){$e++;}
+						}
+					}elseif($fila['type'] == 'G'){
+						$w++;
+					}elseif($fila['type'] == 'L'){
+						$r++;
+					}else{
+						$a++;
+					}
+				}
+
+				if($e > 0){
+					$query_update = "UPDATE student SET stateAcademic = 'E' WHERE idStudent = '$student'";
+				}elseif($e == 0 && $w > 0){
+					$query_update = "UPDATE student SET stateAcademic = 'W' WHERE idStudent = '$student'";
+				}elseif($e == 0 && $w == 0 && $r >= 3){
+					$query_update = "UPDATE student SET stateAcademic = 'R' WHERE idStudent = '$student'";
+				}elseif($e == 0 && $w == 0 && $r == 0 && $a > 0){
+					$query_update = "UPDATE student SET stateAcademic = 'A' WHERE idStudent = '$student'";
+				}else{
+					$query_update = "UPDATE student SET stateAcademic = 'A' WHERE idStudent = '$student'";
+				}
+				return ($this->connection->connection->query($query_update));
+			}
+		}
+
+		function state_expulsion($student, $idPeriod, $date, $hour, $idApplier, $type){
+			$query = "SELECT c.type, r.idApplied_Code FROM record r INNER JOIN applied_code ac ON ac.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ac.idCode WHERE r.idStudent = '$student' AND ac.idPeriod = $idPeriod ORDER BY r.idRecord";
+			$result = $this->connection->connection->query($query);
+			$z = 0;
+			$id_MG = 0;
+			if($result->num_rows > 0){
+				while($fila = $result->fetch_assoc()){
+					if($fila['type'] == 'G'){
+						if($z == 2){
+							$z = 0;
+						}else{
+							$z++;
+						}
+					}
+					if($fila['type'] == 'MG'){
+						$id_MG = $fila['idApplied_Code'];
+					}
+				}
+			}
+
+			// for($i =0; $i < count($this->gnrl_code->c_reference); $i++){
+			// 	if($this->gnrl_code->c_reference[$i] == 'G'){
+			// 		$code = $this->gnrl_code->c_result[$i];
+			// 	}
+			// }
+
+			if($z == 2){
+				$valid = true;
+				$query_verifyS = "SELECT * FROM suspended WHERE idApplied_Code = $id_MG";
+				$result_verifyS = $this->connection->connection->query($query_verifyS);
+				
+				if($result_verifyS->num_rows > 0){
+					$valid = false;
+				}else{
+					$valid = true;
+				}
+
+				if($valid){
+					// $queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+					// $valInsertApply = $this->connection->connection->query($queryApply);
+
+					// $idApplyCode = $this->connection->connection->insert_id;
+					// $queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
+					// $valInsertRecord = $this->connection->connection->query($queryRecord);
+
+					$endDate = $this->EndSuspended($date);
+					$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$id_MG', 1)";
+					$result_suspended = $this->connection->connection->query($query_suspended);
+				}
+			}
+		}
+
+		function AccumulationCodes($idCode, $num_rows, $c_reference, $t_result, $code_result, $idStudent, $idPeriod){
+			$query = "SELECT r.accumulation_code, r.idRecord, r.idStudent, ac.idApplied_Code, ac.date, ac.idPeriod, c.idCode, c.type, c.category FROM `record` r INNER JOIN applied_code ac ON ac.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ac.idCode WHERE r.idRecord <= $idCode AND ac.idPeriod = $idPeriod AND r.idStudent ='$idStudent' ORDER BY r.idRecord";
+			$result = $this->connection->connection->query($query);
+			$z = 0;
+			$valid = true;
+			if($result->num_rows > 1){
+				while($fila = $result->fetch_assoc()){
+					if($fila['type'] == $c_reference){$z++;}
+					if(($fila['type'] == $t_result)) {
+						if($fila['type'] == 'MG'){$valid = false;}
+						if($fila['type'] != 'MG' && $fila['accumulation_code'] == 1){
+							$valid = false;
+							if($z == $num_rows){
+								$z = 0;
+								$valid = true;
+							}
+						}
+					}
+					// if($z == $num_rows){break;}
+				}
+
+				if(($valid) && ($z == $num_rows)){return ($code_result);}
+			}
+			return false;
+		}
+
+		function EndSuspended($date){
 			$endDate = strtotime("+ ".$this->info_gnrl->days_expulsion." days", strtotime($date));
 			$endDate = date("Y-m-d", $endDate);
 
-			$query = "SELECT * FROM record r INNER JOIN applied_code ap ON ap.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ap.idCode WHERE c.type = 'MG' AND ap.idPeriod = $idPeriod AND r.idStudent = '".$student."'";
-			$result = $this->connection->connection->query($query);
+			$day = $this->days_letter[date("w", strtotime($endDate))];
 			
-			if($result->num_rows > 0){
-				$query_suspended = "INSERT INTO suspended(idStudent, StartDate, EndDate) VALUES('$student', '$date', '$endDate')";
-				$this->connection->connection->query($query_suspended);
-				
-				$query_state = "UPDATE student SET stateAcademic = '".$this->info_gnrl->expulsion_state."' WHERE idStudent = '$student'";
-				$this->connection->connection->query($query_state);
+			if($day == "Sábado"){
+				$endDate = strtotime("+ ".($this->info_gnrl->days_expulsion + 2)." days", strtotime($date));
+				$endDate = date("Y-m-d", $endDate);
+			}elseif($day == "Domingo"){
+				$endDate = strtotime("+ ".($this->info_gnrl->days_expulsion + 1)." days", strtotime($date));
+				$endDate = date("Y-m-d", $endDate);
 			}
-		}
 
-		function checkType($code){
-			$query = "SELECT * FROM code WHERE idCode = $code";
-			$result = $this->connection->connection->query($query);
-			$fila = $result->fetch_assoc();
-			return ($r = ($fila['type'] == 'MG') ? 0 : 1);
-		}
-
-		function AccumulationCodes($idStudent, $idPeriod){
-			$z = 0;
-			$a_codes = array();
-			for($i = 0; $i < count($this->gnrl_code->c_reference); $i++){
-				$query = "SELECT COUNT(r.idRecord) AS n_code FROM record r INNER JOIN applied_code ap ON ap.idApplied_Code = r.idApplied_Code INNER JOIN code c ON c.idCode = ap.idCode WHERE c.type ='".$this->gnrl_code->c_reference[$i]."' AND  ap.idPeriod = $idPeriod AND r.idStudent = '".$idStudent."' ";
-				$result = $this->connection->connection->query($query);
-				$fila = $result->fetch_assoc();
-
-				if($fila['n_code'] == $this->gnrl_code->c_code[$i]){
-					$code = $this->gnrl_code->c_result[$i];
-					$a_codes[$z] = $code;
-					$z++;
-				}
-			}
-			return ($z = ($z > 0) ? $a_codes : false);
+			return ($endDate);
 		}
 
 		function v_gnrlCode(){

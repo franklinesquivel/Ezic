@@ -44,7 +44,7 @@
 		}
 
 		function getIdSubject($name, $teacher, $acronym, $description){
-			$query = "SELECT * FROM subject WHERE nameSubject = '$name' AND idTeacher = '$teacher' AND acronym = '$acronym' AND description='$description'";
+			$query = "SELECT MAX(idSubject) AS idSubject FROM subject";
 			$result = $this->connection->connection->query($query);
 			while ($fila = $result->fetch_assoc()) {
 				return $fila['idSubject'];
@@ -87,8 +87,8 @@
 
 			$i = 0;
 			while ($fila_1 = $result_1->fetch_assoc()) {			
-					$subject_1[$i] = $fila_1['idSubject'];
-					$i++;
+				$subject_1[$i] = $fila_1['idSubject'];
+				$i++;
 			}
 			$i = 0;
 			while ($fila_2 = $result_2->fetch_assoc()) {
@@ -100,56 +100,36 @@
 				$subject_3[$i] = $fila_3['idSubject'];
 				$i++;
 			}
-
+			//$subject = array_merge($subject_1, $subject_2, $subject_3);
+			$new_subject = array();
 			$i = 0;
-			for($j = 0; $j < count($subject_1);  $j++){
-				for($x = 0; $x < count($subject_2); $x++){
+			$valid = true;
 
+			for($x = 0; $x < count($subject_1); $x++){
+				for($y = 0; $y < count($subject_2); $y++){
 					for($z = 0; $z < count($subject_3); $z++){
-						if($subject_2[$x] == $subject_3[$z]){
-							if(count($subject) > 0){
-								for($y = 0; $y < count($subject); $y++){
-									if($subject_3[$z] != $subject[$y]){
-										$subject[$i] = $subject_3[$z];
-										$i++;
-									}	
+						if($subject_1[$x] == $subject_2[$y] && $subject_2[$y] == $subject_3[$z]){
+							for($j = 0; $j < count($new_subject); $j++){
+								if($new_subject[$j] == $subject_3[$z]){
+									$valid = false;
+									break;
 								}
-							}else{
-								$subject[$i] = $subject_3[$z];
-								$i++;
 							}
-							
+							if($valid){
+								$new_subject[$i] = $subject_3[$z];
+								$i++;
+								$valid = true;
+							}
 						}
 					}
-					//if(count($subject) > 0){
-						if($subject_2[$x] == $subject_1[$j]){
-							for($y = 0; $y < count($subject); $y++){
-								if($subject_2[$x] != $subject[$y]){
-									$subject[$i] = $subject_2[$x];
-									$i++;
-								}	
-							}
-						}
-					// }else{
-					// 	$subject[$i] = $subject_2[$x];
-					// 	$i++;
-					// }
-				}		
-				// for($y = 0; $y < count($subject); $y++){
-				// 	if($subject_1[$j] != $subject[$y]){
-				// 		$subject[$i] = $subject_1[$j];
-				// 		$i++;
-				// 	}	
-				// }
+				}
 			}
-
 			//Se obtienen las materias que no cuentan con regsitros, solo en las tablas subject y register_subject
 			$i = 0;
 			$info = array();
-
-			if (count($subject) > 0){
-				for ($x=0; $x < count($subject) ; $x++) { 
-					$query = "SELECT subject.idSubject, subject.nameSubject, subject.acronym, subject.idTeacher, level.level FROM subject INNER JOIN register_subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = '".$subject[$x]."' GROUP BY subject.idSubject LIMIT 1";
+			if (count($new_subject) > 0){
+				for ($x=0; $x < count($new_subject) ; $x++) { 
+					$query = "SELECT subject.idSubject, subject.nameSubject, subject.acronym, subject.idTeacher, level.level FROM subject INNER JOIN register_subject ON register_subject.idSubject = subject.idSubject INNER JOIN section ON section.idSection = register_subject.idSection INNER JOIN level ON level.idLevel = section.idLevel WHERE subject.idSubject = '".$new_subject[$x]."' GROUP BY subject.idSubject LIMIT 1";
 					$result = $this->connection->connection->query($query);
 
 					while ($fila = $result->fetch_assoc()) {

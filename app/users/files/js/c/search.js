@@ -295,7 +295,7 @@
                 $('#removeCode-modal').find('.apply-name').html(lastName + ", " + name);
 
                 $.ajax({
-                    url: '../../files/php/C_Controller.php',
+                     url: '../../files/php/C_Controller.php',
                     data: {getStudentCodes: 1, id: g_id},
                     success: r => {
                         if (r != -1) {
@@ -303,14 +303,14 @@
                                 $('#removeCode-modal .modal-content .alert_').remove();
                             }
                             $('#removeCode-modal .btnRemoveCodes').removeAttr('disabled');
-                            $('#removeCode-modal tbody').html(r);
-                            $('#removeCode-modal table').fadeIn('slow');
+                            $('#removeCode-modal .row').html(r);
+                            // $('#removeCode-modal table').fadeIn('slow');
                         }else{
                             if ($('#removeCode-modal .modal-content').find('.alert_').length == 0) {
                                 $('#removeCode-modal .modal-content').append(`<div class='alert_'>El estudiante no posee aplicación de códigos...</div>`);
                             }
                             $('#removeCode-modal .btnRemoveCodes').attr('disabled', 1);
-                            $('#removeCode-modal table').fadeOut('slow');
+                            //$('#removeCode-modal table').fadeOut('slow');
                         }
                     }
                 })
@@ -732,6 +732,7 @@
             Materialize.toast('Seleccione el código que desea remover!', 2000);
         }else{
             loader.in();
+            //console.log(ids);
             $.ajax({
                 url: '../../files/php/C_Controller.php',
                 data: {rmvCodes: 1, ids: ids},
@@ -991,7 +992,7 @@
                     period: $(this).val()
                 }
             }).done(function(r){
-                $('main .container-justification').html(r);
+                $('main form .container-justification').html(r);
                 $('select').material_select();
                 loader.out();
             });
@@ -1008,6 +1009,7 @@
         });
 
         $(document).on("click", ".btnSaveJustification", function(){
+            // console.log('Click');
             $("form.justification").validate({
                 rules:{
                     justification:{

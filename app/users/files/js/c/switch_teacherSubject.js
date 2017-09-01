@@ -35,7 +35,8 @@ $(document).ready(function(){
 			}
 			}).done(function(r){
 				loader.out();
-				if (r=='1') {
+				// alert(r);
+				if (r==1) {
                     $("#selectSubject").val('');
                     $("#selectSubject").material_select();
                     $("#selectTeacher").val('');

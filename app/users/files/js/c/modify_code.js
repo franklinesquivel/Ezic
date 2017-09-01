@@ -104,7 +104,7 @@
 						object: info_after
 					}
 				}).done(function(r){
-					if (r == "S") {
+					if (r == -1) {
 						Materialize.toast('Modificación exitosa', 3000);
 						$("main .codes_modify").empty();
 						load_page();
@@ -127,7 +127,6 @@
 		array.length = 0;
 
 		for (var i = 0; i < $(".txtForm").length; i++) {
-			console.log(i);
 			array[z] = {
 				"id":  $("blockquote").eq(z).attr("id"),
 				"description": $(".txtForm").eq(i).val(),

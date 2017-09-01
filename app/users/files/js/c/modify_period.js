@@ -32,7 +32,7 @@
 				}).done(function(r){
 					loader.out();
 					let objeto = JSON.parse(r)[0];
-					console.log(objeto);
+					// console.log(objeto);
 					let startDate = (objeto.startDate).split("-"), 
 						endDate = (objeto.endDate).split("-");
 
