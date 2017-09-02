@@ -17,7 +17,7 @@
 			require_once($this->aux);
 			$this->connection = new Connection();
 			$this->connection->Connect();
-			$this->days_letter = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado", "Domingo");
+			$this->days_letter = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado");
 			$this->days_number =  array('Domingo' => 00, 'Lunes' => 01, 'Martes' => 02, 'Miercoles' => 03, 'Jueves' => 04, 'Viernes' =>05, 'Sabado'=>06);
 		}
 
@@ -34,7 +34,7 @@
 			$query = "SHOW TABLES FROM ezic WHERE TABLES_IN_ezic LIKE 'teacher_schedule_".$_SESSION['id']."'";
 			$result = $this->connection->connection->query($query);
 			if ($result->num_rows > 0) {
-				$query = "SELECT schedule_register.idS_Register, student.idStudent, student.name, student.lastName, student.stateAcademic FROM `teacher_schedule_" . $_SESSION['id'] . "` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_".$_SESSION['id'].".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON section.idLevel = level.idLevel INNER JOIN student ON student.idSection = section.idSection  WHERE  student.verified = 1 AND schedule_register.startTime BETWEEN schedule_register.startTime AND '$horaLocal' AND schedule_register.endTime BETWEEN '$horaLocal' AND schedule_register.endTime AND schedule_register.day ='$day' ORDER BY student.lastName ASC";
+				$query = "SELECT schedule_register.idS_Register, student.idStudent, student.name, student.lastName, student.stateAcademic, student.idSection FROM `teacher_schedule_" . $_SESSION['id'] . "` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_".$_SESSION['id'].".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON section.idLevel = level.idLevel INNER JOIN student ON student.idSection = section.idSection  WHERE  student.verified = 1 AND student.stateAcademic != 'E' AND schedule_register.startTime BETWEEN schedule_register.startTime AND '$horaLocal' AND schedule_register.endTime BETWEEN '$horaLocal' AND schedule_register.endTime AND schedule_register.day ='$day' ORDER BY student.lastName ASC";
 				$result = $this->connection->connection->query($query);
 				$column = $this->connection->connection->query($query);
 				$idSchedule = $column->fetch_assoc();
@@ -45,7 +45,7 @@
 					}else{	
 						$disabled_All = "disabled = 'disabled'";
 					}
-					$block = $this->verifyBlock($idSchedule['idS_Register']);
+					$block = $this->verifyBlock($day, $idSchedule['idSection'], $idSchedule['idS_Register']);
 					$block =  ($block != false) ? implode(",", $block) : $idSchedule['idS_Register'];
 
 					$table = "<div class='row col l8 m8 s12 offset-l2 offset-m2'><table class='centered responsive-table assistance' register='".$block."'> 
@@ -148,8 +148,8 @@
 			return ($z = ($z > 0) ? true : false);
 		}
 		
-		function verifyBlock($idS_Register){
-			$query = "SELECT * FROM schedule_register ORDER BY day";
+		function verifyBlock($day, $idSection, $idSchedule){
+			$query = "SELECT * FROM schedule_register WHERE day = '$day' AND idSection = $idSection";
 			$result = $this->connection->connection->query($query);
 			$i = 0;
 			$block = array();
@@ -170,7 +170,10 @@
 						if(($block[$x][1] == $block[$z][1]) && ($block[$x][4] == $block[$z][4]) &&
 							($block[$x][5] == $block[$z][5]) && ($block[$x][3] == $block[$z][2]) &&
 							(($block[$x][6] + 1) == $block[$z][6])){
-							return array($block[$x][0] , $block[$z][0]);
+
+							if($idSchedule == $block[$x][0] || $idSchedule == $block[$z][0]){
+								return array($block[$x][0] , $block[$z][0]);
+							}
 						}
 					}
 				}
