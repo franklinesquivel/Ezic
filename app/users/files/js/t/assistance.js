@@ -133,8 +133,11 @@
     $(document).on("click", ".btnSave", function(){
         let array = ($("table").attr("register")).split(", ");
         let object = validate_radio();
-        //console.log(object);
+        // console.log(object);
+        let loader = new Loader();
+
         if (object != false) {
+            loader.in();
             $.ajax({
                 type: 'POST',
                 url: '../../files/php/T_Controller.php',
@@ -151,6 +154,7 @@
                     load_data();
                 }else{
                     Materialize.toast("ERROR, intentarlo más tarde",3000);
+                    loader.out();
                 }
             });
         }else{
@@ -161,16 +165,17 @@
     var validate_radio = () =>{
         let z = 0, y = 0, assistance_values = new Array();
         for (var i = 0; i < $("table tbody tr").length; i++) {
-            if(!($("table tbody tr input[type='radio']").eq(i).attr("disabled"))){
-                if($("table tbody tr input[name='student_"+i+"']:checked").val() != undefined){
+            //if(($("table tbody tr input[type='radio']").eq(i).attr("disabled") == false)){
+                if(($("table tbody tr input[name='student_"+i+"']:checked").val() != undefined)){
                     assistance_values[y] = {
                         "idStudent": $("table tbody tr").eq(i).attr("id"),
                         "attended": $("table tbody tr input[name='student_"+i+"']:checked").val()
                     };
                     y++;
                 }
-            }
-            z++;
+                z++;
+            //}
+            // if(!($("table tbody tr input[type='radio']").eq(i).attr("disabled"))){z++;}
         }
         return (r = (z == y) ? JSON.stringify(assistance_values) : false);
     };

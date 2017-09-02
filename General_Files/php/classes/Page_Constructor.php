@@ -158,7 +158,8 @@
                 $result = $this->connection->connection->query($query);
                 if ($result->num_rows > 0 && $_SESSION['type'] == 'T') {
                    if ($_SESSION['type'] == 'T') {//Teacher
-                        $query = "SELECT subject.acronym, section.sectionIdentifier, level.level FROM `teacher_schedule_".$_SESSION['id']."` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_".$_SESSION['id'].".idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN subject ON subject.idSubject = schedule_register.idSubject WHERE schedule_register.startTime BETWEEN schedule_register.startTime AND '$hour' AND schedule_register.endTime BETWEEN '$hour' AND schedule_register.endTime AND schedule_register.day ='$day'";
+                        $idTeacher = $_SESSION['id'];
+                        $query = "SELECT subject.acronym, section.sectionIdentifier, level.level FROM `teacher_schedule_$idTeacher` INNER JOIN schedule_register ON schedule_register.idS_Register = teacher_schedule_$idTeacher.idScheduleInfo INNER JOIN section ON section.idSection = schedule_register.idSection INNER JOIN level ON level.idLevel = section.idLevel INNER JOIN subject ON subject.idSubject = schedule_register.idSubject WHERE schedule_register.startTime BETWEEN schedule_register.startTime AND '$hour' AND schedule_register.endTime BETWEEN '$hour' AND schedule_register.endTime AND schedule_register.day ='$day'";
                         $result = $this->connection->connection->query($query);
                         
                         while ($fila = $result->fetch_assoc()) {

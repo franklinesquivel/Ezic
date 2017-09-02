@@ -445,7 +445,7 @@
 
                     $sectionQuery =
                     "DELETE FROM section_schedule_" . $obj[$i]['idSection'] . " WHERE idScheduleRegister = " . $obj[$i]['idS_Register'] . ";";
-//
+                    
                     if (!($this->connection->connection->query($sectionQuery))) return 0;
 
                     $teacherQuery =
@@ -608,7 +608,6 @@
                                         $equalF = 1;
                                         $auxIndex_2 = $g;
                                         $auxArray[$j] = 1;
-                                        // return $dataArray[$auxIndex]['day'] . " - " . $dataArray[$g]['day'];
                                         break;
                                     }else{
                                         $equalF = 0;
@@ -670,12 +669,12 @@
                                     $aux .= "<td rowspan=2></td>";
                                     $auxEmpty[$j] = 1;
                                 }else{
-                                    $aux .= ($auxEmpty_3[$j] ? "<td></td>" : "");//
+                                    $aux .= ($auxEmpty_3[$j] ? "<td></td>" : "");
                                 }
                             }
                         }else{
                             if ($i % 2 == 0) {
-                                $aux .= "";//
+                                $aux .= "";
                             }else{
                                 $aux .= "<td rowspan=2></td>";
                             };
@@ -846,12 +845,12 @@
                                 $aux .= "<td rowspan=2></td>";
                                 $auxEmpty[$j] = 1;
                             }else{
-                                $aux .= ($auxEmpty_3[$j] ? "<td></td>" : "");//
+                                $aux .= ($auxEmpty_3[$j] ? "<td></td>" : "");
                             }
                         }
                     }else{
                         if ($i % 2 == 0) {
-                            $aux .= "";//
+                            $aux .= "";
                         }else{
                             $aux .= "<td rowspan=2></td>";
                         };
