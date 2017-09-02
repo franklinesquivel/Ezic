@@ -33,6 +33,9 @@
 </head>
 <body>
     <header>
+        <?php 
+            echo($const->getSchedule());
+        ?> 
         <nav class="top-nav green darken-2">
             <div class="container">
                 <div class="nav-wrapper"><a class="page-title">Administrar Sección</a></div>

@@ -1,2 +1,2 @@
 # Ezic
-> Actual Version: __3.1__
+> Actual Version: __3.8__
