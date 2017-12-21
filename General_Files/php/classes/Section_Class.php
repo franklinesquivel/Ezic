@@ -85,7 +85,7 @@
 				$cant = $this->connection->connection->query($cantQuery)->fetch_assoc()['total'];
 				$aux .= "
 					<a class='collection-item waves-effect sctnItem waves-black ' idSn='" . $row['idSection'] . "'>
-	                    <span class='title black-text'> " . ($row['level'] == 1 ? '1er' : ($row['level'] == 2 ? '2do' : '3er')) . " Año, &nbsp</span>
+	                    <span class='title black-text'> " . $row['level'] . "° Grado, &nbsp</span>
 	                    <span class='title black-text'><i>" . $row['sName'] . ":</i> &nbsp </span>
 	                    <span class='title black-text'><b>Sección <i>\"". $row['sectionIdentifier'] ."\"</i></b></span><br>
 	                    <span title='Cantidad de Estudiantes' class='grey-text text-darken-1'>" . $cantNON . " estudiantes sin verificar /$cant</span>
@@ -108,7 +108,7 @@
 			while ($row = $res->fetch_assoc()) {
 				$aux .= "
 					<a class='collection-item waves-effect waves-black ' idSn='" . $row['idSection'] . "'>
-	                    <span class='title black-text'> " . ($row['level'] == 1 ? '1er' : ($row['level'] == 2 ? '2do' : '3er')) . " Año, &nbsp</span>
+	                    <span class='title black-text'> " . $row['level'] . "° Grado, &nbsp</span>
 	                    <span class='title black-text'><i>" . $row['sName'] . ":</i> &nbsp </span>
 	                    <span class='title black-text'><b>Sección <i>\"". $row['sectionIdentifier'] ."\"</i></b></span>
 	                </a>
@@ -672,7 +672,7 @@
 					</div>
 				</form>"; 	
 			}else{
-				$form = "Noup";
+				$form = "<div class='alert_ red-text text-darken-4'>No se encontraron secciones para eliminar...<div>";
 			}
 			return ($form);
 		}

@@ -299,26 +299,35 @@
         </ul>
     </div>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printRecord"> 
-        <input type="hidden" name="printRecord" value="1">
-        <input type="hidden" name="id" value="">
-    </form>
-
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printSchedule"> 
-        <input type="hidden" name="printSchedule" value="1">
-        <input type="hidden" name="type" value="">
-        <input type="hidden" name="id" value="">
-    </form>
-
     <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printUser"> 
         <input type="hidden" name="printUser" value="1">
         <input type="hidden" name="id" value="">
     </form>
 
-    <form action="../../../../General_Files/php/classes/Print.php" method="POST" id="printGrades"> 
-        <input type="hidden" name="printGrades" value="1">
+    <form action="vUser.php" target="_blank" name="frmViewUser" method="POST">
+        <input type="hidden" name="showUser" value="true">
         <input type="hidden" name="id" value="">
-        <input type="hidden" name="period" value="">
+    </form>
+
+    <form action="vGrades.php" target="_blank" name="frmViewGrades" method="POST">
+        <input type="hidden" name="showGrades" value="true">
+        <input type="hidden" name="id" value="">
+    </form>
+
+    <form action="vSchedule.php" target="_blank" name="frmViewSchedule" method="POST">
+        <input type="hidden" name="showSchedule" value="true">
+        <input type="hidden" name="type" value="">
+        <input type="hidden" name="id" value="">
+    </form>
+
+    <form action="vRecord.php" target="_blank" name="frmViewRecord" method="POST">
+        <input type="hidden" name="showRecord" value="true">
+        <input type="hidden" name="id" value="">
+    </form>
+
+    <form action="editUser.php" target="_blank" name="frmEditUser" method="POST">
+        <input type="hidden" name="editUser" value="true">
+        <input type="hidden" name="id" value="">
     </form>
 </body>
 </html>

@@ -69,13 +69,15 @@
 				type: 'POST',
 				url: '../../files/php/C_Controller.php',
 				data: {deleteSpecialty: 1, data: JSON.stringify(ids)},
-				success: r => {
+				success: function(r) {
 					Materialize.toast(
 						r ? 
 						(ids.length == 1 ? 
 							"La especialidad ha sido eliminada exitosamente!" 
 							: "Las especialidades han sido eliminadas exitosamente!") 
-						: "Ha ocurrido un error!", 2000);
+						: "Ha ocurrido un error!", 2000
+					);
+
 					init();
 				}
 			})

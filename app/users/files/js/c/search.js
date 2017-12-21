@@ -49,39 +49,8 @@
         2: {
             record: [
                 id => {
-                    loader.in();
-                    $('main').fadeOut('slow');
-                    $.ajax({
-                        url: '../../files/php/C_Controller.php',
-                        data: {record: 1, id: id},
-                        success: function(r){
-                            $('main').html(r);
-                            $('main').append("<br><br><div class='row'><div class='col l4 m4 s10 offset-l1 offset-m1 offset-s1 green btn waves-effect btnPermission'>Permiso de ausencia <i class='material-icons right'>date_range</i></div><div class='hide-on-med-and-up col s12'><i style='opacity: 0'>.</i></div><div class='col l4 m4 s10 offset-l2 offset-m2 offset-s1 orange btn waves-effect btnJustify'>Registrar justificante <i class='material-icons right'>done_all</i></div></div>")
-                            $('.recordTables thead tr th').each(function() {
-                                $(this).css('border', '1px solid ' + $(this).parent().css('background-color'));
-                            });
-
-                            $('.recordTables tbody tr').each(function() {
-                                $(this).css({
-                                    'border-left': '1px solid ' + $(this).parent().parent().children().children().css('background-color'),
-                                    'border-right': '1px solid ' + $(this).parent().parent().children().children().css('background-color'),
-                                    'border-bottom': '1px solid ' + $(this).parent().parent().children().children().css('background-color')
-                                })
-                            });
-                            initFunctions();
-                            $('main').fadeIn('slow', loader.out());
-                        }
-                    })
-                    $('.btnBack').removeAttr('disabled');
-                    $('.btnPrint').removeAttr('disabled');
-                    $('.options_btn').attr('disabled', 1);
-                    stage_aux = 'record';
-                    f = 1;
-
-                    $('.btnPrint').click(() => {
-                        $('#printRecord input[name=id]').val(id);
-                        $('#printRecord').submit();
-                    })
+                    frmViewRecord.id.value = g_id;
+                    frmViewRecord.submit();
                 },
                 () => {
                     schedules_id.length = 0;
@@ -121,66 +90,17 @@
                 }
             ],
             show: id => {
-                loader.in();
-                $('main').fadeOut('slow');
-                $.ajax({
-                    url: '../../files/php/C_Controller.php',
-                    data: {showUser: 1, user_obj: JSON.stringify(get_user('id', g_id))},
-                    success: function(r){
-                        $('main').html(r);
-                        $('main').fadeIn('slow', loader.out());
-                        $('.btnBack').removeAttr('disabled');
-                        $('.btnPrint').removeAttr('disabled');
-                        $('.options_btn').attr('disabled', 1);
-                        $('.btnPrint').click(() => {
-                            $('#printUser input[name=id]').val(g_id);
-                            $('#printUser').submit();
-                        })
-                    }
-                })
+                frmViewUser.id.value = g_id;
+                frmViewUser.submit();
             },
             edit: id => {
-                loader.in();
-                $('main').fadeOut('slow');
-                $.ajax({
-                    url: '../../files/php/C_Controller.php',
-                    data: {newForm: '1', id: id},
-                    success: (r) => {
-                        $('main').html(r);
-                        $.getScript("../../files/js/init.js");
-                        $.getScript("../../files/js/c/modify_user_data.js");
-                        $('.btnBack').removeAttr('disabled');
-                        $('.btnPrint').attr('disabled', 1);
-                        $('.options_btn').attr('disabled', 1);
-                        $('main').fadeIn('slow', loader.out());
-                    }
-                })
+                frmEditUser.id.value = g_id;
+                frmEditUser.submit();
             },
             schedule: id => {
-                loader.in();
-                $('main').fadeOut('slow');
-                $.ajax({
-                    url: '../../files/php/C_Controller.php',
-                    data: {showSchedule: '1', id: id, type: (id[0] == 'D' && !isNaN(id[1]) ? 'T' : (id[0] == 'C' && !isNaN(id[1]) ? 'C' : 'S')) },
-                    success: (r) => {
-                        if (r == -1) {
-                            $('main').html("<br><div class='container alert_ red-text text-darken-4'>No posee un horario asignado</div>");
-                        }else{
-                            $('main').html("<br><div class='container'><table class='centered'><thead><th>Hora</th><th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th></thead><tbody class='scheduleCont'></tbody></table></div><br>");
-                            $('main table tbody').html(r);
-                        }
-                        $('.btnBack').removeAttr('disabled');
-                        $('.btnPrint').removeAttr('disabled', 1);
-                        $('.options_btn').attr('disabled', 1);
-                        $('main').fadeIn('slow', loader.out());
-
-                        $('.btnPrint').click(() => {
-                            $('#printSchedule input[name=id]').val(id);
-                            $('#printSchedule input[name=type]').val((id[0] == 'D' ? 'T' : (id[0] == 'C' ? 'C' : 'S')));
-                            $('#printSchedule').submit();
-                        })
-                    }
-                })
+                frmViewSchedule.id.value = g_id;
+                frmViewSchedule.type.value = ((g_id[0] == 'D' ? 'T' : (g_id[0] == 'C' ? 'C' : 'S')));
+                frmViewSchedule.submit();
             },
             subject: id => {
                 loader.in();
@@ -206,66 +126,8 @@
                 })
             },
             grade: id => {
-                loader.in();
-                $('main').fadeOut('slow');
-                $.ajax({
-                    url: '../../files/php/C_Controller.php',
-                    data: {showGrades: '1', id: id},
-                    success: (r) => {
-                        if (r == -1) {
-                            $('main').html(`<div class='container'><div style='margin-top: 5%;' class='alert_'>No se encontraron materias registradas a las sección del estudiante!</div></div>`)
-                        }else{
-                            r = JSON.parse(r);
-                            gR = r
-                            $('main').html(`
-                                <div class="row cmbCont" style="display: none;">
-                                    <div class="input-field col l4 m4 s10 offset-s1 offset-l4 offset-m4">
-                                        <select name="" id="cmbPeriod">
-                                            <option disabled>Seleciona un período</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="container gradesCont"></div>`);
-                            $('#cmbPeriod').change(function(){
-                                if ($('#cmbPeriod option:selected').attr('acc') === undefined) {
-                                    $('.gradesCont').html(gR.subject[$('#cmbPeriod option:selected').attr('index')]);
-                                }else{
-                                    $('.gradesCont').html(gR.acc);
-                                }
-                            })
-                            for (var i = 0; i < r.pInfo.length; i++) {
-                                if(r.subject[i] != -1){
-                                    $('#cmbPeriod').append(`<option index="${i}" period="${r.pInfo[i][1]}">Período N°${r.pInfo[i][1]}</option>`);
-                                }else{
-                                    $('#cmbPeriod').append(`<option disabled>Período N°${r.pInfo[i][1]}</option>`);
-                                }
-                            }
-
-                            if (r.acc !== null) {
-                                $('#cmbPeriod').append(`<option acc="1">Notas Acumuladas</option>`);
-                            }
-
-                            $('#cmbPeriod option[index]:first-child').attr('selected', 1);
-                            $('.gradesCont').append(r.subject[$('#cmbPeriod option:selected').attr('index')]);
-                            $('.cmbCont').fadeIn('slow');
-                            $('select').material_select();
-                            $('.btnPrint').removeAttr('disabled');
-                        }
-                        $('.btnBack').removeAttr('disabled');
-                        $('.options_btn').attr('disabled', 1);
-                        $('main').fadeIn('slow', loader.out());
-
-                        $('.btnPrint').click(() => {
-                            $('#printGrades input[name=id]').val(id);
-                            if ($('#cmbPeriod option:selected').attr('acc') === undefined) {
-                                $('#printGrades input[name=period]').val($('#cmbPeriod option:selected').attr('period'));
-                            }else{
-                                $('#printGrades input[name=period]').val("acc");
-                            }
-                            $('#printGrades').submit();
-                        })
-                    }
-                })
+                frmViewGrades.id.value = g_id;
+                frmViewGrades.submit();
             }
         }
     };
@@ -468,13 +330,13 @@
     const show_user = (user) => {
         if (user.state == state) {
             if ($('.user-row').length == 0) {
-                let user_row = document.createElement('li');    
+                let user_row = document.createElement('li');
                 user_row.classList = 'user-row';
                 user_row.innerHTML = (user.element);
                 $('.user-cont').append(user_row);
             }else{
                 if ($('.user-row' + (($('.user-row').length == 1) ? '' : ':last-child')).children().length > 1) {
-                    let user_row = document.createElement('li');    
+                    let user_row = document.createElement('li');
                     user_row.classList = 'user-row';
                     user_row.innerHTML = (user.element);
                     $('.user-cont').append(user_row);
@@ -623,7 +485,7 @@
                 search_user('S', attr, state, $('#search').val());
             }else{
                 $('input[type=radio').each((i) => $('input[type=radio').eq(i).removeAttr('disabled'));
-                $('#cmbBehaviourState').attr('disabled', 1); 
+                $('#cmbBehaviourState').attr('disabled', 1);
                 search_user(type, attr, state, $('#search').val());
                 $('select').material_select();
             }
@@ -643,7 +505,7 @@
                         $('select').material_select();
                         search_section($("#cmbLevel").val());
                     }else{
-                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 1000); 
+                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 1000);
                         $("#cmbSpecialty").empty();
                         $("#cmbSection").empty();
                         $("#cmbSpecialty").html("<option disabled selected>Especialidad</option>");
@@ -666,7 +528,7 @@
                         $('select').material_select();
                         search_section($("#cmbLevel").val(), $("#cmbSpecialty").val());
                     }else{
-                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 3000); 
+                        Materialize.toast('No se encontraron registros de especialidades para mostrar', 3000);
                     }
                 }
             })
@@ -710,8 +572,8 @@
             $.ajax({
                 url: '../../files/php/C_Controller.php',
                 data: {
-                    applyCode: 1, 
-                    idCode: $('#cmbCodes option:selected').attr('idCode'), 
+                    applyCode: 1,
+                    idCode: $('#cmbCodes option:selected').attr('idCode'),
                     idStudent: g_id},
                 success: r => {
                     if (r != -1) {
@@ -822,7 +684,7 @@
             },
             complete: function() { $("#txtDownJustification").val(""); Materialize.updateTextFields();}
         });
-        
+
         $('#cmbCategory').change(function(){
             $('#cmbCodes').html('<option selected disabled>Código</option>');
             let t = ($('#cmbType option:selected').attr('idtype') === undefined ? "" : $('#cmbType option:selected').attr('idtype'));
@@ -902,7 +764,7 @@
                     $('main .schedule_permission').html("<div class='row search_error col s8 offset-s2'><div class='alert_ red-text text-darken-4'>Horario de día seleccionado no disponible</div></div>")
                 }else{
                     $('main .schedule_permission').html(r);
-                } 
+                }
                 schedules_id.length = 0;
             });
         });

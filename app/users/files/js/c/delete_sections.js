@@ -15,6 +15,7 @@
 				v_deleteSection: 1
 			}
         }).done(function(r){
+            console.log(r);
             sections.length = 0;
             x = 0;
             $('main .container').html(r);
