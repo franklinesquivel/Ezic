@@ -422,6 +422,7 @@
 			ini_set("date.timezone", 'America/El_Salvador');
 			$hour = date("H:i");
             $date = date("Y-m-d");
+			$Date1 = new DateTime($date);
 
             $periodQuery = "SELECT * FROM period;";
             $periodRes = $this->connection->connection->query($periodQuery);
@@ -429,59 +430,68 @@
             if ($periodRes->num_rows == 0) {
             	return -1;
             }else{
+				$result = "";
+				$idPeriod = -1;
+
 	            while ($rowPeriod = $periodRes->fetch_assoc()) {
-	            	if ((($rowPeriod['startDate']) <= ($date)) && (($rowPeriod['endDate']) >= ($date))) {
+					
+					$Date2 = new DateTime($rowPeriod['startDate']);
+					$Date3 = new DateTime($rowPeriod['endDate']);
+	            	if ((($Date2) <= ($Date1)) && (($Date3) >= ($Date1))) {
 	            		$idPeriod = $rowPeriod['idPeriod'];
 	            		break;
-	            	}
+					}
 				}
 
-				$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
-				$valInsertApply = $this->connection->connection->query($queryApply);
-
-				$idApplyCode = $this->connection->connection->insert_id;
-				$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 0)";
-				$valInsertRecord = $this->connection->connection->query($queryRecord);
-
-				#Acumulación de Códigos
-				$infoCode = $this->getInfoCode($student, $idPeriod);
-				$equivalence = $this->EquivalenceInfoCode($infoCode['type']);
-
-				if(($equivalence != false) && ($infoCode['type'] != 'MG')){
-					$initial = $infoCode['type'];
-					$code = $this->AccumulationCodes($infoCode['idRecord'], $equivalence['c_code'], $equivalence['c_ref'], $equivalence['t_result'],  $equivalence['c_result'], $student, $idPeriod);
-					if($code != false){
-						$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
-						$valInsertApply = $this->connection->connection->query($queryApply);
-		
-						$idApplyCode = $this->connection->connection->insert_id;
-						$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
-						$valInsertRecord = $this->connection->connection->query($queryRecord);	
-					
-						if($initial == 'G'){
+				if($idPeriod != -1){
+					$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+					$valInsertApply = $this->connection->connection->query($queryApply);
+	
+					$idApplyCode = $this->connection->connection->insert_id;
+					$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 0)";
+					$valInsertRecord = $this->connection->connection->query($queryRecord);
+	
+					#Acumulación de Códigos
+					#$infoCode = $this->getInfoCode($student, $idPeriod);
+					#$equivalence = $this->EquivalenceInfoCode($infoCode['type']);
+	
+					/*if(($equivalence != false) && ($infoCode['type'] != 'MG')){
+						$initial = $infoCode['type'];
+						$code = $this->AccumulationCodes($infoCode['idRecord'], $equivalence['c_code'], $equivalence['c_ref'], $equivalence['t_result'],  $equivalence['c_result'], $student, $idPeriod);
+						if($code != false){
+							$queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+							$valInsertApply = $this->connection->connection->query($queryApply);
+			
+							$idApplyCode = $this->connection->connection->insert_id;
+							$queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 1)";
+							$valInsertRecord = $this->connection->connection->query($queryRecord);	
+						
+							if($initial == 'G'){
+								$endDate = $this->EndSuspended($date);
+								$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$idApplyCode', 1)";
+								$result_suspended = $this->connection->connection->query($query_suspended);
+							}
+						}
+						
+					}else{
+						if($infoCode['type'] == 'MG'){
+							// $queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
+							// $valInsertApply = $this->connection->connection->query($queryApply);
+			
+							// $idApplyCode = $this->connection->connection->insert_id;
+							// $queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 0)";
+	
 							$endDate = $this->EndSuspended($date);
 							$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$idApplyCode', 1)";
 							$result_suspended = $this->connection->connection->query($query_suspended);
 						}
 					}
-					
-				}else{
-					if($infoCode['type'] == 'MG'){
-						// $queryApply = "INSERT INTO applied_code VALUES (NULL, '$hour', '$date', '$idApplier', '$type', $code, $idPeriod);";
-						// $valInsertApply = $this->connection->connection->query($queryApply);
-		
-						// $idApplyCode = $this->connection->connection->insert_id;
-						// $queryRecord = "INSERT INTO record VALUES (NULL, $idApplyCode, '$student', 0)";
-
-						$endDate = $this->EndSuspended($date);
-						$query_suspended = "INSERT INTO suspended(idStudent, startDate, endDate, idApplied_Code, state) VALUES('$student', '$date', '$endDate' , '$idApplyCode', 1)";
-						$result_suspended = $this->connection->connection->query($query_suspended);
-					}
+					$this->state_expulsion($student, $idPeriod, $date, $hour, $idApplier, $type);
+					$this->verifyStateAcademic($student);*/
+	
+					return (($valInsertApply && $valInsertRecord) ? 1 : 0);
 				}
-				$this->state_expulsion($student, $idPeriod, $date, $hour, $idApplier, $type);
-				$this->verifyStateAcademic($student);
-
-				return (($valInsertApply && $valInsertRecord) ? 1 : 0);
+				return $idPeriod;
             }
 		}
 

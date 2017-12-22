@@ -798,7 +798,7 @@
 			$x = 0;
 			for ($i=0; $i < count($ids); $i++) {
 
-				$infoCode = $this->getInfoCode($ids[$i]);  #Obtenemos Información del código a eliminar
+				/*$infoCode = $this->getInfoCode($ids[$i]);  #Obtenemos Información del código a eliminar
 				$equivalence = $this->EquivalenceInfoCode($infoCode['type']);
 
 				if($equivalence != false){#Si se encontraron equivalencias en la tabla General
@@ -830,7 +830,7 @@
 					}
 				}
 				$suspended = $this->InfoSuspended($ids[$i]);
-				$this->stateSuspended($suspended['idSuspended'], $suspended['student'], $suspended['StateSuspended']); 
+				$this->stateSuspended($suspended['idSuspended'], $suspended['student'], $suspended['StateSuspended']); */
 				
 				$rmvQuery = "DELETE FROM record WHERE idRecord = $ids[$i]";
 				

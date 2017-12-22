@@ -15,7 +15,7 @@
 			$this->connection = new Connection();
 			$this->connection->Connect();
 			$this->days_letter = array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado");
-			$this->days_number =  array('Domingo' => 00, 'Lunes' => 01, 'Martes' => 02, 'Miercoles' => 03, 'Jueves' => 04, 'Viernes' =>05, 'Sabado'=>06);
+			$this->days_number =  array('Domingo' => 00, 'Lunes' => 01, 'Martes' => 02, 'Miércoles' => 03, 'Jueves' => 04, 'Viernes' =>05, 'Sabado'=>06);
 		}
 
 		function v_make_permission($student){
@@ -31,11 +31,11 @@
 				$form = "<h3 class='center'>Permiso</h3><div class='container'> 
 					<form class='addPermission'>
 						<div class='row'>
-							<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+							<div class='input-field col l10 m6 s10 offset-l1 offset-m3 offset-s1'>
 		            			<textarea id='justification' name='justification' class='materialize-textarea' data-length='300'></textarea>
 		            			<label for='justification'>Justificación</label>
 		                    </div>
-		                    <div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+		                    <div class='input-field col l10 m6 s10 offset-l1 offset-m3 offset-s1'>
 		                        <select id='selectPermission'>
 		                        	<option value='' disabled selected>Seleccionar Día</option>
 	            ";
@@ -134,7 +134,7 @@
 
 
 			if ($result->num_rows > 0) {
-				$table = "<div class='row'><table class='permission centered col l8 m10 s10 offset-l2 offset-m1 offset-s1'>
+				$table = "<div class='row'><table class='permission centered col l10 m10 s10 offset-l1 offset-m1 offset-s1'>
 					<thead>
 			          <tr>
 			              <th>Horas</th>

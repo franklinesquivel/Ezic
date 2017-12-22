@@ -27,18 +27,18 @@
 			$row = "<br> <h3 class='center'>Justificante</h3><div class='container'> 
 				<div class='row'>
 					<form class='justification'>
-						<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<div class='input-field col l10 m6 s10 offset-l1 offset-m3 offset-s1'>
 		            		<textarea id='justification' name='justification' class='materialize-textarea' data-length='300'></textarea>
 		            		<label for='justification'>Justificación</label>
 		                </div>
-						<div class='input-field col l6 m6 s10 offset-l3 offset-m3 offset-s1'>
+						<div class='input-field col l10 m6 s10 offset-l1 offset-m3 offset-s1'>
 			                <select id='selectPeriodJustification'>
 			                    <option value='' disabled selected>Seleccionar Período</option>	
 			                    $options_periods
 							</select>
 							<label>Elegir Período</label>
 		          		</div>
-		          		<div class='row col l8 m10 s10 offset-l2 offset-m1 offset-s1 container-justification'>
+		          		<div class='row col l10 m10 s10 offset-l1 offset-m1 offset-s1 container-justification'>
 
 						</div>
 					</form>
@@ -86,7 +86,7 @@
 				$table .= "</tbody></table>
 				</div>
 				<div class='row'>
-					<button class='col l2 m4 s6 offset-l5 offset-m4 offset-s3 btn waves-effect waves-light black btnSaveJustification'>Guardar
+					<button class='col l4 m4 s6 offset-l4 offset-m4 offset-s3 btn waves-effect waves-light black btnSaveJustification'>Guardar
 			    	 	<i class='material-icons right'>save</i>
 			    	</button>
 				</div>

@@ -41,6 +41,7 @@
 
     <script src="../../files/js/init.js" charset="utf-8"></script>
     <script src="../../files/js/Loader.js" charset="utf-8"></script>
+    <script src="../../files/js/c/vRecord.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -74,6 +75,26 @@
         <input type="hidden" name="printRecord" value="1">
         <input type="hidden" name="id" value="<?php echo $_POST['id']; ?>">
     </form>
+
+    <div id="modalPermission" class="modal modal-fixed-footer">
+        <div class="modal-content">
+
+        </div>
+        <div class="modal-footer">
+            <!-- <div class="waves-effect btn green white-text btnSavePermission" style="margin-left: 2%;">Guardar <i class="material-icons right">save</i></div> -->
+            <div class="modal-action modal-close waves-effect btn red white-text">Cancelar <i class="material-icons right">cancel</i></div>
+        </div>
+    </div>
+
+    <div id="modalJustification" class="modal modal-fixed-footer">
+        <div class="modal-content">
+
+        </div>
+        <div class="modal-footer">
+            <!-- <div class="waves-effect btn green white-text btnSavePermission" style="margin-left: 2%;">Guardar <i class="material-icons right">save</i></div> -->
+            <div class="modal-action modal-close waves-effect btn red white-text">Cancelar <i class="material-icons right">cancel</i></div>
+        </div>
+    </div>
 
     <script>
         var loader = new Loader();
