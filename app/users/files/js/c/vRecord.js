@@ -8,7 +8,9 @@ $(document).ready(function(){
     var schedules_id = new Array(), x = 0, justification_id = new Array();
 
     $(document).on('click', '.btnPermission', function () {
+        loader.in();
         let id = $("#printRecord input[name='id']").val();
+        schedules_id.length = 0;
         $.ajax({
             type: 'POST',
             url: '../../files/php/C_Controller.php',
