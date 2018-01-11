@@ -154,7 +154,7 @@ $(document).ready(function(){
                     type: type
                 },
                 success: function(r){
-                    // console.log(r);
+                    console.log(r);
                     loader.out();
                     if( parseInt(r) ){
                         location.href = '../users/' + (( type == 'C' ) ? 'coordinator' : 'teacher') + '/';

@@ -13,10 +13,14 @@
 
         public function __construct()
         {
+            if (!isset($_SESSION)) {
+                session_start();
+            }
+
             $this->host = "localhost";
             $this->user  = "root";
             $this->pass = "";
-            $this->DB = "ezic";
+            $this->DB = (( isset($_SESSION['bdd']) ) ? "".$_SESSION['bdd']."" : 'ezic_basica');
         }
 
         function Connect()
@@ -25,6 +29,4 @@
             $this->connection->set_charset("utf8");
         }
     }
-
-
 ?>

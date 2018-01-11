@@ -13,7 +13,7 @@
             require_once($this->aux);
             $this->connection = new Connection();
             $this->connection->Connect();
-            session_start();
+            if (!isset($_SESSION)) { session_start(); }
         }
 
         function v_permissionTeacher(){

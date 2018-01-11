@@ -1137,6 +1137,6 @@
 			}else{
 				return ($this->connection->connection->multi_query($query) ? 1 : 0);
 			}
-		}
+		}	
 	}
 ?>

@@ -47,10 +47,15 @@
             if($res->num_rows > 0){
                 $rowLog = $res->fetch_assoc();
                 if ( $pass == $this->DisarmedEncryption($rowLog['password']) ) {
-                    session_start();
+                    
+                    if (!isset($_SESSION)) {
+                        session_start();
+                    }
+
                     $_SESSION['id'] = $rowLog[$idLog];
                     $_SESSION['type'] = $type;
                     $_SESSION['log'] = true;
+                    $_SESSION['bdd'] = "ezic_basica"; //Variable que estará iterada según el tipo de usuario
                     return 1;
                 }else{
                     return 0;

@@ -59,7 +59,7 @@
 				$this->options[count($this->options)] = ['Suspensiones', "sentiment_very_dissatisfied", "v_suspended"];
 
 				$this->options[count($this->options)] = ['Aceptar Permisos', "lock_open", "accept_permission"];
-				
+				$this->options[count($this->options)] = ['Administrad BDD', "data_usage", "DB_admin"];
 				$this->options[count($this->options)] = ['Administración', "folder", "administration"];
 				$this->options[count($this->options)] = ['Estadísticas', "insert_chart", "stadistics"];
 			}elseif($type == 'T'){
@@ -102,7 +102,7 @@
                     <span class='white-text email'>" . ($_SESSION['type'] == 'T' ? 'Docente' : ($_SESSION['type'] == 'C' ? ( $userRow['sex'] == 'F' ? 'Coordinadora' : 'Coordinador' ) : 'Estudiante')) . "</span>
                 </div>
             </li>";
-
+			$this->element .= "<li><a class='waves-effect btnUnlog'><i class='material-icons'>cancel</i>Cerrar Sesión</a></li></ul>";
 			for ($i=0; $i < count($this->options); $i++) {
 				if (is_array($this->options[$i][2])) {
 					$auxiliar = "";
@@ -147,7 +147,6 @@
 					}
 				}
 			}
-			$this->element .= "<li><a class='waves-effect btnUnlog'><i class='material-icons'>cancel</i>Cerrar Sesión</a></li></ul>";
 
             return $this->element;
 		}

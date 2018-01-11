@@ -26,6 +26,7 @@
 	require_once '../../../../General_Files/php/classes/Permission_Grade.php';
 	require_once '../../../../General_Files/php/classes/Specialty_Class.php';
 	require_once '../../../../General_Files/php/classes/Suspended_Class.php';
+	require_once '../../../../General_Files/php/classes/DB_Swap.php';
 
 //--------------------------------------------------------------------------------------------
 //CLASES INSTANCIADAS HASTA EZIC 1.5
@@ -36,6 +37,7 @@
 	$section = new Section();
 	$subject = new Subject();
 	$grade = new Grade();
+	$DB_Swap = new DB_Swap();
 //FIN DE CLASES INTANCIADAS HASTA EZIC 1.5	
 //--------------------------------------------------------------------------------------------
 
@@ -903,4 +905,20 @@
 	if (isset($_POST['deleteSpecialty'])) {
 		echo $admin->deleteSpecialty(json_decode($_POST['data'], 1));
 	}
+//--------------------------------------------------------------------------------------
+//		OBTIENE LA LISTA DE LAS BDD
+	if(isset($_REQUEST['v_databases'])){
+		echo($DB_Swap->v_databases());
+	}
+// OBTIENE LA LISTA DE LAS BDD
+//--------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------------------
+//		CAMBIA LA BDD QUE SE ESTA UTILIZANDO EN LA BDD
+	if(isset($_REQUEST['changeBDD'])){
+		$result = $DB_Swap->setBDD($_REQUEST['name']);
+		echo( ( ($result == true) ? 1 : 0 ));
+	}
+// CAMBIA LA BDD QUE SE ESTA UTILIZANDO EN LA BDD
+//--------------------------------------------------------------------------------------
 ?>
